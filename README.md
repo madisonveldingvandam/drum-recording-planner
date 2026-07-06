@@ -73,7 +73,31 @@ That writes `dist-site/` with asset URLs rooted at `/drum-recording-planner/`.
 
 ## Cargo Site Deployment
 
-The live website currently runs on Cargo. Cargo pages are not a normal local static-site repo, so the most direct Cargo route is to paste a generated custom HTML fragment into Cargo's raw custom HTML/code-injection area:
+The live website currently runs on Cargo. The production app is hosted by GitHub Pages at:
+
+```text
+https://madisonveldingvandam.github.io/drum-recording-planner/
+```
+
+The preferred Cargo integration is a small iframe wrapper on:
+
+```text
+https://madisonveldingvandam.com/drum-recording-planner
+```
+
+Paste this file into the Cargo page's Code View:
+
+```text
+deploy/cargo-github-pages-iframe.html
+```
+
+If you prefer the Cargo URL to immediately leave for GitHub Pages, paste this file into the page's Code View instead:
+
+```text
+deploy/cargo-github-pages-redirect.html
+```
+
+Cargo also has a generated full-inline fallback, but this is less reliable because it asks Cargo to store and execute a large bundled JavaScript app:
 
 ```bash
 npm run build:cargo

@@ -1,0 +1,49 @@
+<!--
+Cargo page iframe embed for Drum Mic Planner.
+
+Paste this into the Code View for the Cargo page at:
+https://madisonveldingvandam.com/drum-recording-planner
+
+The app itself is hosted by GitHub Pages:
+https://madisonveldingvandam.github.io/drum-recording-planner/
+-->
+<style>
+  html,
+  body {
+    margin: 0 !important;
+    overflow: hidden !important;
+    background: #e8e9eb !important;
+  }
+
+  #site_menu_wrapper,
+  [data-loading="page"] {
+    display: none !important;
+  }
+
+  #drum-recording-planner-embed {
+    position: fixed;
+    inset: 0;
+    z-index: 2147483000;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    background: #e8e9eb;
+  }
+
+  #drum-recording-planner-embed iframe {
+    width: 100vw;
+    height: 100vh;
+    border: 0;
+    display: block;
+    background: #e8e9eb;
+  }
+</style>
+
+<div id="drum-recording-planner-embed">
+  <iframe
+    title="Drum Recording Planner"
+    src="https://madisonveldingvandam.github.io/drum-recording-planner/"
+    loading="eager"
+    allow="clipboard-write; fullscreen"
+  ></iframe>
+</div>

@@ -1,0 +1,25 @@
+<!--
+Cargo page redirect for Drum Mic Planner.
+
+Paste this into the Code View for the Cargo page at:
+https://madisonveldingvandam.com/drum-recording-planner
+
+This sends visitors to the GitHub Pages app and preserves query strings
+and hash share links when JavaScript is available.
+-->
+<script>
+  (() => {
+    const target = new URL('https://madisonveldingvandam.github.io/drum-recording-planner/');
+    target.search = window.location.search;
+    target.hash = window.location.hash;
+    window.location.replace(target.toString());
+  })();
+</script>
+
+<meta http-equiv="refresh" content="0; url=https://madisonveldingvandam.github.io/drum-recording-planner/" />
+
+<p>
+  <a href="https://madisonveldingvandam.github.io/drum-recording-planner/">
+    Open Drum Recording Planner
+  </a>
+</p>

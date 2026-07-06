@@ -10,6 +10,7 @@ The app now has a real project structure, a data layer, saved local projects, fe
 - Local project database using IndexedDB
 - Versioned JSON data loaded from `public/data/`
 - Mic catalog profiles with default body type and pickup pattern
+- Studio mic/gear inventory import from pasted lists
 - Template mic packages: Minimal 4 Mic, Glyn Johns, Full Close Mic
 - Per-mic channel, target, position, catalog profile, pattern, stand, and notes
 - Technical readouts:
@@ -30,6 +31,22 @@ Static reference data lives in:
 
 - `public/data/mic-catalog.json`
 - `public/data/setup-templates.json`
+- `public/data/reference-configurations.json`
+
+Studio inventory imports are project data. Preferred paste format:
+
+```text
+MICS
+4x Shure SM57
+2x Sennheiser MD 421
+2x Neumann KM 184
+1x AKG D112
+
+GEAR
+Neve 1073 preamp
+1176 compressor
+EMT plate
+```
 
 Editable user/session data is saved in the browser via IndexedDB under the `drum-mic-planner` database. This keeps GitHub Pages deployment simple and safe: no backend secrets, no database server, and no GitHub token in the browser.
 

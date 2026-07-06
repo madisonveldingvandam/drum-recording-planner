@@ -50,6 +50,33 @@ function isLegacyDefaultGoboSet(gobos) {
   );
 }
 
+function normalizeImportedMic(mic, index) {
+  const sources = Array.isArray(mic.sources) ? mic.sources.map((source) => text(source, '')).filter(Boolean) : [];
+  return {
+    id: text(mic.id, `studio-mic-${index + 1}`),
+    manufacturer: text(mic.manufacturer, ''),
+    model: text(mic.model || mic.name, `Studio Mic ${index + 1}`),
+    micType: MIC_TYPES.includes(mic.micType) ? mic.micType : 'dynamic',
+    defaultPattern: PATTERNS.includes(mic.defaultPattern) ? mic.defaultPattern : 'cardioid',
+    sources: sources.length ? sources : ['Studio Inventory'],
+    maxSpl: mic.maxSpl == null ? null : num(mic.maxSpl, null),
+    notes: text(mic.notes, ''),
+    quantity: clamp(Math.round(num(mic.quantity, 1)), 1, 999),
+    imported: true,
+  };
+}
+
+function normalizeImportedGear(item, index) {
+  return {
+    id: text(item.id, `studio-gear-${index + 1}`),
+    name: text(item.name, `Gear ${index + 1}`),
+    category: text(item.category, 'Studio gear'),
+    quantity: clamp(Math.round(num(item.quantity, 1)), 1, 999),
+    notes: text(item.notes, ''),
+    imported: true,
+  };
+}
+
 export function clampMicToRoom(mic, room) {
   const halfWidth = room.width / 2 + 1;
   const halfLength = room.length / 2 + 1;
@@ -115,6 +142,10 @@ export function validatePlannerState(input) {
     kit: [],
     mics: [],
     gobos: [],
+    studioInventory: {
+      mics: [],
+      gear: [],
+    },
   };
 
   const kitSource = Array.isArray(obj.kit) && obj.kit.length ? obj.kit : def.kit;
@@ -169,6 +200,12 @@ export function validatePlannerState(input) {
       out.room,
     ),
   );
+
+  const inventorySource = obj.studioInventory || {};
+  out.studioInventory = {
+    mics: Array.isArray(inventorySource.mics) ? inventorySource.mics.map(normalizeImportedMic) : [],
+    gear: Array.isArray(inventorySource.gear) ? inventorySource.gear.map(normalizeImportedGear) : [],
+  };
 
   return out;
 }

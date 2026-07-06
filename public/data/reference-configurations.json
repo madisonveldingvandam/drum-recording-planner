@@ -769,7 +769,7 @@
             "length": 30,
             "height": 12,
             "confidence": "approximate",
-            "source": "Same Tarquin room approximation, with additional gobo and far-room positions for the expanded app layout.",
+            "source": "Same Tarquin room approximation, with additional far-room positions for the expanded app layout. Gobo use is not confirmed.",
             "sourceUrl": "https://tapeop.com/interviews/31/tarquin-studios/"
           }
         ]
@@ -1362,7 +1362,7 @@
             "length": 30,
             "height": 12,
             "confidence": "approximate",
-            "source": "Same Headgear room approximation, with added hallway/far-room and gobo positions for the expanded app layout.",
+            "source": "Same Headgear room approximation, with added hallway/far-room positions for the expanded app layout. Gobo use is not confirmed.",
             "sourceUrl": "https://tapeop.com/interviews/65/headgear/"
           }
         ]
@@ -1858,7 +1858,7 @@
             "length": 60.17,
             "height": 24,
             "confidence": "confirmed Studio Two dimensions / exact Solid Gold room unknown",
-            "source": "Same Abbey Road Studio Two dimensional context, with controlled gobo layout for the app preset. This does not confirm the original Solid Gold drum room.",
+            "source": "Same Abbey Road Studio Two dimensional context for the expanded app preset. Gobo use is not confirmed for the original Solid Gold drum room.",
             "sourceUrl": "https://tapeop.com/interviews/11/abbey-road-pictorial/"
           }
         ]
@@ -2106,6 +2106,458 @@
       "Exact mic placements.",
       "Exact console path, preamps, EQ, compression, tape speed, and tape formulation.",
       "Song-specific drum setup changes."
+    ],
+    "lastVerified": "2026-07-06"
+  },
+  {
+    "id": "queens-of-the-stone-age-songs-for-the-deaf-dry-shell-separate-cymbal",
+    "name": "Queens of the Stone Age / Songs for the Deaf dry-shell + separate-cymbal overdub drum configuration",
+    "status": "research-reference",
+    "appDataNotes": {
+      "setupTemplatesChanged": false,
+      "catalogingMode": true,
+      "candidateSetupLabels": [
+        {
+          "id": "songs-for-the-deaf-dry-shell-basic",
+          "name": "Songs for the Deaf Dry Shell Basic",
+          "channels": [
+            "Kick in shell pass",
+            "Snare top shell pass",
+            "Rack tom shell pass",
+            "Floor tom shell pass",
+            "Shell front/glue",
+            "Cymbal pass overheads"
+          ],
+          "note": "App layout separates shell-pass close mics from cymbal-pass overheads; electronic cymbal pads and dummy drums are documented in notes rather than as audio channels."
+        },
+        {
+          "id": "songs-for-the-deaf-expanded-overdub",
+          "name": "Songs for the Deaf Expanded Overdub",
+          "channels": [
+            "Kick in",
+            "Kick out",
+            "Snare top",
+            "Snare bottom",
+            "Rack tom",
+            "Floor tom",
+            "Shell front/crush",
+            "Cymbal pass overheads",
+            "Cymbal pass hat/ride spots",
+            "Dead room dirt"
+          ],
+          "note": "Expanded app layout for planning the separate-shell and separate-cymbal workflow; not an original session mic sheet."
+        }
+      ]
+    },
+    "accuracyBoundary": {
+      "summary": "The separate shell/cymbal workflow and no-samples point are source-supported. Exact room, kit, microphones, placements, preamps, compressors, tape/converter path, and song-by-song chains are not publicly documented in the reliable sources checked.",
+      "doUseAs": [
+        "Source-backed Songs for the Deaf drum-production workflow reference",
+        "Practical dry-shell plus real-cymbal-overdub planning preset",
+        "Controlled-room rock drum setup"
+      ],
+      "doNotUseAs": [
+        "Exact historical Songs for the Deaf mic sheet",
+        "Proof of a specific drum room at The Site, Conway, or Barefoot",
+        "Proof of exact original drum kit or cymbal models"
+      ]
+    },
+    "sources": [
+      {
+        "id": "musicradar-eric-valentine-no-one-knows",
+        "title": "Inside the making of a Queens Of The Stone Age classic",
+        "url": "https://www.musicradar.com/artists/of-course-it-was-gonna-be-a-hit-this-song-is-one-of-the-few-tracks-from-that-period-of-the-noughties-that-really-is-original-its-got-a-super-distinctive-sonic-signature-inside-the-making-of-a-queens-of-the-stone-age-classic",
+        "sourceType": "technical production interview / participant evidence quoted by MusicRadar/Rhythm",
+        "reliability": "high for the separate-cymbal method, no-samples statement, dead drum sound, and guitar/drum frequency-arrangement comments attributed to Eric Valentine; not a complete session recall sheet",
+        "supports": [
+          "Grohl recorded acoustic shells while hitting electronic cymbal pads",
+          "real cymbals were overdubbed separately with dummy snare and padded toms",
+          "Valentine stated there were no samples",
+          "drum sound was notably dead",
+          "guitar midrange focus pushed drums toward a scooped/controlled role"
+        ]
+      },
+      {
+        "id": "songs-for-the-deaf-wikipedia",
+        "title": "Songs for the Deaf",
+        "url": "https://en.wikipedia.org/wiki/Songs_for_the_Deaf",
+        "sourceType": "album context / credits",
+        "reliability": "useful for broad album/session credits; verify against physical or official credits before treating as session paperwork",
+        "supports": [
+          "2002 album context",
+          "October 2001-June 2002 recording window",
+          "studios listed as The Site, Conway, and Barefoot",
+          "Josh Homme, Eric Valentine, and Adam Kasper production credits",
+          "Eric Valentine recording credit",
+          "Adam Kasper additional recording and mixing credits"
+        ]
+      },
+      {
+        "id": "louder-why-dave-grohl-joined-qotsa",
+        "title": "Why Dave Grohl joined Queens Of The Stone Age",
+        "url": "https://www.loudersound.com/bands-artists/why-dave-grohl-joined-queens-of-the-stone-age",
+        "sourceType": "performance/session-intent context",
+        "reliability": "useful for Grohl/Homme session-intent and live-playability context; not a drum mic source",
+        "supports": [
+          "Grohl joining the sessions",
+          "band intent to make material that could function live",
+          "performance context"
+        ]
+      }
+    ],
+    "artistAlbumEngineer": {
+      "artist": "Queens of the Stone Age",
+      "album": "Songs for the Deaf",
+      "year": 2002,
+      "mainDrummer": "Dave Grohl on most of the album",
+      "additionalDrummerContext": "Gene Trautmann is credited in album personnel and associated with some tracks; exact recording method for those performances is not publicly documented in the checked sources.",
+      "producers": [
+        "Josh Homme",
+        "Eric Valentine",
+        "Adam Kasper"
+      ],
+      "recordingEngineer": "Eric Valentine",
+      "additionalRecording": "Adam Kasper on several tracks",
+      "mixingEngineer": "Adam Kasper",
+      "secondEngineers": [
+        "Kevin Szymanski",
+        "Joe Marlett"
+      ],
+      "knownStudios": [
+        "The Site, San Rafael",
+        "Conway, Los Angeles",
+        "Barefoot, Hollywood"
+      ],
+      "recordingWindow": "October 2001 to June 2002",
+      "confidence": "confirmed broad credits / exact drum room unknown"
+    },
+    "soundGoal": {
+      "summary": "Tight, focused, punchy, controlled, dry, and somewhat claustrophobic rock drums built from real performances with separately recorded shells and cymbals.",
+      "confirmedMethod": [
+        "Dave Grohl played acoustic drum shells while hitting electronic cymbal pads instead of real cymbals.",
+        "Real cymbals were recorded separately while dummy snare and padded toms minimized shell spill.",
+        "Eric Valentine stated that there were no drum samples."
+      ],
+      "practicalTarget": [
+        "dry close shells",
+        "reduced cymbal bleed",
+        "assertive close-mic EQ/compression options",
+        "real cymbals layered as a separate performance pass",
+        "human but highly controllable rock drums"
+      ],
+      "avoid": [
+        "huge live-room foundation",
+        "sample-replaced default aesthetic",
+        "modern metal click",
+        "overly glossy cymbal image",
+        "uncontrolled room bloom"
+      ],
+      "confidence": "confirmed method / inferred practical target"
+    },
+    "roomContext": {
+      "confirmed": [
+        "The documented drum sound is associated with a notably dead, controlled drum capture rather than a large ambient room.",
+        "Album credits list The Site, Conway, and Barefoot as studios."
+      ],
+      "unknown": [
+        "exact drum room",
+        "room dimensions",
+        "ceiling height",
+        "wall, floor, and ceiling materials",
+        "gobos, baffles, risers, absorbers, or blankets",
+        "which credited studio/room produced each drum track"
+      ],
+      "practicalSubstitute": "Use a small-to-medium dead room, iso room, or heavily controlled live room. Avoid a splashy high-ceiling room unless it can be made much drier with gobos, rugs, absorbers, and blankets.",
+      "confidence": "confirmed sonic direction / exact room unknown",
+      "plannerRoomApproximation": {
+        "unit": "ft",
+        "presets": [
+          {
+            "presetId": "songs-for-the-deaf-dry-shell-basic",
+            "label": "Controlled dead iso-room approximation",
+            "width": 18,
+            "length": 22,
+            "height": 9,
+            "confidence": "approximate / exact album room unknown",
+            "source": "Eric Valentine described the No One Knows drum sound as notably dead with shells and cymbals recorded separately; no exact room dimensions were found.",
+            "sourceUrl": "https://www.musicradar.com/artists/of-course-it-was-gonna-be-a-hit-this-song-is-one-of-the-few-tracks-from-that-period-of-the-noughties-that-really-is-original-its-got-a-super-distinctive-sonic-signature-inside-the-making-of-a-queens-of-the-stone-age-classic"
+          },
+          {
+            "presetId": "songs-for-the-deaf-expanded-overdub",
+            "label": "Controlled dead iso-room approximation",
+            "width": 18,
+            "length": 22,
+            "height": 9,
+            "confidence": "approximate / exact album room unknown",
+            "source": "Same dry isolation-room substitute with additional close, cymbal-spot, and dead-room planning channels.",
+            "sourceUrl": "https://www.musicradar.com/artists/of-course-it-was-gonna-be-a-hit-this-song-is-one-of-the-few-tracks-from-that-period-of-the-noughties-that-really-is-original-its-got-a-super-distinctive-sonic-signature-inside-the-making-of-a-queens-of-the-stone-age-classic"
+          }
+        ]
+      }
+    },
+    "kitContext": {
+      "confirmed": [
+        "Dave Grohl played drums on most of the album."
+      ],
+      "unknown": [
+        "exact kit brand/model",
+        "kick size",
+        "snare model, size, and material",
+        "tom sizes",
+        "cymbal models",
+        "heads",
+        "sticks",
+        "muffling",
+        "tuning"
+      ],
+      "practicalSubstitute": [
+        "22 or 24 inch kick with controlled internal damping",
+        "medium-low rock snare with short ring plus a brighter crack snare option",
+        "rack/floor toms tuned for punch rather than long resonance",
+        "cymbals chosen for tone because they are overdubbed separately"
+      ],
+      "confidence": "confirmed drummer / inferred kit plan"
+    },
+    "micList": [
+      {
+        "source": "Drum-shell performance guide / cymbal positions",
+        "micOptions": [
+          "Electronic cymbal pads, not final audio mics"
+        ],
+        "pattern": "N/A",
+        "placement": "Pads placed where cymbals would normally be so the shell performance preserves normal reach and motion.",
+        "heightDistanceAngle": "Normal cymbal-playing height and reach.",
+        "phaseRelationship": "No final audio phase issue if pads are not used in the final mix.",
+        "processingNotes": "Confirmed central method: Grohl played acoustic shells while hitting electronic cymbal pads instead of real cymbals.",
+        "confidence": "confirmed"
+      },
+      {
+        "source": "Kick close / kick in",
+        "micOptions": [
+          "AKG D112",
+          "Shure Beta 52A",
+          "Electro-Voice RE20",
+          "Beyer M88",
+          "Sennheiser e602",
+          "Audix D6",
+          "boundary mic"
+        ],
+        "pattern": "cardioid or hypercardioid",
+        "placement": "Inside the kick or at the port.",
+        "heightDistanceAngle": "2-12 inches from beater impact area; angle to balance click and body.",
+        "phaseRelationship": "Check polarity against kick out, shell overhead/front mic, and bass later.",
+        "processingNotes": "Close, punchy, controlled. Compression and gating can be more assertive because cymbal bleed is reduced.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Kick outside / low-frequency support",
+        "micOptions": [
+          "FET condenser",
+          "large dynamic",
+          "subkick",
+          "outside dynamic"
+        ],
+        "pattern": "cardioid, omni, or figure-8 depending on room",
+        "placement": "Outside resonant head.",
+        "heightDistanceAngle": "6-24 inches from head; farther only if the room is controlled.",
+        "phaseRelationship": "Polarity/time-align against kick in; avoid hollow low end.",
+        "processingNotes": "Optional. Use only if it adds weight without boxiness.",
+        "confidence": "guess"
+      },
+      {
+        "source": "Snare top",
+        "micOptions": [
+          "Shure SM57",
+          "Beyer M201",
+          "Audix i5",
+          "Sennheiser MD441",
+          "Shure 545"
+        ],
+        "pattern": "cardioid or hypercardioid",
+        "placement": "Above batter head near rim.",
+        "heightDistanceAngle": "1-3 inches above head, angled 30-60 degrees toward center; aim null toward hat/pad zone.",
+        "phaseRelationship": "Check against snare bottom and any overhead/front mic.",
+        "processingNotes": "Core sound source. EQ and compression can be more aggressive than in a normal cymbal-bleed-heavy kit take.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Snare bottom",
+        "micOptions": [
+          "small dynamic",
+          "small condenser"
+        ],
+        "pattern": "cardioid",
+        "placement": "Under snare, aimed toward wires.",
+        "heightDistanceAngle": "1-3 inches below bottom head.",
+        "phaseRelationship": "Usually polarity-invert relative to top, then fine-adjust by ear.",
+        "processingNotes": "Optional rattle/brightness layer. Keep controlled.",
+        "confidence": "guess"
+      },
+      {
+        "source": "Rack toms",
+        "micOptions": [
+          "Sennheiser MD421",
+          "Sennheiser e604/e904",
+          "Beyer M201",
+          "Sennheiser MD441",
+          "ATM25",
+          "compact condenser"
+        ],
+        "pattern": "cardioid or hypercardioid",
+        "placement": "Close over batter heads.",
+        "heightDistanceAngle": "1-3 inches above rim, angled toward strike zone.",
+        "phaseRelationship": "Check against shell overhead/front mic.",
+        "processingNotes": "Gate, expand, compress, and EQ as needed because cymbal bleed is reduced. Tune and damp before EQ.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Floor toms",
+        "micOptions": [
+          "MD421",
+          "RE20",
+          "M88",
+          "ATM25",
+          "D112-style dynamic",
+          "condenser if controlled"
+        ],
+        "pattern": "cardioid or hypercardioid",
+        "placement": "Close over batter heads.",
+        "heightDistanceAngle": "1-4 inches above rim, angled for attack/body balance.",
+        "phaseRelationship": "Check against kick and any mono kit mic.",
+        "processingNotes": "Manage low mids carefully; avoid long uncontrolled decay.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Shell image / front-of-kit / mono kit mic",
+        "micOptions": [
+          "ribbon",
+          "dynamic",
+          "condenser"
+        ],
+        "pattern": "cardioid, figure-8, or omni depending on room",
+        "placement": "In front of kit or above kick/snare axis.",
+        "heightDistanceAngle": "2-6 ft from kit, chest to head height; move until kick/snare balance works.",
+        "phaseRelationship": "Use as phase anchor or mute if it clouds the close mics.",
+        "processingNotes": "Optional glue/crush mic. Useful as a practical substitute, but not publicly documented for the album.",
+        "confidence": "guess"
+      },
+      {
+        "source": "Real cymbal pass / overheads",
+        "micOptions": [
+          "matched condensers",
+          "ribbons",
+          "darker condensers"
+        ],
+        "pattern": "cardioid, omni, or figure-8 depending on room and cymbal tone",
+        "placement": "Over real cymbals during the second pass.",
+        "heightDistanceAngle": "Start 2-4 ft above cymbals. Use spaced pair for width or ORTF/XY for tighter mono image.",
+        "phaseRelationship": "Phase is mainly within the cymbal pair. Align musically to the shell pass, but avoid over-editing feel.",
+        "processingNotes": "Confirmed concept: real cymbals were recorded separately with dummy snare and padded toms, then blended with the shell pass. Exact overhead technique is unknown.",
+        "confidence": "confirmed method / inferred placement"
+      },
+      {
+        "source": "Hi-hat / ride / cymbal spots",
+        "micOptions": [
+          "small condensers",
+          "ribbons"
+        ],
+        "pattern": "cardioid or hypercardioid",
+        "placement": "Close to specific cymbals during cymbal pass.",
+        "heightDistanceAngle": "4-12 inches from cymbal edge or bell area; avoid harsh edge blast.",
+        "phaseRelationship": "Check against cymbal overheads.",
+        "processingNotes": "Optional. Since cymbals are isolated, spot mics can be blended low or omitted.",
+        "confidence": "guess"
+      },
+      {
+        "source": "Room mics",
+        "micOptions": [
+          "mono ribbon",
+          "dynamic",
+          "condenser",
+          "stereo pair if room helps"
+        ],
+        "pattern": "omni, figure-8, or cardioid",
+        "placement": "In the dead room, hallway, or adjacent space only if useful.",
+        "heightDistanceAngle": "6-15 ft from kit for a small room; farther only if there is a usable hallway or chamber.",
+        "phaseRelationship": "Check polarity against close shells; time delay may be part of character.",
+        "processingNotes": "Use as parallel dirt, not the foundation.",
+        "confidence": "speculation"
+      },
+      {
+        "source": "Dummy snare / padded toms during cymbal pass",
+        "micOptions": [
+          "No final drum-shell mic source; this is a physical overdub aid"
+        ],
+        "pattern": "N/A",
+        "placement": "Dummy snare and padded toms replace normal shell sound during cymbal take.",
+        "heightDistanceAngle": "Normal kit geometry.",
+        "phaseRelationship": "Timing relationship is performance-based, not mic phase-based.",
+        "processingNotes": "Confirmed method: real cymbals were recorded while dummy/padded drums minimized shell spill.",
+        "confidence": "confirmed"
+      }
+    ],
+    "phaseRelationship": [
+      "No public source found gives a detailed phase strategy, mic distance rule, overhead geometry, or polarity chart.",
+      "Treat the shell pass as the primary drum image.",
+      "Check kick in/out, snare top/bottom, toms, and any mono kit mic first.",
+      "Add the cymbal pass and check whether the groove feels late, early, or smeared.",
+      "Do not automatically sample-align every cymbal transient to the shell pass; slight human variance may be part of the feel."
+    ],
+    "overallProcessingNotes": [
+      "Confirmed: Eric Valentine stated that the drums were not sample-replaced.",
+      "Confirmed: Valentine described a frequency-arrangement concept where guitars occupied a concentrated midrange area, with Homme focused around roughly 600-700 Hz, pushing drums into a more scooped and controlled role.",
+      "Unknown: exact preamps, console channels, EQs, compressors, gates, tape machine, tape speed, converters, drum bus compression, reverb, and plug-ins.",
+      "Practical translation: use assertive close-mic EQ and compression, keep shells dry and physical, avoid modern-metal click, and blend cymbals as a separate layer."
+    ],
+    "variations": [
+      {
+        "name": "Main Dave Grohl / Valentine configuration",
+        "notes": "Best-documented configuration: dry shell pass plus separate real-cymbal pass.",
+        "confidence": "confirmed method"
+      },
+      {
+        "name": "No One Knows",
+        "notes": "Clearest reference track for the method: tight shells, controlled cymbals, strong pocket, and no obvious room bloom.",
+        "confidence": "source-supported reference track"
+      },
+      {
+        "name": "Gene Trautmann tracks",
+        "notes": "Gene Trautmann is credited in personnel and associated with some tracks. Exact drum-recording method is not publicly documented in checked sources.",
+        "confidence": "confirmed personnel context / unknown technical setup"
+      },
+      {
+        "name": "Adam Kasper-produced tracks",
+        "notes": "Adam Kasper is credited as producer on The Sky Is Fallin' and Do It Again, with additional recording and mixing credits. Exact drum-chain differences are not publicly documented.",
+        "confidence": "confirmed credit context / unknown technical setup"
+      }
+    ],
+    "whatMattersMost": [
+      "drummer consistency",
+      "willingness to record shells and cymbals separately",
+      "small dead room or controlled iso space",
+      "short punchy tuning and damping",
+      "frequency arrangement around dense midrange guitars",
+      "close-mic punch before room sound",
+      "real performance over sample replacement"
+    ],
+    "studioBookingChecklist": [
+      "Book a controlled dead room or iso room.",
+      "Confirm the drummer can repeat shell and cymbal passes consistently.",
+      "Prepare electronic cymbal pads for the shell pass.",
+      "Prepare dummy snare and padded toms for the cymbal pass.",
+      "Use a loud rock kit with short sustain.",
+      "Prioritize close kick, snare, and tom capture.",
+      "Record cymbal overheads separately.",
+      "Use room mics only as dirt or optional depth.",
+      "Avoid default sample replacement."
+    ],
+    "unresolvedQuestions": [
+      "Exact drum room.",
+      "Exact kit, snare, cymbals, heads, sticks, muffling, and tuning.",
+      "Exact microphones.",
+      "Exact mic placements.",
+      "Exact console path, preamps, EQ, compression, gates, tape speed, tape formulation, converters, and plug-ins.",
+      "Exact song-by-song drum chains."
     ],
     "lastVerified": "2026-07-06"
   }

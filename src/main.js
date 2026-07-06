@@ -249,6 +249,18 @@ app.innerHTML = `
             <input id="importFile" type="file" accept=".json,application/json" hidden />
           </section>
           <section>
+            <p class="sec-title">Studio inventory</p>
+            <label class="field">
+              <span>Mic / gear list</span>
+              <textarea id="studioImportText" rows="6" placeholder="MICS&#10;4x Shure SM57&#10;2x Sennheiser MD 421&#10;GEAR&#10;Neve 1073 preamp"></textarea>
+            </label>
+            <div class="button-row">
+              <button id="btnImportStudioList" type="button"><i data-lucide="upload"></i><span>Import list</span></button>
+              <button id="btnClearStudioInventory" type="button"><i data-lucide="trash-2"></i><span>Clear inventory</span></button>
+            </div>
+            <div id="studioInventoryDetails" class="data-readout studio-readout"></div>
+          </section>
+          <section>
             <p class="sec-title">Technical checks</p>
             <div class="technical-checks">
               <div class="check-group">
@@ -353,6 +365,67 @@ const STANDARD_MIC_PRESETS = [
   { id: 'trash-room', name: 'Trash Room', catalogId: 'ev-635a', micType: 'dynamic', pattern: 'omni', target: 'Kick', x: -4.5, y: -7.5, z: 1.4 },
 ];
 
+const MIC_BRANDS = [
+  'AKG',
+  'Altec',
+  'Audio-Technica',
+  'Audix',
+  'Beyerdynamic',
+  'Blue',
+  'Cascade',
+  'Coles',
+  'DPA',
+  'Earthworks',
+  'Electro-Voice',
+  'EV',
+  'Heil',
+  'Lewitt',
+  'Mojave',
+  'Neumann',
+  'RCA',
+  'Royer',
+  'Schoeps',
+  'Sennheiser',
+  'Shure',
+  'Sony',
+  'Telefunken',
+  'Warm Audio',
+];
+
+const MIC_MODEL_NEEDLES = [
+  'sm57',
+  'sm7',
+  'md421',
+  'md 421',
+  're20',
+  're 20',
+  'd112',
+  'd 112',
+  'c414',
+  'c 414',
+  'c451',
+  'c 451',
+  'km184',
+  'km 184',
+  'u87',
+  'u 87',
+  'fet 47',
+  '4038',
+  'm160',
+  'm 160',
+  'm201',
+  'm 201',
+  'm88',
+  'm 88',
+  'r121',
+  'r-121',
+  'm49',
+  'm 49',
+  'u67',
+  'u 67',
+  '635a',
+];
+
 function fmt(value, digits = 2) {
   return Number.isFinite(value) ? value.toFixed(digits) : '—';
 }
@@ -445,8 +518,23 @@ async function loadJsonFile(path, fallback) {
   }
 }
 
+function slugify(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function normalizeLookup(value) {
+  return String(value || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
+
+function combinedCatalog() {
+  return [...catalog, ...(state.studioInventory?.mics || [])];
+}
+
 function catalogById(id) {
-  return catalog.find((item) => item.id === id) || null;
+  return combinedCatalog().find((item) => item.id === id) || null;
 }
 
 function kitAnchor() {
@@ -520,6 +608,141 @@ function createGoboFromStandardSize(sizeId) {
   );
 }
 
+function cleanInventoryLine(line) {
+  return String(line || '')
+    .replace(/^[\s>*•-]+/, '')
+    .replace(/^\[[ x-]\]\s*/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function inventorySection(line) {
+  const normalized = line.replace(/:$/, '').trim().toLowerCase();
+  if (/^(mics?|microphones?|microphone list)$/.test(normalized)) return 'mics';
+  if (/^(gear|outboard|equipment|backline|instruments|studio gear|preamps?|compressors?)$/.test(normalized)) return 'gear';
+  return '';
+}
+
+function extractQuantity(line) {
+  const prefix = line.match(/^(\d{1,2})\s*(?:x|×)\s+(.+)$/i);
+  if (prefix) return { quantity: Number(prefix[1]), item: prefix[2].trim() };
+  const suffix = line.match(/^(.+?)\s*(?:x|×)\s*(\d{1,2})$/i);
+  if (suffix) return { quantity: Number(suffix[2]), item: suffix[1].trim() };
+  const parens = line.match(/^(.+?)\s*\((?:x|qty\s*)?(\d{1,2})\)$/i);
+  if (parens) return { quantity: Number(parens[2]), item: parens[1].trim() };
+  return { quantity: 1, item: line };
+}
+
+function micBrandForLine(line) {
+  const normalized = normalizeLookup(line);
+  const brands = MIC_BRANDS.slice().sort((a, b) => b.length - a.length);
+  const brand = brands.find((candidate) => normalized.startsWith(normalizeLookup(candidate)));
+  if (!brand) return null;
+  const canonical = brand === 'EV' ? 'Electro-Voice' : brand;
+  const variants = [brand, brand.replace('-', ' '), canonical, canonical.replace('-', ' ')].filter(Boolean);
+  const matched = variants.find((variant) => line.toLowerCase().startsWith(variant.toLowerCase()));
+  const model = matched ? line.slice(matched.length).replace(/^[-\s]+/, '').trim() : line;
+  return { manufacturer: canonical, model };
+}
+
+function catalogMatchForImport(manufacturer, model, raw) {
+  const fullNeedle = normalizeLookup(`${manufacturer} ${model}`);
+  const modelNeedle = normalizeLookup(model || raw);
+  const rawNeedle = normalizeLookup(raw);
+  return (
+    catalog.find((item) => {
+      const full = normalizeLookup(`${item.manufacturer} ${item.model}`);
+      const itemModel = normalizeLookup(item.model);
+      return full === fullNeedle || itemModel === modelNeedle || itemModel === rawNeedle;
+    }) || null
+  );
+}
+
+function looksLikeMicInventoryLine(line) {
+  const normalized = normalizeLookup(line);
+  if (MIC_BRANDS.some((brand) => normalized.startsWith(normalizeLookup(brand)))) return true;
+  return MIC_MODEL_NEEDLES.some((needle) => normalized.includes(normalizeLookup(needle)));
+}
+
+function inferImportedMicType(raw, match) {
+  if (match?.micType) return match.micType;
+  const normalized = normalizeLookup(raw);
+  if (/d112|beta52|d20|m88|re20/.test(normalized)) return 'kickmic';
+  if (/km184|km84|c451|c460|pencil|smallcondenser|sdch/.test(normalized)) return 'pencil';
+  if (/c414|u87|u67|fet47|u47|m49|ela|251|4038|r121|ribbon|m160/.test(normalized)) return 'ldc';
+  return 'dynamic';
+}
+
+function inferImportedPattern(raw, match) {
+  if (match?.defaultPattern) return match.defaultPattern;
+  const normalized = normalizeLookup(raw);
+  if (/4038|r121|ribbon|m160|figure8|figureeight/.test(normalized)) return 'figure-8';
+  if (/omni|635a|measurement/.test(normalized)) return 'omni';
+  if (/supercardioid|hypercardioid/.test(normalized)) return normalized.includes('hyper') ? 'supercardioid' : 'supercardioid';
+  return 'cardioid';
+}
+
+function parseStudioMicLine(line, quantity) {
+  const branded = micBrandForLine(line);
+  const modelOnlyMatch = branded ? null : catalogMatchForImport('', line, line);
+  const manufacturer = branded?.manufacturer || modelOnlyMatch?.manufacturer || '';
+  const model = branded?.model || modelOnlyMatch?.model || line;
+  const match = catalogMatchForImport(manufacturer, model, line);
+  const id = `studio-mic-${slugify(`${manufacturer || 'studio'}-${model}`) || createId('mic')}`;
+  const notes = [`Studio inventory import`, quantity > 1 ? `Qty ${quantity}` : '', match ? `Matched catalog: ${match.manufacturer} ${match.model}` : ''].filter(Boolean).join(' · ');
+  return {
+    id,
+    manufacturer,
+    model,
+    micType: inferImportedMicType(`${manufacturer} ${model}`, match),
+    defaultPattern: inferImportedPattern(`${manufacturer} ${model}`, match),
+    sources: match?.sources || ['Studio Inventory'],
+    maxSpl: match?.maxSpl ?? null,
+    notes,
+    quantity,
+    imported: true,
+  };
+}
+
+function parseStudioGearLine(line, quantity) {
+  return {
+    id: `studio-gear-${slugify(line) || createId('gear')}`,
+    name: line,
+    category: 'Studio gear',
+    quantity,
+    notes: 'Studio inventory import',
+    imported: true,
+  };
+}
+
+function mergeInventoryItems(existing, incoming) {
+  const byId = new Map(existing.map((item) => [item.id, item]));
+  incoming.forEach((item) => byId.set(item.id, item));
+  return [...byId.values()];
+}
+
+function parseStudioInventoryText(text) {
+  const result = { mics: [], gear: [] };
+  let section = 'mixed';
+  String(text || '')
+    .split(/\r?\n/)
+    .map(cleanInventoryLine)
+    .filter(Boolean)
+    .forEach((line) => {
+      const nextSection = inventorySection(line);
+      if (nextSection) {
+        section = nextSection;
+        return;
+      }
+      const { quantity, item } = extractQuantity(line.replace(/[,;]+$/, ''));
+      if (!item) return;
+      const isMic = section === 'mics' || (section === 'mixed' && looksLikeMicInventoryLine(item));
+      if (isMic) result.mics.push(parseStudioMicLine(item, quantity));
+      else result.gear.push(parseStudioGearLine(item, quantity));
+    });
+  return result;
+}
+
 function applyCatalogToMic(mic, catalogId) {
   const item = catalogById(catalogId);
   mic.catalogId = catalogId || '';
@@ -542,6 +765,8 @@ function updateState({ autosave = true, refreshForms = false } = {}) {
   updateCatalogDetails();
   updateTemplateDetails();
   updateReferenceConfigDetails();
+  renderLibraryDetails();
+  renderStudioInventoryDetails();
   if (refreshForms) renderForms();
   if (autosave) scheduleAutosave();
 }
@@ -640,6 +865,12 @@ function renderStandardMicPicker() {
   $('btnAddMic').disabled = !available.length;
 }
 
+function catalogSelectLabel(item) {
+  const qty = item.imported && item.quantity > 1 ? ` x${item.quantity}` : '';
+  const prefix = item.imported ? 'Studio · ' : '';
+  return `${prefix}${[item.manufacturer, item.model].filter(Boolean).join(' ')}${qty}`;
+}
+
 function renderMicSelectors() {
   const hasMic = state.mics.length > 0;
   $('micSelect').innerHTML = hasMic
@@ -668,8 +899,8 @@ function renderMicSelectors() {
   writeValue('micName', mic.name);
   $('micCatalog').innerHTML =
     option('Unassigned', '', !mic.catalogId) +
-    catalog
-      .map((item) => option(`${item.manufacturer} ${item.model}`, item.id, item.id === mic.catalogId))
+    combinedCatalog()
+      .map((item) => option(catalogSelectLabel(item), item.id, item.id === mic.catalogId))
       .join('');
   $('micType').innerHTML = MIC_TYPES.map((type) => option(type, type, type === mic.micType)).join('');
   $('micPattern').innerHTML = PATTERNS.map((pattern) => option(pattern, pattern, pattern === mic.pattern)).join('');
@@ -744,7 +975,36 @@ function renderGoboSelectors() {
 function renderLibraryDetails() {
   const node = $('libraryDetails');
   if (!node) return;
-  node.textContent = `${catalog.length} mic profiles · ${templates.length} mic packages · ${referenceConfigs.length} reference presets`;
+  const importedMics = state.studioInventory?.mics?.length || 0;
+  const importedGear = state.studioInventory?.gear?.length || 0;
+  const imported = importedMics || importedGear ? ` · ${importedMics} studio mics · ${importedGear} gear` : '';
+  node.textContent = `${catalog.length + importedMics} mic profiles · ${templates.length} mic packages · ${referenceConfigs.length} reference presets${imported}`;
+}
+
+function renderStudioInventoryDetails() {
+  const node = $('studioInventoryDetails');
+  if (!node) return;
+  const importedMics = state.studioInventory?.mics || [];
+  const importedGear = state.studioInventory?.gear || [];
+  if (!importedMics.length && !importedGear.length) {
+    node.textContent = 'No studio inventory imported';
+    $('btnClearStudioInventory').disabled = true;
+    return;
+  }
+  $('btnClearStudioInventory').disabled = false;
+  const micText = importedMics.slice(0, 6).map(catalogSelectLabel).join(', ');
+  const micExtra = importedMics.length > 6 ? ` +${importedMics.length - 6}` : '';
+  const gearText = importedGear
+    .slice(0, 5)
+    .map((item) => `${item.name}${item.quantity > 1 ? ` x${item.quantity}` : ''}`)
+    .join(', ');
+  const gearExtra = importedGear.length > 5 ? ` +${importedGear.length - 5}` : '';
+  node.innerHTML = `
+    <div class="readout-grid">
+      <span>Mics</span><strong>${escapeHtml(importedMics.length ? `${micText}${micExtra}` : 'None')}</strong>
+      <span>Gear</span><strong>${escapeHtml(importedGear.length ? `${gearText}${gearExtra}` : 'None')}</strong>
+    </div>
+  `;
 }
 
 function renderTemplates() {
@@ -784,6 +1044,7 @@ function referenceTone(config) {
   if (album === 'antics') return 'Room-heavy post-punk; close punch; compressed far room.';
   if (album === 'fever to tell') return 'Raw trio drums; midrange kit picture; room edge.';
   if (album === 'solid gold') return 'Dry close funk-punk; tight kit image; controlled room.';
+  if (album === 'songs for the deaf') return 'Dry shell pass; separate cymbal overdub; no sample replacement.';
   return String(config?.soundGoal?.summary || config?.soundGoal || config?.accuracyBoundary?.summary || '').split('.')[0] || 'Reference drum layout.';
 }
 
@@ -872,6 +1133,7 @@ function renderForms() {
   renderMicSelectors();
   renderGoboSelectors();
   renderLibraryDetails();
+  renderStudioInventoryDetails();
   renderTemplates();
   renderReferenceConfigs();
   renderAnalysis();
@@ -918,7 +1180,7 @@ function renderAnalysis() {
 }
 
 function renderPatchTable() {
-  const rows = patchRows(state, catalog);
+  const rows = patchRows(state, combinedCatalog());
   $('patchTable').innerHTML = `
     <table>
       <thead>
@@ -1056,6 +1318,37 @@ function syncGoboSizeFromFields() {
   updateState({ refreshForms: true });
 }
 
+function importStudioInventoryFromField() {
+  const text = $('studioImportText').value;
+  const parsed = parseStudioInventoryText(text);
+  if (!parsed.mics.length && !parsed.gear.length) {
+    toast('No inventory found');
+    return;
+  }
+  state.studioInventory = {
+    mics: mergeInventoryItems(state.studioInventory?.mics || [], parsed.mics),
+    gear: mergeInventoryItems(state.studioInventory?.gear || [], parsed.gear),
+  };
+  writeValue('studioImportText', '');
+  updateState({ refreshForms: true });
+  toast(`${parsed.mics.length} mics · ${parsed.gear.length} gear imported`);
+}
+
+function clearStudioInventory() {
+  const hasInventory = (state.studioInventory?.mics?.length || 0) || (state.studioInventory?.gear?.length || 0);
+  if (!hasInventory) return;
+  if (!confirm('Clear imported studio inventory from this project?')) return;
+  const importedIds = new Set((state.studioInventory?.mics || []).map((mic) => mic.id));
+  state.mics.forEach((mic) => {
+    if (importedIds.has(mic.catalogId)) {
+      mic.catalogId = '';
+    }
+  });
+  state.studioInventory = { mics: [], gear: [] };
+  updateState({ refreshForms: true });
+  toast('Studio inventory cleared');
+}
+
 function downloadText(filename, text, type = 'application/json') {
   const blob = new Blob([text], { type });
   const url = URL.createObjectURL(blob);
@@ -1069,7 +1362,7 @@ function downloadText(filename, text, type = 'application/json') {
 }
 
 function buildReport() {
-  const rows = patchRows(state, catalog);
+  const rows = patchRows(state, combinedCatalog());
   const selected = selectedMicReport(state, selectedMicIndex);
   const overhead = overheadReport(state);
   const risks = phaseRiskRows(state, selectedMicIndex).filter((row) => row.status !== 'ok');
@@ -1258,8 +1551,10 @@ function applyReferencePresetContext(config, candidate, presetContext) {
   if (Array.isArray(presetContext.kit)) state.kit = clone(presetContext.kit);
   if (Array.isArray(presetContext.gobos)) {
     state.gobos = clone(presetContext.gobos).map((gobo) => clampGoboToRoom(gobo, state.room));
-    selectedGoboIndex = 0;
+  } else {
+    state.gobos = [];
   }
+  selectedGoboIndex = 0;
   state.project.notes = replaceReferencePresetProjectNote(
     state.project.notes,
     referencePresetProjectNote(config, candidate, presetContext),
@@ -1311,6 +1606,13 @@ function bindEvents() {
         .querySelectorAll('.tab-panel')
         .forEach((panel) => panel.classList.toggle('active', panel.dataset.panel === button.dataset.tab));
     });
+  });
+
+  document.addEventListener('click', (event) => {
+    const button = event.target.closest?.('#btnImportStudioList, #btnClearStudioInventory');
+    if (!button) return;
+    if (button.id === 'btnImportStudioList') importStudioInventoryFromField();
+    else clearStudioInventory();
   });
 
   ['projectName', 'projectEngineer', 'projectVenue', 'projectDate', 'projectNotes'].forEach((id) => {
@@ -1470,7 +1772,7 @@ function bindEvents() {
     }
   });
   $('btnCsv').addEventListener('click', () => {
-    downloadText(`${state.project.name.replaceAll(/\W+/g, '-').toLowerCase()}-patch-list.csv`, rowsToCsv(patchRows(state, catalog)), 'text/csv');
+    downloadText(`${state.project.name.replaceAll(/\W+/g, '-').toLowerCase()}-patch-list.csv`, rowsToCsv(patchRows(state, combinedCatalog())), 'text/csv');
   });
   $('btnReport').addEventListener('click', () => {
     downloadText(`${state.project.name.replaceAll(/\W+/g, '-').toLowerCase()}-report.md`, buildReport(), 'text/markdown');

@@ -1261,3 +1261,126 @@ Cataloging note: these are labels and channel groupings only. No planner coordin
 - Exact mic placements.
 - Exact console path, preamps, EQ, compression, tape speed, and tape formulation.
 - Song-specific drum setup changes.
+
+---
+
+## Queens of the Stone Age / Songs for the Deaf Dry-Shell + Separate-Cymbal Drums
+
+Working name: Queens of the Stone Age / Songs for the Deaf dry-shell + separate-cymbal overdub drum configuration.
+
+Accuracy boundary: the separate shell/cymbal workflow and no-samples statement are source-supported by Eric Valentine interview material quoted by MusicRadar/Rhythm. Exact drum room, kit, microphones, mic placements, preamps, compressors, tape/converter path, and song-by-song chains are not publicly documented in the reliable sources checked.
+
+### Source Notes
+
+- MusicRadar / Eric Valentine technical source: https://www.musicradar.com/artists/of-course-it-was-gonna-be-a-hit-this-song-is-one-of-the-few-tracks-from-that-period-of-the-noughties-that-really-is-original-its-got-a-super-distinctive-sonic-signature-inside-the-making-of-a-queens-of-the-stone-age-classic
+- Album credits/session context: https://en.wikipedia.org/wiki/Songs_for_the_Deaf
+- Louder / Metal Hammer performance context: https://www.loudersound.com/bands-artists/why-dave-grohl-joined-queens-of-the-stone-age
+
+### Confirmed Context
+
+- Artist: Queens of the Stone Age.
+- Album: Songs for the Deaf.
+- Year: 2002.
+- Main drummer: Dave Grohl on most of the album.
+- Producers: Josh Homme, Eric Valentine, Adam Kasper.
+- Recording engineer: Eric Valentine.
+- Additional recording and mixing: Adam Kasper.
+- Credited studios: The Site, San Rafael; Conway, Los Angeles; Barefoot, Hollywood.
+- Exact drum room: not publicly documented with confidence.
+
+### Sound Goal
+
+Tight, focused, punchy, controlled, dry, and somewhat claustrophobic rock drums. The defining method is not a secret mic choice; it is the separation of shell capture from cymbal capture.
+
+Confirmed method:
+
+- Shell pass: Dave Grohl recorded acoustic drum shells while hitting electronic cymbal pads instead of real cymbals.
+- Cymbal pass: real cymbals were recorded separately while dummy snare and padded toms minimized shell spill.
+- Eric Valentine stated that the drums were not sample-replaced.
+
+Practical target: dry close shells, reduced cymbal bleed, assertive close-mic EQ/compression options, and real cymbals layered as a separate performance pass.
+
+### Room Notes
+
+Confirmed: the drum sound is associated with a notably dead, controlled drum capture rather than a large ambient room.
+
+Unknown:
+
+- Exact drum room.
+- Room dimensions.
+- Ceiling height.
+- Wall, floor, and ceiling materials.
+- Gobos, baffles, risers, absorbers, or blankets.
+- Which credited studio/room produced each drum track.
+
+Practical substitute: use a small-to-medium dead room, iso room, or heavily controlled live room. Avoid a splashy high-ceiling room unless it can be made much drier with gobos, rugs, absorbers, and blankets.
+
+Planner room approximation: 18 ft W x 22 ft L x 9 ft H for both Songs for the Deaf presets. This is approximate app geometry based on the documented dry/dead drum sound, not a confirmed room measurement from The Site, Conway, or Barefoot.
+
+### Kit Notes
+
+Confirmed: Dave Grohl played drums on most of the album.
+
+Unknown: exact kit brand/model, kick size, snare model/size/material, tom sizes, cymbal models, heads, sticks, muffling, and tuning.
+
+Practical substitute:
+
+- 22 or 24 inch kick with controlled internal damping.
+- Medium-low rock snare with short ring plus a brighter crack snare option.
+- Rack/floor toms tuned for punch rather than long resonance.
+- Cymbals chosen for tone because they are overdubbed separately.
+
+### Mic / Pass Notes
+
+Shell pass guide: electronic cymbal pads are placed where cymbals would normally be. These are not final audio mics.
+
+Kick close / kick in: exact mic unknown. Practical options include AKG D112, Shure Beta 52A, EV RE20, Beyer M88, Sennheiser e602, Audix D6, or boundary mic. Confidence: inferred.
+
+Kick outside: exact mic unknown. Practical options include FET condenser, large dynamic, subkick, or outside dynamic. Confidence: guess / optional.
+
+Snare top: exact mic unknown. Practical options include SM57, Beyer M201, Audix i5, MD441, Shure 545, or similar dynamic. Confidence: inferred.
+
+Snare bottom: exact mic unknown. Practical option for wire layer only. Confidence: guess / optional.
+
+Rack/floor toms: exact mics unknown. Practical options include MD421, e604/e904, M201, MD441, ATM25, or compact condensers. Confidence: inferred.
+
+Shell image / front-of-kit: optional practical glue/crush mic. Not documented as an album fact. Confidence: guess.
+
+Cymbal pass overheads: confirmed method, inferred placement. Record real cymbals in a second pass with dummy snare and padded toms. Start with controlled overheads 2 to 4 ft above cymbals.
+
+Hi-hat / ride / cymbal spots: optional. Because cymbals are isolated, spots can be blended low or omitted. Confidence: guess.
+
+Room mics: not the foundation. Use only as parallel dirt or controlled depth. Confidence: speculation.
+
+### Phase / Processing
+
+Treat the shell pass as the primary drum image. Check kick in/out, snare top/bottom, toms, and any mono kit mic first. Then add the cymbal pass and check whether the groove feels late, early, or smeared. Do not automatically sample-align every cymbal transient to the shell pass; slight human variance may be part of the feel.
+
+Confirmed processing context: Valentine stated there were no samples, and described a frequency-arrangement concept where guitars occupied a concentrated midrange area around roughly 600 to 700 Hz, pushing the drums into a more scooped and controlled role.
+
+### App Data Notes
+
+Candidate setup labels:
+
+- `songs-for-the-deaf-dry-shell-basic`: kick in, snare top, rack tom, floor tom, shell front/glue, cymbal pass overheads.
+- `songs-for-the-deaf-expanded-overdub`: kick in/out, snare top/bottom, rack tom, floor tom, shell front/crush, cymbal pass overheads, hat/ride cymbal spots, dead room dirt.
+
+Cataloging note: these are app-ready planning layouts for the documented workflow, not original session mic sheets.
+
+### What Matters Most
+
+- Drummer consistency.
+- Willingness to record shells and cymbals separately.
+- Small dead room or controlled iso space.
+- Short punchy tuning and damping.
+- Frequency arrangement around dense midrange guitars.
+- Close-mic punch before room sound.
+- Real performance over sample replacement.
+
+### Questions Still Unresolved
+
+- Exact drum room.
+- Exact kit, snare, cymbals, heads, sticks, muffling, and tuning.
+- Exact microphones and mic placements.
+- Exact console path, preamps, EQ, compression, gates, tape speed, tape formulation, converters, and plug-ins.
+- Exact song-by-song drum chains.

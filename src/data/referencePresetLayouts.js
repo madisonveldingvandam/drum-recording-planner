@@ -20,6 +20,16 @@ const compactKit20 = [
   { id: 'ride', name: 'Ride', type: 'cymbal', x: -1.95, y: -0.45, z: 3.0, diameter: inft(20) },
 ];
 
+const dryShellKit24 = [
+  { id: 'kick', name: 'Kick', type: 'kick', x: 0, y: 0, z: inft(24) / 2 + 0.05, diameter: inft(24), height: inft(14) },
+  { id: 'snare', name: 'Snare', type: 'drum', x: 1.08, y: 1.22, z: 1.22, diameter: inft(14), height: inft(6.5) },
+  { id: 'tom-hi', name: 'Hi/Mid Tom', type: 'drum', x: 0.42, y: 0.28, z: 2.42, diameter: inft(13), height: inft(9) },
+  { id: 'tom-lo', name: 'Low Tom', type: 'drum', x: -1.85, y: 1.25, z: 1.28, diameter: inft(16), height: inft(16) },
+  { id: 'hihat', name: 'Hi Hat', type: 'cymbal', x: 2.28, y: 1.0, z: 2.52, diameter: inft(14) },
+  { id: 'crash', name: 'Crash', type: 'cymbal', x: 1.9, y: -0.82, z: 3.38, diameter: inft(19) },
+  { id: 'ride', name: 'Ride', type: 'cymbal', x: -2.15, y: -0.58, z: 3.12, diameter: inft(22) },
+];
+
 export const REFERENCE_PRESET_CONTEXTS = {
   'pinkerton-informed-minimum-rock-room': {
     room: {
@@ -31,10 +41,6 @@ export const REFERENCE_PRESET_CONTEXTS = {
       source: 'Electric Lady publishes Studio A live room as 35 ft x 38 ft; height was not found in the checked source.',
     },
     kit: kit22,
-    gobos: [
-      { id: 'gobo-gtr-l', name: 'Amp Isolation L', x: -6.5, y: 2.2, rot: 28, w: 5, h: 6 },
-      { id: 'gobo-gtr-r', name: 'Amp Isolation R', x: 6.5, y: 2.2, rot: -28, w: 5, h: 6 },
-    ],
   },
   'pinkerton-informed-sound-city-expanded': {
     room: {
@@ -46,11 +52,6 @@ export const REFERENCE_PRESET_CONTEXTS = {
       source: 'Exact Sound City dimensions were not verified; source context describes a former Vox warehouse, a small-gymnasium-like live room, 15-18 ft room-mic distances, and an 18-20 ft high ceiling in secondary discussion.',
     },
     kit: kit22,
-    gobos: [
-      { id: 'gobo-side-l', name: 'Tall Room Screen L', x: -8.5, y: 1.5, rot: 18, w: 5, h: 8 },
-      { id: 'gobo-side-r', name: 'Tall Room Screen R', x: 8.5, y: 1.5, rot: -18, w: 5, h: 8 },
-      { id: 'gobo-rear', name: 'Rear Reflection Screen', x: 0, y: 5.8, rot: 0, w: 7, h: 7 },
-    ],
   },
   'antics-minimum-room-hybrid': {
     room: {
@@ -62,10 +63,6 @@ export const REFERENCE_PRESET_CONTEXTS = {
       source: 'Tape Op documents Tarquin as a top-floor residential studio with a wood-floored live room and enough space for the band setup; exact live-room dimensions were not found.',
     },
     kit: kit22,
-    gobos: [
-      { id: 'gobo-amp-left', name: 'Guitar Amp Sightline Screen', x: -7.5, y: 3.2, rot: 35, w: 4, h: 6 },
-      { id: 'gobo-amp-right', name: 'Bass Amp Closet Screen', x: 7.5, y: 3.2, rot: -35, w: 4, h: 6 },
-    ],
   },
   'antics-tarquin-expanded-room': {
     room: {
@@ -77,11 +74,6 @@ export const REFERENCE_PRESET_CONTEXTS = {
       source: 'Tape Op documents Tarquin as a top-floor residential studio with a wood-floored live room and isolated amps; exact live-room dimensions were not found.',
     },
     kit: kit22,
-    gobos: [
-      { id: 'gobo-amp-left', name: 'Guitar Amp Sightline Screen', x: -7.5, y: 3.2, rot: 35, w: 4, h: 6 },
-      { id: 'gobo-amp-right', name: 'Bass Amp Closet Screen', x: 7.5, y: 3.2, rot: -35, w: 4, h: 6 },
-      { id: 'gobo-rear', name: 'Far Room Boundary', x: 0, y: 8.8, rot: 0, w: 6, h: 6 },
-    ],
   },
   'fever-to-tell-minimum-raw-trio': {
     room: {
@@ -93,10 +85,6 @@ export const REFERENCE_PRESET_CONTEXTS = {
       source: 'Tape Op documents Headgear as a subdivided Williamsburg building with 2,000 sq ft studio zones and Fever to Tell as an early session; exact live-room dimensions were not found.',
     },
     kit: compactKit20,
-    gobos: [
-      { id: 'gobo-corner-l', name: 'Fast Reflection Screen L', x: -5.5, y: 1.5, rot: 24, w: 4, h: 5 },
-      { id: 'gobo-corner-r', name: 'Fast Reflection Screen R', x: 5.5, y: 1.5, rot: -24, w: 4, h: 5 },
-    ],
   },
   'fever-to-tell-expanded-headgear': {
     room: {
@@ -108,11 +96,6 @@ export const REFERENCE_PRESET_CONTEXTS = {
       source: 'Tape Op documents Headgear as a subdivided Williamsburg building with 2,000 sq ft studio zones and Fever to Tell as an early session; exact live-room dimensions were not found.',
     },
     kit: compactKit20,
-    gobos: [
-      { id: 'gobo-corner-l', name: 'Fast Reflection Screen L', x: -5.5, y: 1.5, rot: 24, w: 4, h: 5 },
-      { id: 'gobo-corner-r', name: 'Fast Reflection Screen R', x: 5.5, y: 1.5, rot: -24, w: 4, h: 5 },
-      { id: 'gobo-hall', name: 'Hallway Boundary', x: 0, y: 8.6, rot: 0, w: 5, h: 6 },
-    ],
   },
   'solid-gold-minimum-close-funk': {
     room: {
@@ -124,11 +107,6 @@ export const REFERENCE_PRESET_CONTEXTS = {
       source: 'Tape Op cites Studio Two at 38 ft x 60 ft with 24 ft ceiling and 1.2 s reverb; Solid Gold source credits Abbey Road but not the exact room.',
     },
     kit: compactKit20,
-    gobos: [
-      { id: 'gobo-close-l', name: 'Close Dry Screen L', x: -4.8, y: 1.5, rot: 18, w: 5, h: 7 },
-      { id: 'gobo-close-r', name: 'Close Dry Screen R', x: 4.8, y: 1.5, rot: -18, w: 5, h: 7 },
-      { id: 'gobo-front', name: 'Front Spill Screen', x: 0, y: -4.2, rot: 0, w: 6, h: 6 },
-    ],
   },
   'solid-gold-controlled-expanded': {
     room: {
@@ -140,11 +118,38 @@ export const REFERENCE_PRESET_CONTEXTS = {
       source: 'Tape Op cites Studio Two at 38 ft x 60 ft with 24 ft ceiling and 1.2 s reverb; Solid Gold source credits Abbey Road but not the exact room.',
     },
     kit: compactKit20,
+  },
+  'songs-for-the-deaf-dry-shell-basic': {
+    room: {
+      width: 18,
+      length: 22,
+      height: 9,
+      label: 'Controlled dead iso-room approximation',
+      confidence: 'approximate / exact album room unknown',
+      source: 'Eric Valentine described the No One Knows drum sound as notably dead with shells recorded while Grohl hit electronic cymbal pads, then real cymbals overdubbed separately; exact studio room dimensions were not found.',
+    },
+    kit: dryShellKit24,
     gobos: [
-      { id: 'gobo-close-l', name: 'Close Dry Screen L', x: -4.8, y: 1.5, rot: 18, w: 5, h: 7 },
-      { id: 'gobo-close-r', name: 'Close Dry Screen R', x: 4.8, y: 1.5, rot: -18, w: 5, h: 7 },
-      { id: 'gobo-front', name: 'Front Spill Screen', x: 0, y: -4.2, rot: 0, w: 6, h: 6 },
-      { id: 'gobo-rear', name: 'Rear Room Control', x: 0, y: 6.5, rot: 0, w: 7, h: 7 },
+      { id: 'qotsa-absorb-l', name: 'Absorber L', x: -4.2, y: 1.3, rot: 12, w: 4, h: 7 },
+      { id: 'qotsa-absorb-r', name: 'Absorber R', x: 4.2, y: 1.3, rot: -12, w: 4, h: 7 },
+      { id: 'qotsa-front-pad', name: 'Front Absorber', x: 0, y: -4.8, rot: 0, w: 6, h: 6 },
+    ],
+  },
+  'songs-for-the-deaf-expanded-overdub': {
+    room: {
+      width: 18,
+      length: 22,
+      height: 9,
+      label: 'Controlled dead iso-room approximation',
+      confidence: 'approximate / exact album room unknown',
+      source: 'Same Valentine/Rhythm separate-cymbal method context; app room is a practical dry iso-room substitute, not a confirmed Site, Conway, or Barefoot room measurement.',
+    },
+    kit: dryShellKit24,
+    gobos: [
+      { id: 'qotsa-absorb-l', name: 'Absorber L', x: -4.2, y: 1.3, rot: 12, w: 4, h: 7 },
+      { id: 'qotsa-absorb-r', name: 'Absorber R', x: 4.2, y: 1.3, rot: -12, w: 4, h: 7 },
+      { id: 'qotsa-front-pad', name: 'Front Absorber', x: 0, y: -4.8, rot: 0, w: 6, h: 6 },
+      { id: 'qotsa-rear-pad', name: 'Rear Absorber', x: 0, y: 4.9, rot: 0, w: 6, h: 6 },
     ],
   },
 };
@@ -231,5 +236,28 @@ export const REFERENCE_PRESET_LAYOUTS = {
     { channel: 7, name: 'Mono Overhead', catalogId: 'akg-d19', target: 'Snare', x: 0, y: 0.2, z: 4.8, researchSource: 'Overhead' },
     { channel: 8, name: 'Front/Crush', catalogId: 'coles-4038', pattern: 'figure-8', target: 'Kick', x: 0, y: -3.6, z: 2.4, researchSource: 'Front-of-kit / mono crush mic' },
     { channel: 9, name: 'Low Room', catalogId: 'generic-measure', pattern: 'omni', target: 'Kick', x: 0, y: -7.5, z: 2.6, researchSource: 'Far room mic' },
+  ],
+  'songs-for-the-deaf-dry-shell-basic': [
+    { channel: 1, name: 'Kick In - Shell Pass', catalogId: 'akg-d112', target: 'Kick', x: 0, y: -1.25, z: 0.95, researchSource: 'Kick close / kick in' },
+    { channel: 2, name: 'Snare Top - Shell Pass', catalogId: 'shure-sm57', target: 'Snare', x: 1.55, y: 1.75, z: 1.9, researchSource: 'Snare top' },
+    { channel: 3, name: 'Rack Tom - Shell Pass', catalogId: 'sennheiser-md421', target: 'Hi/Mid Tom', x: 0.78, y: 0.05, z: 3.15, researchSource: 'Rack toms' },
+    { channel: 4, name: 'Floor Tom - Shell Pass', catalogId: 'sennheiser-md421', target: 'Low Tom', x: -2.45, y: 1.82, z: 2.05, researchSource: 'Floor toms' },
+    { channel: 5, name: 'Shell Front/Glue', catalogId: 'shure-sm7b', target: 'Kick', x: 0, y: -3.2, z: 2.35, researchSource: 'Shell image / front-of-kit / mono kit mic' },
+    { channel: 6, name: 'Cymbal Pass OH L', catalogId: 'akg-c414', target: 'Crash', x: 2.0, y: -0.4, z: 4.85, researchSource: 'Real cymbal pass / overheads' },
+    { channel: 7, name: 'Cymbal Pass OH R', catalogId: 'akg-c414', target: 'Ride', x: -2.0, y: -0.45, z: 4.85, researchSource: 'Real cymbal pass / overheads' },
+  ],
+  'songs-for-the-deaf-expanded-overdub': [
+    { channel: 1, name: 'Kick In - Shell Pass', catalogId: 'akg-d112', target: 'Kick', x: 0, y: -1.25, z: 0.95, researchSource: 'Kick close / kick in' },
+    { channel: 2, name: 'Kick Out - Shell Pass', catalogId: 'neumann-fet47', target: 'Kick', x: 0, y: -2.25, z: 1.1, researchSource: 'Kick outside / low-frequency support' },
+    { channel: 3, name: 'Snare Top - Shell Pass', catalogId: 'shure-sm57', target: 'Snare', x: 1.55, y: 1.75, z: 1.9, researchSource: 'Snare top' },
+    { channel: 4, name: 'Snare Bottom - Shell Pass', catalogId: 'akg-c451', target: 'Snare', x: 1.35, y: 1.48, z: 0.88, researchSource: 'Snare bottom' },
+    { channel: 5, name: 'Rack Tom - Shell Pass', catalogId: 'sennheiser-md421', target: 'Hi/Mid Tom', x: 0.78, y: 0.05, z: 3.15, researchSource: 'Rack toms' },
+    { channel: 6, name: 'Floor Tom - Shell Pass', catalogId: 'sennheiser-md421', target: 'Low Tom', x: -2.45, y: 1.82, z: 2.05, researchSource: 'Floor toms' },
+    { channel: 7, name: 'Shell Front/Crush', catalogId: 'shure-sm7b', target: 'Kick', x: 0, y: -3.2, z: 2.35, researchSource: 'Shell image / front-of-kit / mono kit mic' },
+    { channel: 8, name: 'Cymbal Pass OH L', catalogId: 'akg-c414', target: 'Crash', x: 2.0, y: -0.4, z: 4.85, researchSource: 'Real cymbal pass / overheads' },
+    { channel: 9, name: 'Cymbal Pass OH R', catalogId: 'akg-c414', target: 'Ride', x: -2.0, y: -0.45, z: 4.85, researchSource: 'Real cymbal pass / overheads' },
+    { channel: 10, name: 'Cymbal Pass Hat Spot', catalogId: 'akg-c451', target: 'Hi Hat', x: 2.75, y: 1.45, z: 3.05, researchSource: 'Hi-hat / ride / cymbal spots' },
+    { channel: 11, name: 'Cymbal Pass Ride Spot', catalogId: 'neumann-km184', target: 'Ride', x: -2.75, y: -0.95, z: 3.55, researchSource: 'Hi-hat / ride / cymbal spots' },
+    { channel: 12, name: 'Dead Room Dirt', catalogId: 'ev-635a', pattern: 'omni', target: 'Kick', x: 0, y: -7.2, z: 2.1, researchSource: 'Room mics' },
   ],
 };

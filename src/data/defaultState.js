@@ -1,4 +1,4 @@
-export const APP_SCHEMA_VERSION = 4;
+export const APP_SCHEMA_VERSION = 5;
 
 export const SPEED_OF_SOUND_FTPS = 1125;
 
@@ -282,5 +282,9 @@ export function createDefaultState() {
       },
     ],
     gobos: [],
+    studioInventory: {
+      mics: [],
+      gear: [],
+    },
   };
 }

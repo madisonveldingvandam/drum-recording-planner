@@ -1,0 +1,2012 @@
+[
+  {
+    "id": "pinkerton-informed-sound-city-electric-lady-reconstruction",
+    "name": "Pinkerton-informed raw live-band rock drums: Sound City / Electric Lady reconstruction",
+    "status": "research-reference",
+    "appDataNotes": {
+      "setupTemplatesChanged": false,
+      "catalogingMode": true,
+      "candidateSetupLabels": [
+        {
+          "id": "pinkerton-informed-minimum-rock-room",
+          "name": "Pinkerton-Informed Minimum Rock Room",
+          "channels": [
+            "Kick close",
+            "Snare top",
+            "Rack tom",
+            "Floor tom",
+            "Stereo overheads",
+            "Mono front/crush"
+          ],
+          "note": "Label and channel grouping only; no planner coordinates created in this pass."
+        },
+        {
+          "id": "pinkerton-informed-sound-city-expanded",
+          "name": "Pinkerton-Informed Sound City Expanded",
+          "channels": [
+            "Kick in",
+            "Kick out",
+            "Snare top",
+            "Snare bottom",
+            "Rack tom",
+            "Floor tom",
+            "Stereo overheads",
+            "Stereo room",
+            "Mono front/crush",
+            "Optional hi-hat"
+          ],
+          "note": "Label and channel grouping only; no compact app template entry created in this pass."
+        }
+      ]
+    },
+    "accuracyBoundary": {
+      "summary": "No published Pinkerton-specific drum mic sheet was verified. This entry combines confirmed session context with a practical 1990s live-rock drum reconstruction.",
+      "doUseAs": [
+        "Source-backed Pinkerton session context",
+        "Sound City / Electric Lady-informed planning reference",
+        "Practical raw live-band rock drum setup"
+      ],
+      "doNotUseAs": [
+        "Exact historical Pinkerton mic documentation",
+        "Proof that Pinkerton used the Nevermind drum setup",
+        "A finished app template"
+      ]
+    },
+    "sources": [
+      {
+        "id": "pinkerton-wikipedia",
+        "title": "Pinkerton (album)",
+        "url": "https://en.wikipedia.org/wiki/Pinkerton_(album)",
+        "sourceType": "album context / liner-note-derived credits",
+        "reliability": "reasonably strong for broad album, studio, production, and personnel context; verify against physical or official credits before treating as session paperwork",
+        "supports": [
+          "release date",
+          "recording window",
+          "known studios",
+          "producer",
+          "personnel",
+          "Electric Lady and Sound City session blocks",
+          "live/raw production intent"
+        ]
+      },
+      {
+        "id": "sound-city-wikipedia",
+        "title": "Sound City Studios",
+        "url": "https://en.wikipedia.org/wiki/Sound_City_Studios",
+        "sourceType": "studio history / discography context",
+        "reliability": "useful context for studio identity and rock discography; not Pinkerton-specific drum mic documentation",
+        "supports": [
+          "Sound City reputation and historical rock context",
+          "Neve 8028 / Sound City sound context",
+          "Nirvana and other rock artist context"
+        ]
+      },
+      {
+        "id": "musicradar-nevermind-sound-city",
+        "title": "How Dave Grohl delivered the Smells Like Teen Spirit drum track",
+        "url": "https://www.musicradar.com/drums/dave-grohl-and-nirvana-drum-week",
+        "sourceType": "technical comparison / Sound City analogy",
+        "reliability": "medium as analogy only; does not document Pinkerton",
+        "supports": [
+          "Nevermind Sound City mic reference: D12 kick, SM57 snare, possible AKG 451 under snare, 421 toms, 414 overheads, U87 rooms 15-18 ft back"
+        ]
+      }
+    ],
+    "artistAlbumEngineer": {
+      "artist": "Weezer",
+      "album": "Pinkerton",
+      "year": 1996,
+      "producer": "Weezer",
+      "drummer": "Patrick Wilson",
+      "mixingEngineer": "Jack Joseph Puig",
+      "engineers": [
+        "Jack Joseph Puig",
+        "Joe Barresi",
+        "Dave Fridmann",
+        "Adam Kasper",
+        "Clif Norrell",
+        "Rob Jacobs",
+        "Jim Rondinelli"
+      ],
+      "secondEngineers": [
+        "Billy Bowers",
+        "Greg Fidelman",
+        "Dan McLaughlin",
+        "Jim Champagne",
+        "David Dominguez"
+      ],
+      "masteringEngineer": "George Marino",
+      "knownStudios": [
+        "Electric Lady Studios",
+        "Sound City Studios",
+        "Hollywood Sound",
+        "Fort Apache",
+        "Rumbo"
+      ],
+      "recordingWindow": "August 22, 1995 to late July 1996",
+      "confidence": "confirmed"
+    },
+    "soundGoal": {
+      "summary": "Raw, live, aggressive, medium-room alternative-rock drums with close-mic punch, audible room interaction, controlled cymbals, and roughness left intact.",
+      "avoid": [
+        "slick sample-replacement aesthetics",
+        "hard quantization",
+        "overly bright cymbal sheen",
+        "extreme close-mic isolation",
+        "hyper-clean gated toms",
+        "modern metal kick click"
+      ],
+      "confidence": "inferred"
+    },
+    "roomContext": {
+      "confirmed": [
+        {
+          "room": "Electric Lady Studios",
+          "associatedSongs": [
+            "Why Bother?",
+            "Getchoo",
+            "No Other One",
+            "Tired of Sex"
+          ],
+          "confidence": "confirmed"
+        },
+        {
+          "room": "Sound City Studios",
+          "associatedSongs": [
+            "El Scorcho",
+            "Pink Triangle",
+            "The Good Life",
+            "Across the Sea",
+            "Falling for You"
+          ],
+          "confidence": "confirmed"
+        }
+      ],
+      "unknown": [
+        "exact drum-room placement",
+        "room dimensions",
+        "baffle and gobo use",
+        "riser use",
+        "floor/wall/ceiling treatment",
+        "close-to-room mic balance"
+      ],
+      "practicalSubstitute": "Use a medium-to-large live room with hard floor reflections, controlled but lively ambience, and enough space for room mics 10-18 ft from the kit. Avoid a small dead booth unless adding hallway, chamber, or re-amped room depth.",
+      "confidence": "confirmed context / inferred practical plan"
+    },
+    "kitContext": {
+      "confirmed": [
+        "Patrick Wilson played drums on the album.",
+        "Karl Koch is credited with percussion on Butterfly."
+      ],
+      "unknown": [
+        "kit brand",
+        "kick size",
+        "snare model",
+        "tom sizes",
+        "cymbal brands",
+        "drumheads",
+        "sticks",
+        "tuning",
+        "muffling",
+        "song-by-song kit changes"
+      ],
+      "practicalSubstitute": {
+        "kit": [
+          "classic 1990s rock kit",
+          "22 inch kick preferred",
+          "12 or 13 inch rack tom",
+          "16 inch floor tom",
+          "optional 18 inch floor tom"
+        ],
+        "snare": [
+          "14x6.5 metal snare for crack and body",
+          "14x5.5 or 14x6.5 maple snare as woodier alternate",
+          "medium to medium-high tuning",
+          "minimal damping with some ring intact"
+        ],
+        "cymbals": [
+          "medium-thin darker crashes",
+          "controlled hats",
+          "ride that does not wash out vocal range",
+          "avoid bright glassy cymbals"
+        ]
+      },
+      "confidence": "confirmed player / inferred kit plan"
+    },
+    "micList": [
+      {
+        "source": "Kick drum close",
+        "micOptions": [
+          "AKG D12 / D112",
+          "Electro-Voice RE20",
+          "Beyerdynamic M88",
+          "Sennheiser MD421",
+          "Shure Beta 52",
+          "similar large dynamic"
+        ],
+        "pattern": "cardioid or hypercardioid depending on mic",
+        "placement": "Ported head: just inside or at the hole, aimed between beater impact and shell center. Intact front head: 4-10 inches off resonant head.",
+        "heightDistanceAngle": "Approximately beater height or slightly below center; 0-30 degrees off-axis to reduce click.",
+        "phaseRelationship": "Use kick close as low-frequency anchor. Check polarity against overheads and room mics. Preserve some room delay unless low end collapses.",
+        "processingNotes": "Moderate EQ; weight around 60-80 Hz, reduce 250-500 Hz boxiness if needed, add 3-5 kHz only if buried by guitars. Compress 2-5 dB with dbx 160 / 1176 / Distressor-style behavior. Avoid modern metal click.",
+        "confidence": "inferred",
+        "evidenceBasis": "AKG D12 kick is documented for Nevermind at Sound City, not Pinkerton."
+      },
+      {
+        "source": "Kick drum outside / front-of-kit low support",
+        "micOptions": [
+          "FET 47",
+          "U47-style tube/FET mic",
+          "RE20",
+          "large dynamic/condenser"
+        ],
+        "pattern": "cardioid, or omni if the room is excellent",
+        "placement": "1-3 ft in front of resonant head, centered or slightly off-axis.",
+        "heightDistanceAngle": "Roughly kick-center height; angle off-axis until low end is full without excessive beater slap.",
+        "phaseRelationship": "Check polarity against kick-in and overheads. Move the mic physically before digital delay.",
+        "processingNotes": "Low-pass or darken if cymbal bleed is harsh. Blend under kick-in for body. Compress lightly or not at all.",
+        "confidence": "guess",
+        "evidenceBasis": "Practical modern addition; not documented for Pinkerton."
+      },
+      {
+        "source": "Snare top",
+        "micOptions": [
+          "Shure SM57",
+          "Beyerdynamic M201",
+          "Sennheiser MD441",
+          "equivalent mid-forward dynamic"
+        ],
+        "pattern": "cardioid or hypercardioid",
+        "placement": "1-2 inches above rim, 1-2 inches inside hoop, aimed toward center.",
+        "heightDistanceAngle": "30-45 degrees downward; rotate to minimize hi-hat bleed.",
+        "phaseRelationship": "Check against overheads first, then kick. If snare bottom is used, flip bottom polarity as a starting point and choose by ear.",
+        "processingNotes": "High-pass around 80-120 Hz. Add 180-250 Hz body if thin; add 5-8 kHz crack if needed. Use fast 1176-style compression only enough to stabilize the backbeat. Do not remove all ring.",
+        "confidence": "inferred",
+        "evidenceBasis": "SM57 snare is documented for Nevermind at Sound City, not Pinkerton."
+      },
+      {
+        "source": "Snare bottom",
+        "micOptions": [
+          "AKG 451",
+          "KM84-style small condenser",
+          "SM57",
+          "similar"
+        ],
+        "pattern": "cardioid",
+        "placement": "1-3 inches under the snare, aimed toward wires but not directly at the loudest rattle point.",
+        "heightDistanceAngle": "Close under-shell placement; angle to reduce kick and hi-hat spill.",
+        "phaseRelationship": "Usually polarity-inverted relative to snare top, then verified in mono.",
+        "processingNotes": "High-pass aggressively. Blend only enough to add wire definition. Distortion or compression can work if blended low.",
+        "confidence": "guess",
+        "evidenceBasis": "AKG 451 under-snare is only supported by the Nevermind analogy."
+      },
+      {
+        "source": "Rack tom",
+        "micOptions": [
+          "Sennheiser MD421",
+          "Beyerdynamic M201",
+          "Shure SM57",
+          "Audix D2/D4",
+          "similar dynamic"
+        ],
+        "pattern": "cardioid",
+        "placement": "1-3 inches above head, near rim, aimed toward center.",
+        "heightDistanceAngle": "30-45 degrees down; angle null toward nearest crash.",
+        "phaseRelationship": "Check tom close mics against overheads. Avoid heavy polarity changes that thin the snare image.",
+        "processingNotes": "Minimal gating. Use manual cleanup if needed. Add low-mid body, cut cardboard, compress only if fills disappear.",
+        "confidence": "inferred",
+        "evidenceBasis": "MD421 toms are documented for Nevermind at Sound City, not Pinkerton."
+      },
+      {
+        "source": "Floor tom",
+        "micOptions": [
+          "Sennheiser MD421",
+          "RE20",
+          "Beyerdynamic M88",
+          "FET condenser",
+          "similar"
+        ],
+        "pattern": "cardioid",
+        "placement": "1-4 inches above head, aimed halfway between rim and center.",
+        "heightDistanceAngle": "30-45 degrees; avoid pointing directly at cymbal edge.",
+        "phaseRelationship": "Check against overheads and rack toms. Floor tom polarity can alter the whole kit low-mid image.",
+        "processingNotes": "Keep weight but control boom. Gate only if sympathetic resonance creates arrangement problems.",
+        "confidence": "inferred",
+        "evidenceBasis": "Practical 1990s rock drum reconstruction; no Pinkerton-specific mic data found."
+      },
+      {
+        "source": "Stereo overheads",
+        "micOptions": [
+          "AKG 414",
+          "Neumann U87",
+          "KM84-style condensers",
+          "Coles/Royer ribbons for darker cymbal picture"
+        ],
+        "pattern": "cardioid or wide cardioid; omni only in a strong room",
+        "placement": "Spaced pair or wide quasi-ORTF above kit. Exact Pinkerton overhead technique is unknown.",
+        "heightDistanceAngle": "Start 3-5 ft above cymbals, both mics equidistant from snare. Raise if cymbals are aggressive; lower if drums lack immediacy.",
+        "phaseRelationship": "Measure to snare. Check mono before tracking. Adjust until snare remains centered and full.",
+        "processingNotes": "High-pass between 80-150 Hz depending on close-mic low end. Avoid excessive top-end boost. Prefer tape/console saturation over bright modern EQ.",
+        "confidence": "inferred",
+        "evidenceBasis": "AKG 414 overheads are documented for Nevermind at Sound City, not Pinkerton."
+      },
+      {
+        "source": "Stereo room mics",
+        "micOptions": [
+          "Neumann U87",
+          "AKG 414",
+          "FET 47",
+          "ribbon pair",
+          "other full-range room-capable mics"
+        ],
+        "pattern": "cardioid, omni, or figure-8 depending on room",
+        "placement": "Start 10-18 ft in front of kit, facing snare/kick center. Move until room gives punch rather than wash.",
+        "heightDistanceAngle": "Chest to head height first. Try lower knee-height placement if room sounds too bright.",
+        "phaseRelationship": "Check polarity against close-mic kit. Preserve natural delay for size. If room image smears backbeat, move mics before alignment.",
+        "processingNotes": "Compress hard in parallel with 1176 all-buttons, Distressor, SSL listen-mic style, dbx 160 pair, or equivalent. High-pass enough to keep kick close solid. Low-pass abrasive cymbals. Blend under close mics.",
+        "confidence": "inferred",
+        "evidenceBasis": "Strongly supported as a Sound City-informed inference; U87 rooms 15-18 ft back are documented for Nevermind, not Pinkerton."
+      },
+      {
+        "source": "Mono front-of-kit / crush mic",
+        "micOptions": [
+          "SM57",
+          "EV 635A",
+          "RE20",
+          "Coles 4038",
+          "AKG 414",
+          "any character mic"
+        ],
+        "pattern": "cardioid, omni, or figure-8",
+        "placement": "3-6 ft in front of kit, aimed at kick/snare intersection.",
+        "heightDistanceAngle": "Knee to waist height. Lower gives kick/tom density; higher gives snare/cymbal bite.",
+        "phaseRelationship": "Check against kick, snare, and overheads. Use polarity for maximum punch, not maximum brightness.",
+        "processingNotes": "Heavy compression and saturation. Blend as aggression, not fidelity. Mute or automate down if it clouds verses.",
+        "confidence": "guess",
+        "evidenceBasis": "Practical substitute for raw room energy if room is small; not documented for Pinkerton."
+      },
+      {
+        "source": "Hi-hat",
+        "micOptions": [
+          "KM84",
+          "AKG 451",
+          "SM81",
+          "SM57",
+          "omit"
+        ],
+        "pattern": "cardioid",
+        "placement": "4-8 inches above outer edge, aimed away from snare.",
+        "heightDistanceAngle": "Angle across cymbal rather than straight down to reduce harsh air blasts.",
+        "phaseRelationship": "Check against overheads; often leave muted unless articulation is needed.",
+        "processingNotes": "High-pass aggressively. Use sparingly.",
+        "confidence": "guess",
+        "evidenceBasis": "No Pinkerton hi-hat mic documentation found."
+      }
+    ],
+    "variations": [
+      {
+        "name": "Electric Lady variation",
+        "appliesTo": [
+          "Tired of Sex",
+          "Getchoo",
+          "No Other One",
+          "Why Bother?"
+        ],
+        "notes": "Use the same close/overhead framework, but assume less dependence on Sound City's particular room unless stronger sources prove otherwise. Blend room mics for aggression rather than huge depth.",
+        "confidence": "confirmed session location / inferred setup"
+      },
+      {
+        "name": "Sound City variation",
+        "appliesTo": [
+          "El Scorcho",
+          "Pink Triangle",
+          "The Good Life",
+          "Across the Sea",
+          "Falling for You"
+        ],
+        "notes": "Let room mics matter more, because the Sound City room is part of the practical target.",
+        "confidence": "confirmed session location / inferred setup"
+      },
+      {
+        "name": "Butterfly variation",
+        "appliesTo": [
+          "Butterfly"
+        ],
+        "notes": "Treat as a separate acoustic/percussion configuration rather than the main full-kit rock setup.",
+        "confidence": "confirmed percussion credit / inferred setup separation"
+      }
+    ],
+    "albumRationale": [
+      "Do not chase exact undocumented gear as if it were proven.",
+      "Choose a room with a real drum identity.",
+      "Track a strong live drummer without over-sanitizing the kit.",
+      "Keep cymbals controlled at the source.",
+      "Use close mics for punch and room/crush mics for violence and depth.",
+      "Avoid modern over-editing unless the arrangement demands it."
+    ],
+    "evidenceTable": [
+      {
+        "detail": "Album",
+        "confirmedInformation": "Weezer, Pinkerton, released September 24, 1996.",
+        "sourceId": "pinkerton-wikipedia",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Use 1990s alternative-rock production assumptions, not modern pop-punk assumptions."
+      },
+      {
+        "detail": "Recording window",
+        "confirmedInformation": "August 22, 1995 to late July 1996.",
+        "sourceId": "pinkerton-wikipedia",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Multiple sessions; do not assume one unified drum setup."
+      },
+      {
+        "detail": "Producer",
+        "confirmedInformation": "Weezer.",
+        "sourceId": "pinkerton-wikipedia",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Recreate a band-led, performance-first process."
+      },
+      {
+        "detail": "Drummer",
+        "confirmedInformation": "Patrick Wilson.",
+        "sourceId": "pinkerton-wikipedia",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Performance feel matters more than replacement samples."
+      },
+      {
+        "detail": "Mix / engineering credit",
+        "confirmedInformation": "Jack Joseph Puig credited with mixing and engineering.",
+        "sourceId": "pinkerton-wikipedia",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Mix should retain rawness but still have professional density."
+      },
+      {
+        "detail": "Other engineers",
+        "confirmedInformation": "Joe Barresi, Dave Fridmann, Adam Kasper, Clif Norrell, Rob Jacobs, Jim Rondinelli.",
+        "sourceId": "pinkerton-wikipedia",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Multiple engineers make one exact universal setup unlikely."
+      },
+      {
+        "detail": "Electric Lady songs",
+        "confirmedInformation": "Why Bother?, Getchoo, No Other One, and Tired of Sex tracked at Electric Lady.",
+        "sourceId": "pinkerton-wikipedia",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Do not attribute all drum sounds to Sound City."
+      },
+      {
+        "detail": "Sound City songs",
+        "confirmedInformation": "El Scorcho, Pink Triangle, The Good Life, Across the Sea, and Falling for You are tied to Sound City sessions.",
+        "sourceId": "pinkerton-wikipedia",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Book a room with drum character for the closest practical translation."
+      },
+      {
+        "detail": "Sound City importance",
+        "confirmedInformation": "Karl Koch described Sound City as significant to the sound.",
+        "sourceId": "pinkerton-wikipedia",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Room choice is a primary decision."
+      },
+      {
+        "detail": "Exact Pinkerton drum mics",
+        "confirmedInformation": "Not publicly documented in sources checked.",
+        "sourceId": "none-found",
+        "confidence": "confirmed unknown",
+        "practicalTakeaway": "Build a flexible equivalent setup, not a fake historical replica."
+      },
+      {
+        "detail": "Similar Sound City mic reference",
+        "confirmedInformation": "Nevermind setup discussed as D12 kick, SM57 snare, 421 toms, 414 overheads, U87 rooms 15-18 ft back.",
+        "sourceId": "musicradar-nevermind-sound-city",
+        "confidence": "inferred analogy",
+        "practicalTakeaway": "Use as a starting template for Sound City-style rock drums, not as Pinkerton proof."
+      },
+      {
+        "detail": "Samples / triggers",
+        "confirmedInformation": "Not publicly documented for Pinkerton in sources checked.",
+        "sourceId": "none-found",
+        "confidence": "unknown",
+        "practicalTakeaway": "Start natural; add subtle reinforcement only if the mix fails."
+      },
+      {
+        "detail": "Kit / snare / cymbals",
+        "confirmedInformation": "Not publicly documented in sources checked.",
+        "sourceId": "none-found",
+        "confidence": "unknown",
+        "practicalTakeaway": "Choose by sonic target: hard-hitting 1990s rock kit, controlled cymbals."
+      },
+      {
+        "detail": "Butterfly percussion",
+        "confirmedInformation": "Karl Koch credited with percussion on Butterfly.",
+        "sourceId": "pinkerton-wikipedia",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Treat separately from the main kit setup."
+      }
+    ],
+    "engineeringChecklist": [
+      "Measure overheads to the snare.",
+      "Check polarity in mono.",
+      "Move mics before using digital alignment.",
+      "Let the drummer balance the kit physically.",
+      "Control cymbals at the source.",
+      "Commit to room tone if the room sounds good.",
+      "Use room compression for aggression.",
+      "Avoid default sample replacement."
+    ],
+    "studioBookingQuestions": [
+      "Can the room support room mics 10-18 ft from the kit?",
+      "What console and preamps are available?",
+      "Can the engineer commit to phase checking before EQ?",
+      "Are multiple snares available?",
+      "Is tape or tape-style saturation available?",
+      "Can the session prioritize drum tuning and room placement before close-mic tweaking?",
+      "Can the studio provide a hallway, chamber, or alternate ambient space if the live room is too small?"
+    ],
+    "unresolvedQuestions": [
+      "Exact Pinkerton drum kit.",
+      "Exact snare, cymbals, heads, sticks, tuning, and muffling.",
+      "Exact kick, snare, tom, overhead, room, and spot microphones.",
+      "Exact mic placements and phase method.",
+      "Exact preamps, console channels, outboard, tape speed, tape formulation, and noise reduction.",
+      "Song-specific drum setup changes.",
+      "Whether samples or triggers were used.",
+      "Exact baffle, gobo, riser, and room-mic balance choices.",
+      "Whether a physical booklet or official deluxe-edition source documents more details."
+    ],
+    "lastVerified": "2026-07-06"
+  },
+  {
+    "id": "interpol-antics-tarquin-room-heavy-hybrid",
+    "name": "Interpol / Antics / Tarquin room-heavy hybrid drum configuration",
+    "status": "research-reference",
+    "appDataNotes": {
+      "setupTemplatesChanged": false,
+      "catalogingMode": true,
+      "candidateSetupLabels": [
+        {
+          "id": "antics-minimum-room-hybrid",
+          "name": "Antics Minimum Room Hybrid",
+          "channels": [
+            "Kick in",
+            "Snare top",
+            "Toms as needed",
+            "Stereo overheads",
+            "Mono extreme room"
+          ],
+          "note": "Label and channel grouping only; no planner coordinates created in this pass."
+        },
+        {
+          "id": "antics-tarquin-expanded-room",
+          "name": "Antics Tarquin Expanded Room",
+          "channels": [
+            "Kick in",
+            "Kick out",
+            "Snare top",
+            "Snare bottom",
+            "Rack tom",
+            "Floor tom",
+            "Stereo overheads",
+            "Near room pair",
+            "Mono extreme room",
+            "Optional trash mic"
+          ],
+          "note": "Label and channel grouping only; no compact app template entry created in this pass."
+        }
+      ]
+    },
+    "accuracyBoundary": {
+      "summary": "This entry uses an Antics-era Tape Op interview as the primary source for room-heavy drums, two snare choices, selective click use, Sound Replacer restraint, and hybrid tape/Pro Tools/Neotek workflow. Close-mic specifics remain undocumented.",
+      "doUseAs": [
+        "Source-backed Antics/Tarquin session context",
+        "Room-heavy post-punk drum planning reference",
+        "Practical template source for close mics plus serious room mics"
+      ],
+      "doNotUseAs": [
+        "Exact historical close-mic sheet",
+        "Proof of song-by-song snare or room-mic choices",
+        "A finished app template"
+      ]
+    },
+    "sources": [
+      {
+        "id": "tapeop-interpol-43",
+        "title": "Interpol: Attic recording",
+        "url": "https://tapeop.com/interviews/43/interpol",
+        "sourceType": "primary Antics-era interview",
+        "reliability": "high for Antics-specific drum room use, snares, kit/head preparation, click use, Sound Replacer use, tape/Pro Tools workflow, and Neotek stem mixing",
+        "supports": [
+          "Tarquin Studios album context",
+          "rehearsal-style setup",
+          "amp isolation leaving main room open for drums",
+          "selective click use",
+          "Sound Replacer used a little",
+          "fresh heads except broken-in snare head",
+          "6.5 inch brass snare and 5 inch wood snare",
+          "own kit",
+          "serious room mics used heavily",
+          "Altec 639 and Telefunken ELA M 251 extreme-room options",
+          "24-track 2-inch 456 to Pro Tools",
+          "Pro Tools to Neotek console and back"
+        ]
+      },
+      {
+        "id": "tapeop-tarquin-31",
+        "title": "Tarquin Studios: Making records in the attic",
+        "url": "https://tapeop.com/interviews/31/tarquin-studios/",
+        "sourceType": "studio profile",
+        "reliability": "high for Tarquin room/build/gear context; medium for Antics-specific drum reconstruction because it predates Antics",
+        "supports": [
+          "Tarquin as top-of-house residential studio",
+          "wood-floor live-room context",
+          "Neotek console",
+          "Studer 2-inch deck context",
+          "1176, LA4, Tube-Tech CL1B, Neve 33609, Distressor, dbx 162 context"
+        ]
+      },
+      {
+        "id": "musicradar-peter-katis-2021",
+        "title": "I use amp modellers all the time... mostly not on guitar",
+        "url": "https://www.musicradar.com/news/i-use-amp-modellers-all-the-time-mostly-not-on-guitar-an-interview-with-the-national-interpol-producer-peter-katis",
+        "sourceType": "later producer interview",
+        "reliability": "medium; useful for later confirmation of Katis/Tarquin working context, not detailed Antics drum-session documentation",
+        "supports": [
+          "Peter Katis broader workflow context",
+          "Tarquin residential-studio context"
+        ]
+      },
+      {
+        "id": "antics-wikipedia",
+        "title": "Antics (album)",
+        "url": "https://en.wikipedia.org/wiki/Antics_%28album%29",
+        "sourceType": "album credit transcription",
+        "reliability": "medium; useful for broad credits/date/studio context but not a primary scan of the booklet",
+        "supports": [
+          "Interpol album/personnel context",
+          "Peter Katis recorded and mixed",
+          "Greg Giorgio assistant credit",
+          "Tarquin Studios recording/mixing",
+          "Greg Calbi mastering credit"
+        ]
+      }
+    ],
+    "artistAlbumEngineer": {
+      "artist": "Interpol",
+      "album": "Antics",
+      "year": 2004,
+      "recordingWindow": "March to May 2004",
+      "drummer": "Sam Fogarino",
+      "producerRecordingMixing": "Peter Katis",
+      "assistantEngineer": "Greg Giorgio",
+      "studio": "Tarquin Studios, Bridgeport, Connecticut",
+      "masteringEngineer": "Greg Calbi at Sterling Sound",
+      "confidence": "confirmed"
+    },
+    "soundGoal": {
+      "summary": "Controlled, warm, direct post-punk/indie-rock drums with close-mic punch and meaningful room movement. The room should add breath and depth without turning the kit into arena-rock wash.",
+      "confirmedDirection": [
+        "room mics were a major part of the drum tone",
+        "Sound Replacer was used only lightly",
+        "click tracks were used selectively",
+        "performance movement was preserved where useful"
+      ],
+      "avoid": [
+        "dry close-mic-only modern rock sound",
+        "bright sample-replaced drum identity",
+        "full-song rigid grid unless arrangement needs it",
+        "overly glassy cymbals",
+        "time-aligning all room delay out of the performance"
+      ],
+      "confidence": "confirmed concept / inferred practical target"
+    },
+    "roomContext": {
+      "confirmed": [
+        "Antics was recorded with Peter Katis at Tarquin Studios in Bridgeport, Connecticut.",
+        "The band tracked in a rehearsal-style arrangement so Fogarino could see the other members.",
+        "Paul Banks's guitar amp was in an iso booth.",
+        "Daniel Kessler's guitar amp was in a reflective storage-room/closet area with hardwood floors.",
+        "Carlos Dengler's bass amp was in a smaller closet.",
+        "The main room was left open for drums.",
+        "Fogarino described the room as medium-sized rather than gigantic."
+      ],
+      "studioBuildContext": [
+        "Tarquin was a home-based/residential studio.",
+        "The Tarquin profile describes the studio as moved to the top of a house.",
+        "The live-room context includes wood floor."
+      ],
+      "unknown": [
+        "exact drum-room dimensions",
+        "ceiling height at drum position",
+        "wall and ceiling materials during Antics",
+        "exact gobo placement",
+        "exact drum position",
+        "whether baffles, blankets, risers, or special treatments were used"
+      ],
+      "practicalSubstitute": "Use a medium live room with reflective surfaces, wood floor if possible, enough ceiling height for the kit to breathe, and a hallway/stairwell/doorway/distant-corner position for a mono extreme room mic.",
+      "confidence": "confirmed context / inferred practical plan"
+    },
+    "kitContext": {
+      "confirmed": [
+        "Fogarino brought his own kit.",
+        "He knew what heads he wanted.",
+        "He used new heads except for the snare head, which was slightly broken in.",
+        "He used a 6.5 inch brass snare and a 5 inch wood snare."
+      ],
+      "unknown": [
+        "kit brand/model",
+        "kick size",
+        "kick drum heads",
+        "tom sizes",
+        "tom tuning",
+        "cymbal makes/models",
+        "stick model",
+        "muffling methods",
+        "song-by-song kit or cymbal changes"
+      ],
+      "practicalSubstitute": {
+        "kit": [
+          "drummer's familiar best-sounding kit",
+          "fresh kick and tom heads",
+          "slightly broken-in snare head",
+          "controlled rock tuning",
+          "focused kick and articulate toms"
+        ],
+        "snare": [
+          "6.5 inch brass snare or deeper metal equivalent for bigger songs",
+          "5 inch wood snare or tighter/drier equivalent for contained songs"
+        ],
+        "cymbals": [
+          "dark or controlled cymbals",
+          "avoid bright glassy crashes",
+          "keep hats controlled so room mics do not become cymbal-heavy"
+        ]
+      },
+      "confidence": "confirmed core kit/snare/head facts / inferred substitutions"
+    },
+    "confirmedMicAndWorkflowFacts": [
+      {
+        "detail": "Extreme room mic option 1",
+        "confirmedInformation": "Altec 639 birdcage ribbon mic.",
+        "sourceId": "tapeop-interpol-43",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Use a dark, characterful mono room mic if an Altec is unavailable."
+      },
+      {
+        "detail": "Extreme room mic option 2",
+        "confirmedInformation": "Telefunken ELA M 251 large-diaphragm condenser.",
+        "sourceId": "tapeop-interpol-43",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Use a tube LDC or smooth condenser as an alternate far-room color."
+      },
+      {
+        "detail": "Room mics in mix",
+        "confirmedInformation": "Room mics were used substantially and added breath around the close sound.",
+        "sourceId": "tapeop-interpol-43",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Do not treat room mics as optional ambience; design the session around them."
+      },
+      {
+        "detail": "Mono crushed far room",
+        "confirmedInformation": "An extreme/furthest room mic could be mono and heavily compressed.",
+        "sourceId": "tapeop-interpol-43",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Set up one mono far-room mic specifically for compression and blend."
+      },
+      {
+        "detail": "Close mics",
+        "confirmedInformation": "Close mics were used, but exact models and placements are not public.",
+        "sourceId": "tapeop-interpol-43",
+        "confidence": "confirmed use / unknown specifics",
+        "practicalTakeaway": "Use conventional close mics as the punch foundation."
+      },
+      {
+        "detail": "Tape",
+        "confirmedInformation": "24-track 2-inch 456 tape was used before bounces/transfers into Pro Tools.",
+        "sourceId": "tapeop-interpol-43",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Tape or tape-like saturation belongs in the practical target."
+      },
+      {
+        "detail": "Console workflow",
+        "confirmedInformation": "Mixing came from Pro Tools to the Neotek console and back into Pro Tools.",
+        "sourceId": "tapeop-interpol-43",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Analog-console or console-style stem routing is appropriate."
+      },
+      {
+        "detail": "Tarquin drum compression context",
+        "confirmedInformation": "Tarquin had 1176, LA4, Tube-Tech CL1B, Neve 33609, Distressors, and dbx 162; Katis described using the dbx 162 heavily for drums.",
+        "sourceId": "tapeop-tarquin-31",
+        "confidence": "confirmed studio context / medium Antics specificity",
+        "practicalTakeaway": "Have fast FET, VCA/dbx-style, and parallel room compression options."
+      },
+      {
+        "detail": "Sound Replacer",
+        "confirmedInformation": "Used a little, not to replace sounds they worked hard to capture.",
+        "sourceId": "tapeop-interpol-43",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Samples are allowed only as subtle support."
+      },
+      {
+        "detail": "Click track",
+        "confirmedInformation": "Click use varied by song or section; some tracks used no click.",
+        "sourceId": "tapeop-interpol-43",
+        "confidence": "confirmed",
+        "practicalTakeaway": "Preserve human tempo movement where useful."
+      }
+    ],
+    "recommendedModernReproduction": [
+      {
+        "source": "Kick in",
+        "micOptions": [
+          "AKG D112",
+          "Shure Beta 52A",
+          "Audix D6",
+          "EV RE20",
+          "Beyerdynamic M88",
+          "similar dynamic kick mic"
+        ],
+        "pattern": "cardioid or hypercardioid depending on mic",
+        "placement": "Inside the drum or just at the port, aimed toward the beater but not overly focused on click.",
+        "phaseRelationship": "Check polarity and timing against kick out, overheads, and room mics.",
+        "processingNotes": "Moderate EQ and compression. Avoid exaggerated modern metal click.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Kick out",
+        "micOptions": [
+          "large dynamic",
+          "FET condenser",
+          "tube condenser",
+          "subkick"
+        ],
+        "pattern": "cardioid, omni, or figure-8 depending on mic and room",
+        "placement": "6-24 inches outside the resonant head.",
+        "phaseRelationship": "Check polarity against kick in; do not assume polarity flip is automatically correct.",
+        "processingNotes": "Blend for low-end weight and air.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Snare top",
+        "micOptions": [
+          "Shure SM57",
+          "Beyerdynamic M201",
+          "Audix i5",
+          "Telefunken M80",
+          "Sennheiser MD441",
+          "similar dynamic"
+        ],
+        "pattern": "cardioid or hypercardioid",
+        "placement": "1-3 inches above rim, angled across the head.",
+        "phaseRelationship": "Check against overheads and snare bottom.",
+        "processingNotes": "Medium compression only if needed. Preserve ghost notes and dynamics.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Snare bottom",
+        "micOptions": [
+          "small dynamic",
+          "small condenser"
+        ],
+        "pattern": "cardioid",
+        "placement": "1-3 inches below wires.",
+        "phaseRelationship": "Usually polarity-reversed against snare top, but confirm by ear.",
+        "processingNotes": "Blend lightly for wire detail.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Rack toms / floor toms",
+        "micOptions": [
+          "Sennheiser MD421",
+          "Sennheiser e604/e904",
+          "Beyerdynamic M201",
+          "Josephson e22S",
+          "equivalent dynamics/condensers"
+        ],
+        "pattern": "cardioid or hypercardioid",
+        "placement": "Close, above rim, angled toward strike zone.",
+        "phaseRelationship": "Check against overheads and room mics.",
+        "processingNotes": "Gate lightly only if arrangement requires it. Avoid disconnecting toms from the room.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Overheads",
+        "micOptions": [
+          "smooth condensers",
+          "darker small-diaphragm condensers",
+          "ribbons",
+          "mellow large-diaphragm condensers"
+        ],
+        "pattern": "cardioid, omni, or figure-8 depending on room",
+        "placement": "Start with spaced pair or ORTF. Keep cymbals controlled.",
+        "phaseRelationship": "Measure or check snare-centered arrival if using spaced pair.",
+        "processingNotes": "Do not over-brighten. Cymbals should sit inside the band rather than above it.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Near room pair",
+        "micOptions": [
+          "ribbon pair",
+          "large-diaphragm condenser pair",
+          "smooth omni pair"
+        ],
+        "pattern": "figure-8, omni, or cardioid",
+        "placement": "6-12 ft from kit.",
+        "phaseRelationship": "Check mono compatibility and relationship to close mics.",
+        "processingNotes": "Mild compression. Blend for width and size.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Mono extreme room",
+        "micOptions": [
+          "Altec 639",
+          "Telefunken ELA M 251",
+          "dark ribbon",
+          "tube large-diaphragm condenser",
+          "old dynamic",
+          "character condenser"
+        ],
+        "pattern": "session pattern unknown; choose figure-8, omni, or cardioid by room",
+        "placement": "Farthest useful room position, hallway, doorway, stairwell, or reflective adjoining space.",
+        "phaseRelationship": "Do not automatically time-align. Listen to natural delay as part of groove and size.",
+        "processingNotes": "Compress aggressively with 1176, Distressor, dbx 160/162-style compression, or equivalent. Blend under close mics.",
+        "confidence": "confirmed concept / inferred placement"
+      },
+      {
+        "source": "Trash / character room",
+        "micOptions": [
+          "cheap dynamic",
+          "harmonica mic",
+          "old ribbon",
+          "consumer mic",
+          "condenser through distortion"
+        ],
+        "pattern": "any",
+        "placement": "Reflective corner, hallway, floor, stairwell, or behind a door.",
+        "phaseRelationship": "Check against room and close mics.",
+        "processingNotes": "Crush, distort, filter, or gate. Optional.",
+        "confidence": "guess"
+      }
+    ],
+    "signalChain": {
+      "confirmed": [
+        "24-track 2-inch 456 tape before Pro Tools transfer/bounce",
+        "mixing from Pro Tools out to Neotek console and back into Pro Tools",
+        "final mastering by Greg Calbi at Sterling Sound"
+      ],
+      "confirmedTarquinContext": [
+        "Neotek console",
+        "old Studer 2-inch deck",
+        "1176, LA4, Tube-Tech CL1B, Neve 33609, Distressor, dbx 162 outboard context"
+      ],
+      "unknown": [
+        "mic preamp per drum mic",
+        "tracking EQ",
+        "exact drum-bus compressor on Antics",
+        "tape speed",
+        "noise reduction",
+        "converter models",
+        "drum plug-ins",
+        "room-mic compressor per song",
+        "mix automation"
+      ],
+      "practicalSubstitute": "Track through a console or analog-style preamps with musical headroom. Use tape if available, otherwise use conservative tape saturation. Keep the chain warm and dimensional, not pristine and sterile."
+    },
+    "variations": [
+      {
+        "name": "Brass snare variation",
+        "notes": "Use a 6.5 inch brass snare or equivalent deeper metal snare for bigger, heavier, more authoritative songs.",
+        "confidence": "confirmed source snare / inferred song use"
+      },
+      {
+        "name": "Wood snare variation",
+        "notes": "Use a 5 inch wood snare or equivalent tighter/drier snare for more contained songs.",
+        "confidence": "confirmed source snare / inferred song use"
+      },
+      {
+        "name": "Altec-style extreme room",
+        "notes": "Darker, characterful mono far-room color.",
+        "confidence": "confirmed Altec option / inferred placement"
+      },
+      {
+        "name": "ELA M 251-style extreme room",
+        "notes": "Smoother, more hi-fi tube-condenser far-room color.",
+        "confidence": "confirmed 251 option / inferred placement"
+      },
+      {
+        "name": "Selective click",
+        "notes": "Use click only where arrangement precision needs it; preserve rushing/slowing where the band feels better.",
+        "confidence": "confirmed"
+      },
+      {
+        "name": "Sparse reinforcement",
+        "notes": "Use Sound Replacer-style support sparingly and never as the main drum identity.",
+        "confidence": "confirmed general use / unknown song details"
+      }
+    ],
+    "songBySongInferences": [
+      {
+        "song": "Next Exit",
+        "inference": "Controlled and spacious; room blend should stay subtle and intimate.",
+        "confidence": "inferred"
+      },
+      {
+        "song": "Evil",
+        "inference": "Tight kick/snare articulation is essential; room adds motion without blurring groove.",
+        "confidence": "inferred"
+      },
+      {
+        "song": "Narc",
+        "inference": "Dry, forward snare and controlled cymbals; room adds body, not explosion.",
+        "confidence": "inferred"
+      },
+      {
+        "song": "Take You on a Cruise",
+        "inference": "More atmosphere can be allowed as sections expand.",
+        "confidence": "inferred"
+      },
+      {
+        "song": "Slow Hands",
+        "inference": "Prioritize fast transient clarity and tight low-end control; tuck compressed room underneath.",
+        "confidence": "inferred"
+      },
+      {
+        "song": "Not Even Jail",
+        "inference": "Deeper brass snare and more crushed mono room are practical.",
+        "confidence": "inferred"
+      },
+      {
+        "song": "Public Pervert",
+        "inference": "Use room mics for space but avoid over-compression that pumps unnaturally.",
+        "confidence": "inferred"
+      },
+      {
+        "song": "C'mere",
+        "inference": "Punchy but not oversized; snare should leave room for guitars and vocal.",
+        "confidence": "inferred"
+      },
+      {
+        "song": "Length of Love",
+        "inference": "Rhythmic clarity matters more than huge ambience; keep rooms filtered/compressed to avoid clouding motion.",
+        "confidence": "inferred"
+      },
+      {
+        "song": "A Time to Be So Small",
+        "inference": "Distant/atmospheric room character may help, but drum image should remain understated.",
+        "confidence": "inferred"
+      }
+    ],
+    "albumRationale": [
+      "The reproducible lesson is recording architecture, not exact undocumented close mics.",
+      "Use a real drummer with prepared parts and a familiar kit.",
+      "Prepare two contrasting snares.",
+      "Leave the room open around the drums.",
+      "Use close mics for definition and serious room mics for breath and size.",
+      "Capture a mono crushed far-room option.",
+      "Use sample reinforcement only as subtle support.",
+      "Use tape, tape-like saturation, or analog-console-style routing without flattening the performance."
+    ],
+    "studioBookingQuestions": [
+      "Do you have a medium live room with wood floor or lively surfaces?",
+      "Can guitar and bass amps be isolated while the drummer remains visually connected to the band?",
+      "Is there a hallway, stairwell, doorway, or distant room position for a mono far-room mic?",
+      "Do you have ribbons or tube condensers suitable for room mics?",
+      "Do you have compressors suitable for crushed room sounds, such as 1176, Distressor, dbx 160/162, or equivalents?",
+      "Can we track to tape, or create a tape-like saturation stage during tracking or mix?",
+      "Can the engineer print or monitor compressed room mics during tracking?",
+      "Can we avoid over-editing and preserve human tempo movement where appropriate?",
+      "Can we set up two snare options and switch by song?",
+      "Can we audition room mics before committing to drum sounds?"
+    ],
+    "unresolvedQuestions": [
+      "Exact kick mic or mics.",
+      "Exact snare mic or mics.",
+      "Exact overhead microphones and technique.",
+      "Exact tom microphones.",
+      "Exact hi-hat or ride spot mics.",
+      "Exact room mic distances and heights.",
+      "Exact compressor used on the far-room mic.",
+      "Exact preamps per microphone.",
+      "Exact tracking EQ.",
+      "Exact tape speed and noise-reduction details.",
+      "Exact converter models.",
+      "Exact mix plug-ins.",
+      "Song-by-song snare choices.",
+      "Song-by-song room-mic choices.",
+      "Song-by-song sample reinforcement.",
+      "Exact drum kit brand/model, kick size, tom sizes, cymbals, sticks, and muffling."
+    ],
+    "lastVerified": "2026-07-06"
+  },
+  {
+    "id": "yeah-yeah-yeahs-fever-to-tell-headgear-raw-trio",
+    "name": "Yeah Yeah Yeahs - Fever to Tell / Headgear raw-trio drum configuration",
+    "status": "research-reference",
+    "appDataNotes": {
+      "setupTemplatesChanged": false,
+      "catalogingMode": true,
+      "candidateSetupLabels": [
+        {
+          "id": "fever-to-tell-minimum-raw-trio",
+          "name": "Fever to Tell Minimum Raw Trio",
+          "channels": [
+            "Kick",
+            "Snare top",
+            "Mono overhead",
+            "Mono front-of-kit/crush"
+          ],
+          "note": "Label and channel grouping only; no planner coordinates created in this pass."
+        },
+        {
+          "id": "fever-to-tell-expanded-headgear",
+          "name": "Fever to Tell Expanded Headgear",
+          "channels": [
+            "Kick",
+            "Snare top",
+            "Snare bottom",
+            "Rack tom",
+            "Floor tom",
+            "Mono overhead",
+            "Narrow stereo overheads",
+            "Front-of-kit crush",
+            "Far room/hall",
+            "Optional hi-hat"
+          ],
+          "note": "Label and channel grouping only; no compact app template entry created in this pass."
+        }
+      ]
+    },
+    "accuracyBoundary": {
+      "summary": "Main confirmed facts come from album-credit-derived sources and studio-history sources. Exact drum microphones, kit, cymbals, mic placements, preamps, tape machine, drum processing, and room setup were not publicly documented in reliable sources checked.",
+      "confirmedScope": [
+        "album/studio/producer/engineer/mixing/mastering credits",
+        "Headgear Studio context",
+        "Yeah Yeah Yeahs trio context",
+        "review-language support for guitar/drums rock and forceful percussion",
+        "Maps demo-origin context"
+      ],
+      "undocumentedScope": [
+        "exact drum kit",
+        "exact microphones",
+        "exact mic placements",
+        "exact room setup",
+        "exact preamps, console, compression, tape/digital format",
+        "samples, triggers, quantization, or drum replacement"
+      ]
+    },
+    "sources": [
+      {
+        "id": "fever-to-tell-wikipedia",
+        "title": "Fever to Tell",
+        "url": "https://en.wikipedia.org/wiki/Fever_to_Tell",
+        "sourceType": "album credit / release context",
+        "reliability": "medium; useful for album-credit-derived personnel, studio, producer, engineer, mixing, mastering, and track-editing context",
+        "supports": [
+          "Headgear tracking studio",
+          "David Andrew Sitek and Yeah Yeah Yeahs production",
+          "Brian Chase drums",
+          "Paul Mahajan engineering",
+          "Alan Moulder and Nick Zinner mixing tracks 1-7, 9, 10",
+          "David Andrew Sitek mixing tracks 8 and 11",
+          "Howie Weinberg mastering",
+          "Roger Lian track editing"
+        ]
+      },
+      {
+        "id": "headgear-wikipedia",
+        "title": "Headgear Studio",
+        "url": "https://en.wikipedia.org/wiki/Headgear_Studio",
+        "sourceType": "studio history",
+        "reliability": "medium; useful for Headgear location/history and Fever to Tell being recorded there, not for drum mic details",
+        "supports": [
+          "Headgear based in Williamsburg, Brooklyn",
+          "Fever to Tell recorded at Headgear with David Sitek",
+          "Headgear founded in 1998 and closed in 2012"
+        ]
+      },
+      {
+        "id": "yeah-yeah-yeahs-wikipedia",
+        "title": "Yeah Yeah Yeahs",
+        "url": "https://en.wikipedia.org/wiki/Yeah_Yeah_Yeahs",
+        "sourceType": "band history / trio context",
+        "reliability": "medium; useful for band lineup and broad context, not drum-session documentation",
+        "supports": [
+          "Karen O / Nick Zinner / Brian Chase trio context",
+          "early Yeah Yeah Yeahs band history"
+        ]
+      },
+      {
+        "id": "pitchfork-fever-to-tell",
+        "title": "Yeah Yeah Yeahs: Fever to Tell Album Review",
+        "url": "https://pitchfork.com/reviews/albums/8888-fever-to-tell",
+        "sourceType": "contemporary review / sound description",
+        "reliability": "medium for descriptive sound language; not technical session documentation",
+        "supports": [
+          "guitar/drums rock description",
+          "relentless percussive assault phrase",
+          "deafening percussion phrase",
+          "Maps drum restraint description"
+        ]
+      },
+      {
+        "id": "new-yorker-karen-o-2022",
+        "title": "Karen O Has Found a More Joyful Kind of Wildness",
+        "url": "https://www.newyorker.com/culture/the-new-yorker-interview/karen-o-has-found-a-more-joyful-kind-of-wildness",
+        "sourceType": "artist interview / demo-origin context",
+        "reliability": "medium for Maps writing/demo origin; not final-album drum recording documentation",
+        "supports": [
+          "Maps began from a drum-machine pattern",
+          "Maps demo was recorded into four-track",
+          "demo-origin context is separate from final album drum mic documentation"
+        ]
+      }
+    ],
+    "artistAlbumEngineer": {
+      "artist": "Yeah Yeah Yeahs",
+      "album": "Fever to Tell",
+      "year": 2003,
+      "drummer": "Brian Chase",
+      "producer": "David Andrew Sitek and Yeah Yeah Yeahs",
+      "recordingEngineer": "Paul Mahajan",
+      "trackingStudio": "Headgear Studio, Williamsburg/Brooklyn, New York",
+      "mixStudio": "Eden Studios, London, for Alan Moulder/Nick Zinner mixes",
+      "mixing": "Alan Moulder and Nick Zinner on tracks 1-7, 9, and 10; David Andrew Sitek on tracks 8 and 11",
+      "mastering": "Howie Weinberg at Masterdisk, New York",
+      "editing": "Roger Lian credited for track/digital editing; exact drum-editing role not publicly documented",
+      "confidence": "confirmed album-credit context"
+    },
+    "soundGoal": {
+      "summary": "Raw, fast, midrange-forward, physical drums that sound like a band playing in a room rather than a polished modern rock production.",
+      "qualities": [
+        "urgent",
+        "compact",
+        "guitar/vocal/drum focused",
+        "kick and snare carry momentum",
+        "overheads keep kit connected",
+        "room/crush mics add danger or explosion only where useful"
+      ],
+      "avoid": [
+        "glossy",
+        "wide",
+        "hi-fi",
+        "sample-replaced default aesthetic"
+      ],
+      "confidence": "inferred from user research and review descriptions"
+    },
+    "roomContext": {
+      "confirmed": [
+        "Fever to Tell was recorded at Headgear Studio in Williamsburg/Brooklyn, New York."
+      ],
+      "unknown": [
+        "exact live room",
+        "drum room",
+        "room dimensions",
+        "ceiling height",
+        "floor and wall materials",
+        "gobos",
+        "baffles",
+        "blankets",
+        "risers",
+        "hallway use",
+        "chamber use"
+      ],
+      "practicalSubstituteFromNotes": "Small-to-medium live room with attitude, fast reflections, and controlled decay. Wood, brick, plaster, or concrete room with movable absorption. Avoid a huge polished rock room unless room mics can stay tight and aggressive.",
+      "confidence": "confirmed studio / unknown room specifics"
+    },
+    "kitContext": {
+      "confirmed": [
+        "Brian Chase played drums."
+      ],
+      "unknown": [
+        "kit brand",
+        "kick size",
+        "snare model",
+        "snare size/material",
+        "tom sizes",
+        "heads",
+        "sticks",
+        "muffling",
+        "cymbals",
+        "whether kit changed between songs"
+      ],
+      "practicalSubstituteFromNotes": [
+        "simple rock kit",
+        "20 or 22 inch kick",
+        "one rack tom",
+        "one floor tom",
+        "small cymbal setup",
+        "one higher/cutting/ringy snare",
+        "one drier/fatter snare for restrained songs such as Maps",
+        "controlled and musical cymbals rather than bright or washy cymbals"
+      ],
+      "confidence": "confirmed drummer / unknown kit specifics"
+    },
+    "micList": [
+      {
+        "source": "Kick drum",
+        "micOptions": [
+          "AKG D112",
+          "Shure Beta 52",
+          "EV RE20",
+          "Sennheiser MD421",
+          "Audio-Technica ATM25",
+          "equivalent dynamic kick/large dynamic mic"
+        ],
+        "pattern": "cardioid",
+        "placement": "Inside the port if resonant head is ported, or just outside resonant head if unported. Aim off-center toward beater impact.",
+        "heightDistanceAngle": "Around beater height; 2-8 inches from resonant head or just inside shell; angle slightly away from excessive click if drummer plays hard.",
+        "phaseRelationship": "Check polarity against mono overhead or main kit mic first, then against room mics. Kick should gain punch when combined.",
+        "processingNotes": "Avoid overly modern kick. Use modest 60-80 Hz shaping only if needed, remove sub-rumble, and add beater definition only enough for tempo clarity. Avoid sample replacement unless intentionally departing from original approach.",
+        "confidence": "guess",
+        "evidenceBasis": "No reliable public source found confirms original kick mic or placement."
+      },
+      {
+        "source": "Snare top",
+        "micOptions": [
+          "Shure SM57",
+          "Beyerdynamic M201",
+          "Audix i5",
+          "Sennheiser MD441",
+          "equivalent dynamic"
+        ],
+        "pattern": "cardioid or hypercardioid",
+        "placement": "Above rim, pointed toward center, with null aimed toward hi-hat.",
+        "heightDistanceAngle": "1-2 inches above head, 30-45 degrees downward.",
+        "phaseRelationship": "Align by ear with overhead or mono kit mic. If mono overhead is main kit picture, tune snare polarity to that mic rather than only close kick.",
+        "processingNotes": "High-pass only as needed. Preserve midrange crack. Fast but non-flattening compression; a few dB from 1176-style or dbx-style compressor if printing.",
+        "confidence": "guess",
+        "evidenceBasis": "No reliable public source found confirms original snare mic or placement."
+      },
+      {
+        "source": "Snare bottom, optional",
+        "micOptions": [
+          "SM57",
+          "small-diaphragm condenser",
+          "MD441",
+          "equivalent"
+        ],
+        "pattern": "cardioid",
+        "placement": "Under snare, aimed at wires.",
+        "heightDistanceAngle": "2-4 inches below bottom head, angled to reduce kick spill.",
+        "phaseRelationship": "Polarity usually inverted relative to snare top; verify by ear.",
+        "processingNotes": "Blend only for wire articulation. Do not make snare too slick or modern.",
+        "confidence": "guess"
+      },
+      {
+        "source": "Rack tom / floor tom",
+        "micOptions": [
+          "Sennheiser MD421",
+          "Sennheiser e604/e904",
+          "Beyerdynamic M201",
+          "Audio-Technica ATM25",
+          "equivalent"
+        ],
+        "pattern": "cardioid",
+        "placement": "Close, above rim, angled toward center.",
+        "heightDistanceAngle": "1-3 inches above head, 30-60 degrees downward.",
+        "phaseRelationship": "Check against overhead or mono kit mic. Toms should add body without hollowing kit image.",
+        "processingNotes": "Avoid aggressive gating while tracking. Use editing or automation later if necessary.",
+        "confidence": "guess",
+        "evidenceBasis": "No reliable public source found confirms original tom mics, tom sizes, or whether close tom mics were used."
+      },
+      {
+        "source": "Mono overhead / central kit picture",
+        "micOptions": [
+          "Coles 4038",
+          "Royer R-121/R-122",
+          "AEA R84/R92",
+          "RCA-style ribbon",
+          "Neumann U67/U87",
+          "AKG 414",
+          "Shure SM7B",
+          "EV RE20",
+          "equivalent ribbon/dynamic/darker condenser"
+        ],
+        "pattern": "figure-8 for ribbons; cardioid for condensers/dynamics depending on room",
+        "placement": "Above kit, centered around snare/kick relationship rather than cymbal glamour.",
+        "heightDistanceAngle": "3-5 ft above snare, aimed between snare and kick, adjusted until kick and snare feel balanced.",
+        "phaseRelationship": "Make this the phase anchor. Add close mics around it. Check that kick and snare do not hollow out when close mics are introduced.",
+        "processingNotes": "Compress lightly to moderately if it creates forward motion. Roll off harsh top end if cymbals dominate.",
+        "confidence": "inferred",
+        "evidenceBasis": "No source confirms this exact technique; research notes identify it as a practical compact/narrow kit anchor."
+      },
+      {
+        "source": "Stereo overheads, optional",
+        "micOptions": [
+          "small-diaphragm condensers",
+          "ribbons",
+          "darker large-diaphragm condensers"
+        ],
+        "pattern": "cardioid, figure-8, or omni depending on room",
+        "placement": "Narrow spaced pair, ORTF, or low/wide pair kept controlled. Avoid exaggerated modern width.",
+        "heightDistanceAngle": "3-5 ft above cymbals; start lower than hi-fi rock setup and adjust to reduce splash.",
+        "phaseRelationship": "Keep both overheads equidistant from snare if using spaced pair. Check mono compatibility.",
+        "processingNotes": "High-pass enough to leave kick/snare close mics stable, but do not remove all body.",
+        "confidence": "guess",
+        "evidenceBasis": "Original overhead method is not publicly documented."
+      },
+      {
+        "source": "Front-of-kit / mono room / crush mic",
+        "micOptions": [
+          "EV RE20",
+          "Shure SM7B",
+          "Coles 4038",
+          "Royer R-121",
+          "AEA ribbon",
+          "Neumann FET 47",
+          "U87",
+          "AKG 414",
+          "equivalent"
+        ],
+        "pattern": "cardioid, figure-8, or omni depending on room",
+        "placement": "In front of kit, aimed between kick and snare.",
+        "heightDistanceAngle": "3-8 ft in front of kit, 3-5 ft high. Start near drummer chest height facing kit.",
+        "phaseRelationship": "Check polarity and timing against kick, snare, and overhead. Use polarity with more low-mid punch. Delay-align only if it improves impact.",
+        "processingNotes": "Use as parallel aggression channel. Try 1176 all-buttons, Distressor, dbx 160, LA-3A, TG-style limiting, tape saturation, or console distortion. Blend under close mics.",
+        "confidence": "guess",
+        "evidenceBasis": "No source confirms a crush mic or room mic; listed as practical substitute in research notes."
+      },
+      {
+        "source": "Far room / hallway, optional",
+        "micOptions": [
+          "omni condensers",
+          "ribbons",
+          "mono dynamic"
+        ],
+        "pattern": "omni, figure-8, or cardioid",
+        "placement": "Far end of live room, hallway, stairwell, or reflective boundary if available.",
+        "heightDistanceAngle": "10-25 ft from kit if room allows; lower placement for thump, higher placement for cymbal/air.",
+        "phaseRelationship": "Treat as effect return. Do not force phase-perfect if lateness creates size.",
+        "processingNotes": "Heavy compression, saturation, or gating for choruses/noise sections. Mute or lower for tight verses.",
+        "confidence": "guess",
+        "evidenceBasis": "No reliable public source found documents far-room or hallway mics on album."
+      },
+      {
+        "source": "Hi-hat, optional",
+        "micOptions": [
+          "Neumann KM84/KM184",
+          "AKG 451",
+          "Shure SM81",
+          "Josephson-style small-diaphragm condenser",
+          "equivalent"
+        ],
+        "pattern": "cardioid",
+        "placement": "Above outer edge of hats, aimed away from snare.",
+        "heightDistanceAngle": "4-8 inches above hats, angled across rather than straight down.",
+        "phaseRelationship": "Check against snare top and overhead.",
+        "processingNotes": "High-pass aggressively. Use only if arrangement needs extra hat articulation; otherwise leave muted.",
+        "confidence": "guess",
+        "evidenceBasis": "No reliable public source found confirms a hi-hat mic."
+      }
+    ],
+    "variations": [
+      {
+        "name": "Minimum viable setup",
+        "notes": "Kick, snare top, mono overhead, mono front-of-kit/crush mic.",
+        "confidence": "cataloged practical variant"
+      },
+      {
+        "name": "Expanded setup",
+        "notes": "Kick, snare top/bottom, rack tom, floor tom, mono overhead, narrow stereo overheads, front-of-kit crush mic, one room/hall mic, optional hi-hat.",
+        "confidence": "cataloged practical variant"
+      },
+      {
+        "name": "Maps variation",
+        "notes": "Less crush, less room, softer cymbal balance, restrained snare/kick image. Karen O described a drum-machine/four-track demo origin; this does not document final-album drum-machine replacement.",
+        "confidence": "demo origin confirmed / drum production inference"
+      },
+      {
+        "name": "Y Control variation",
+        "notes": "Room/crush compression can be pushed harder. Pitchfork review language supports forceful percussion as a descriptive reference, not session technique documentation.",
+        "confidence": "review description / inferred adaptation"
+      },
+      {
+        "name": "Fast songs variation",
+        "notes": "Date with the Night, Rich, Tick, Black Tongue, and Pin prioritize transient urgency, controlled cymbal wash, and midrange snare/kick.",
+        "confidence": "inferred"
+      },
+      {
+        "name": "No No No variation",
+        "notes": "Automate room/crush mic upward during chaotic sections and keep close kit more controlled in tighter sections.",
+        "confidence": "inferred"
+      }
+    ],
+    "unknowns": [
+      "Exact drum kit.",
+      "Kick size/model/head choice.",
+      "Snare model, size, material, tuning, and dampening.",
+      "Tom sizes and tuning.",
+      "Cymbal models.",
+      "Drumheads, sticks, tape, wallets, gels, blankets, rings, tea towels, or other muffling.",
+      "Exact microphones.",
+      "Exact mic placements.",
+      "Overhead technique.",
+      "Room mic technique.",
+      "Console, preamps, compressors, EQ, tape machine, tape speed, tape formulation, converters.",
+      "Samples, triggers, quantization, or drum replacement.",
+      "Nature of credited track/digital editing."
+    ],
+    "finalPracticalChecklist": [
+      "Use a simple, well-tuned rock kit.",
+      "Use a 20 or 22 inch kick.",
+      "Use one rack tom and one floor tom unless the arrangement demands more.",
+      "Bring two snares: one cutting/ringy and one drier/fatter.",
+      "Use controlled cymbals, not overly bright or washy cymbals.",
+      "Book a small-to-medium live room with fast reflections and character.",
+      "Start with kick, snare top, mono overhead, and mono front-of-kit/crush mic.",
+      "Add stereo overheads, tom mics, snare bottom, far room, and hi-hat only as needed.",
+      "Make mono overhead or front-of-kit mic the emotional center of the drum sound.",
+      "Check phase from the mono kit picture outward.",
+      "Use compression for urgency, not polish.",
+      "Good compression options: 1176-style, dbx-style, Distressor-style, LA-3A-style, TG-style, console/tape saturation.",
+      "Avoid default sample replacement.",
+      "Keep cymbals controlled in tracking.",
+      "Automate or blend room/crush mics differently by song section."
+    ],
+    "lastVerified": "2026-07-06"
+  },
+  {
+    "id": "gang-of-four-solid-gold-dry-close-funk-punk",
+    "name": "Gang of Four / Solid Gold - dry-close, dense funk-punk drum configuration",
+    "status": "research-reference",
+    "appDataNotes": {
+      "setupTemplatesChanged": false,
+      "catalogingMode": true,
+      "candidateSetupLabels": [
+        {
+          "id": "solid-gold-minimum-close-funk",
+          "name": "Solid Gold Minimum Close Funk",
+          "channels": [
+            "Kick",
+            "Snare top",
+            "Hi-hat",
+            "Mono/narrow overhead"
+          ],
+          "note": "Label and channel grouping only; no planner coordinates created in this pass."
+        },
+        {
+          "id": "solid-gold-controlled-expanded",
+          "name": "Solid Gold Controlled Expanded",
+          "channels": [
+            "Kick",
+            "Snare top",
+            "Snare bottom",
+            "Hi-hat",
+            "Rack tom",
+            "Floor tom",
+            "Mono/narrow overhead",
+            "Optional front/crush",
+            "Optional low room"
+          ],
+          "note": "Label and channel grouping only; no compact app template entry created in this pass."
+        }
+      ]
+    },
+    "accuracyBoundary": {
+      "summary": "Confirmed source facts cover album/session credits, Abbey Road studio credit, Jimmy Douglass engineering credit, Hugo Burnham drum credit, and analog-tape reissue context. Exact drum room, kit, microphones, mic placements, console path, preamps, EQ, compression, tape speed, tape formulation, and song-specific drum setup changes were not publicly documented in reliable sources checked.",
+      "confirmedScope": [
+        "Solid Gold recorded January 1981 at Abbey Road, London",
+        "released March 1981",
+        "Hugo Burnham drums",
+        "Jimmy Douglass engineer",
+        "producer credit: Dave Allen, Hugo Burnham, Jimmy Douglass, Andy Gill, Jon King",
+        "77-81 box set remastered from original analog tapes"
+      ],
+      "undocumentedScope": [
+        "exact Abbey Road drum room",
+        "exact drum kit",
+        "exact snare/cymbals/heads/sticks/muffling",
+        "exact microphone list",
+        "exact mic placements",
+        "exact console path and outboard",
+        "song-specific drum setup changes"
+      ]
+    },
+    "sources": [
+      {
+        "id": "solid-gold-wikipedia",
+        "title": "Solid Gold (album)",
+        "url": "https://en.wikipedia.org/wiki/Solid_Gold_%28album%29",
+        "sourceType": "album/session overview",
+        "sourceScope": "album date, studio, producer credits, drummer credit, engineer credit, re-recording note for two songs",
+        "supports": [
+          "recorded January 1981",
+          "studio: Abbey Road, London",
+          "released March 1981",
+          "Hugo Burnham drums",
+          "Jimmy Douglass engineer",
+          "producer credits",
+          "Outside the Trains Don't Run on Time and He'd Send in the Army as re-recordings"
+        ]
+      },
+      {
+        "id": "musicradar-jimmy-douglass",
+        "title": "Jimmy Douglass on his early days working for Atlantic Records",
+        "url": "https://www.musicradar.com/artists/producers-engineers/there-was-a-back-door-to-the-studio-that-led-out-to-the-street-i-went-out-and-im-not-kidding-you-but-this-guy-pops-out-of-a-trash-can-it-was-ginger-baker-jimmy-douglass-on-his-early-days-working-for-atlantic-records",
+        "sourceType": "engineer interview",
+        "sourceScope": "confirms Jimmy Douglass worked with Gang of Four in London and describes the band as tight",
+        "supports": [
+          "Jimmy Douglass Gang of Four work context",
+          "band tightness comment",
+          "Jimmy Douglass funk/R&B engineering background context"
+        ]
+      },
+      {
+        "id": "the-current-hugo-burnham",
+        "title": "Interview with Hugo Burnham of Gang of Four",
+        "url": "https://www.thecurrent.org/feature/2021/06/05/interview-with-hugo-burnham-of-gang-of-four",
+        "sourceType": "band member interview",
+        "sourceScope": "supports Hugo Burnham's description of What We All Want and Jimmy Douglass/funk context",
+        "supports": [
+          "What We All Want as a key Hugo Burnham reference",
+          "working out funk with Jimmy Douglass context",
+          "performance/arrangement context"
+        ]
+      },
+      {
+        "id": "wired-gang-of-four-remixes",
+        "title": "Gang of Four Remixes It Up",
+        "url": "https://www.wired.com/2005/11/gang-of-four-remixes-it-up",
+        "sourceType": "article / track context",
+        "sourceScope": "supports Jon King quote context for heavy funk plus loud guitar and Jimmy Douglass denser-sound note",
+        "supports": [
+          "What We All Want as Solid Gold reference",
+          "heavy full-on funk with loud guitar phrase",
+          "Jimmy Douglass denser sound context"
+        ]
+      },
+      {
+        "id": "pitchfork-77-81-review",
+        "title": "Gang of Four: 77-81",
+        "url": "https://pitchfork.com/reviews/albums/gang-of-four-77-81",
+        "sourceType": "box set review / archival context",
+        "sourceScope": "supports band arrangement/process framing and Abbey Road demo/session context",
+        "supports": [
+          "Solid Gold as part of early 77-81 period",
+          "spare beats and clockwork riffs framing",
+          "Everything was thought out in advance quote context",
+          "1981 Abbey Road demo side context"
+        ]
+      },
+      {
+        "id": "pitchfork-77-81-news",
+        "title": "Gang of Four 77-81 Box Set With Unreleased Music Announced",
+        "url": "https://pitchfork.com/news/gang-of-four-77-81-box-set-with-unreleased-music-announced",
+        "sourceType": "reissue announcement",
+        "sourceScope": "supports original analog tape remaster context",
+        "supports": [
+          "Entertainment! and Solid Gold remastered from original analog tapes",
+          "77-81 box set archival context"
+        ]
+      },
+      {
+        "id": "abbey-road-about",
+        "title": "Abbey Road Studios - About Us",
+        "url": "https://www.abbeyroad.com/about-us",
+        "sourceType": "official studio history",
+        "sourceScope": "Abbey Road studio history context, not Solid Gold drum-session documentation",
+        "supports": [
+          "Abbey Road official historical context"
+        ]
+      },
+      {
+        "id": "abbey-road-studio-two",
+        "title": "Abbey Road Studio Two",
+        "url": "https://www.abbeyroad.com/studio-two",
+        "sourceType": "official studio room context",
+        "sourceScope": "Studio Two official room context; not proof Solid Gold drums were recorded there",
+        "supports": [
+          "Abbey Road Studio Two room and warm-acoustic context"
+        ]
+      },
+      {
+        "id": "abbey-road-gear",
+        "title": "Abbey Road Historic Gear & Instruments",
+        "url": "https://www.abbeyroad.com/gear-instruments",
+        "sourceType": "official gear context",
+        "sourceScope": "Abbey Road microphones/outboard/tape-machine context; not a Solid Gold session recall sheet",
+        "supports": [
+          "AKG D20 kick-drum context",
+          "AKG D19 drum overhead context",
+          "STC 4038 microphone context",
+          "1176, Fairchild, RS124, plates/chamber context",
+          "Studer A80/A820 analog tape-machine context"
+        ]
+      }
+    ],
+    "artistAlbumEngineer": {
+      "artist": "Gang of Four",
+      "album": "Solid Gold",
+      "year": 1981,
+      "recorded": "January 1981",
+      "released": "March 1981",
+      "drummer": "Hugo Burnham",
+      "engineer": "Jimmy Douglass",
+      "studio": "Abbey Road, London",
+      "producerCredit": [
+        "Dave Allen",
+        "Hugo Burnham",
+        "Jimmy Douglass",
+        "Andy Gill",
+        "Jon King"
+      ],
+      "mixingEngineer": "not publicly documented separately from production/engineering credits",
+      "confidence": "confirmed album/session context"
+    },
+    "soundGoal": {
+      "summary": "Tight, dry-to-semi-dry, dense, controlled, rhythmically exact funk-punk drums. The kit supports bass/guitar interlock rather than a large open rock drum picture.",
+      "qualities": [
+        "close-mic dominant",
+        "compact",
+        "disciplined",
+        "limited cymbal wash",
+        "little obvious room ambience",
+        "kick/snare/bass-forward",
+        "controlled cymbal energy"
+      ],
+      "referenceTrack": "What We All Want",
+      "sourceContext": [
+        "Jon King described the target as heavy full-on funk with loud guitar.",
+        "Hugo Burnham described What We All Want as the band working out its funk with Jimmy Douglass."
+      ],
+      "confidence": "inferred from source context and research notes"
+    },
+    "roomContext": {
+      "confirmed": [
+        "Solid Gold was recorded at Abbey Road, London."
+      ],
+      "unknown": [
+        "exact Abbey Road room used for drums",
+        "exact drum position",
+        "gobos, rugs, baffles, or isolation",
+        "whether Studio Two, Studio Three, or another Abbey Road space was used"
+      ],
+      "practicalSubstituteFromNotes": "Controlled medium live room, not a huge reflective rock room and not a fully dead booth. Some natural air, controlled with gobos, rugs, and baffles.",
+      "confidence": "confirmed studio / unknown room specifics"
+    },
+    "kitContext": {
+      "confirmed": [
+        "Hugo Burnham played drums."
+      ],
+      "unknown": [
+        "kit brand",
+        "drum sizes",
+        "snare model",
+        "cymbals",
+        "heads",
+        "sticks",
+        "muffling"
+      ],
+      "practicalSubstituteFromNotes": [
+        "compact articulate kit",
+        "20 or 22 inch kick",
+        "14 inch snare tuned medium-high with short decay",
+        "one rack tom",
+        "one floor tom",
+        "tight hi-hats",
+        "controlled crash/ride cymbals",
+        "avoid huge open cymbals, long tom sustain, and large room bloom"
+      ],
+      "confidence": "confirmed drummer / unknown kit specifics"
+    },
+    "micList": [
+      {
+        "source": "Kick drum",
+        "micOptions": [
+          "AKG D12/D20 type",
+          "EV RE20",
+          "Beyerdynamic M88",
+          "Sennheiser MD421",
+          "similar full-bodied dynamic mic"
+        ],
+        "pattern": "cardioid or directional dynamic",
+        "placement": "If kick is ported, just inside the hole. If unported, 4-8 inches outside resonant head. Aim between beater impact and shell center.",
+        "heightDistanceAngle": "Around beater height. Angle slightly off-axis if attack is too sharp.",
+        "phaseRelationship": "Check against overhead, snare, and any front-of-kit mic. Flip polarity if low end disappears when combined.",
+        "processingNotes": "Moderate internal damping. Avoid long boom. Add 60-80 Hz only if needed. Cut 250-450 Hz boxiness. Add 2-4 kHz only enough for definition. Avoid modern sub-heavy kick.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Snare top",
+        "micOptions": [
+          "Shure SM57",
+          "Beyerdynamic M201",
+          "Sennheiser MD441",
+          "Sennheiser MD421",
+          "similar tight cardioid dynamic"
+        ],
+        "pattern": "cardioid",
+        "placement": "1-2 inches above rim, angled 30-45 degrees toward center. Aim rear null toward hi-hat.",
+        "heightDistanceAngle": "Close and low for dry crack; slightly higher for more shell tone.",
+        "phaseRelationship": "Use snare top as kit phase anchor. Check against overhead and snare bottom if used.",
+        "processingNotes": "Tune medium-high with short decay. Use small damping if ring interferes with guitar/bass rhythm. Compress lightly to moderately. Avoid huge gated 1980s snare sound.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Snare bottom, optional",
+        "micOptions": [
+          "small dynamic",
+          "small-diaphragm condenser"
+        ],
+        "pattern": "cardioid",
+        "placement": "1-2 inches below wires, angled away from kick and hi-hat bleed.",
+        "heightDistanceAngle": "Close to wires, not aimed at shell.",
+        "phaseRelationship": "Invert polarity relative to snare top, then check by ear.",
+        "processingNotes": "Blend quietly for wire articulation. High-pass aggressively. Mute if it makes kit too bright or modern.",
+        "confidence": "guess"
+      },
+      {
+        "source": "Hi-hat",
+        "micOptions": [
+          "AKG C451",
+          "Neumann KM84/KM184",
+          "Beyerdynamic M201",
+          "Shure SM7B",
+          "Sennheiser MD441",
+          "similar"
+        ],
+        "pattern": "cardioid",
+        "placement": "4-8 inches above outer edge of hats, aimed slightly downward and away from snare.",
+        "heightDistanceAngle": "Close but not hyped. Avoid pointing directly at bell unless sharp tick is needed.",
+        "phaseRelationship": "Check with snare top and overhead.",
+        "processingNotes": "Use less hi-hat mic than expected. Rhythmic clarity should come from playing and arrangement. High-pass heavily. Use little or no compression.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Rack tom",
+        "micOptions": [
+          "Sennheiser MD421",
+          "Beyerdynamic M201",
+          "Shure SM57",
+          "AKG D19-style dynamic",
+          "similar"
+        ],
+        "pattern": "cardioid",
+        "placement": "1-2 inches above rim, aimed between center and edge.",
+        "heightDistanceAngle": "30-45 degrees downward.",
+        "phaseRelationship": "Check against overhead and floor tom.",
+        "processingNotes": "Short controlled sustain. Avoid stadium toms. Gate only if needed; manual cleanup is better than obvious gating.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Floor tom",
+        "micOptions": [
+          "Sennheiser MD421",
+          "EV RE20",
+          "Beyerdynamic M201",
+          "Shure SM57",
+          "similar dynamic"
+        ],
+        "pattern": "cardioid",
+        "placement": "1-3 inches above rim, angled toward center.",
+        "heightDistanceAngle": "Close enough to reduce room wash.",
+        "phaseRelationship": "Check against overhead and kick.",
+        "processingNotes": "Tune for short low-mid punctuation, not long resonance. Cut mud if it masks bass.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Overhead",
+        "micOptions": [
+          "Coles/STC 4038",
+          "RCA-style ribbon",
+          "Beyerdynamic M160",
+          "AKG D19/D20 type",
+          "Neumann KM84",
+          "AKG C451",
+          "Neumann U67/U87 used conservatively",
+          "controlled ribbon/dynamic/condenser"
+        ],
+        "pattern": "figure-8 for ribbon, cardioid for dynamic or condenser",
+        "placement": "Mono overhead or narrow stereo. For mono, 3-4 ft above snare, centered so snare and kick feel coherent. Aim at kick/snare relationship rather than cymbals. For stereo, use XY or narrow pair rather than wide spaced overheads.",
+        "heightDistanceAngle": "Lower than roomy rock setup. High enough to capture kit image, low enough to keep room controlled.",
+        "phaseRelationship": "Make this image mic and align close mics around it. Measure from snare to overhead and check in mono.",
+        "processingNotes": "Keep cymbals dark and controlled. Roll off excessive top end if overhead sounds too modern. Use little compression unless it improves groove.",
+        "confidence": "inferred"
+      },
+      {
+        "source": "Front-of-kit / mono crush mic, optional",
+        "micOptions": [
+          "Coles 4038",
+          "U47/U48-style condenser",
+          "RCA-style ribbon",
+          "Beyerdynamic M160",
+          "EV RE20",
+          "cheap dynamic"
+        ],
+        "pattern": "figure-8 for ribbon, cardioid or omni depending on mic and room",
+        "placement": "3-6 ft in front of kit, around kick-to-chest height, aimed between kick and snare.",
+        "heightDistanceAngle": "Below cymbal plane to avoid excessive cymbal wash.",
+        "phaseRelationship": "Check polarity against kick, snare, and overhead. Delay/slide only if it improves punch without modernizing the image.",
+        "processingNotes": "Compress hard only if blended quietly. This channel should thicken groove, not turn kit into big room-rock sound.",
+        "confidence": "guess"
+      },
+      {
+        "source": "Far room mic, optional and usually low in mix",
+        "micOptions": [
+          "ribbon",
+          "condenser pair",
+          "mono dynamic"
+        ],
+        "pattern": "any pattern that minimizes cymbal harshness",
+        "placement": "8-15 ft from kit only if room sounds controlled and flattering.",
+        "heightDistanceAngle": "Chest height or slightly above. Avoid high cymbal-heavy placement.",
+        "phaseRelationship": "Check in mono. Delay is optional but should not create a polished modern image.",
+        "processingNotes": "Blend very low, around 0-10 percent. Mute if drum sound loses dry, mechanical, interlocking quality.",
+        "confidence": "guess"
+      }
+    ],
+    "overallProcessingNotes": [
+      "Treat as analog, close-controlled, pre-sample production.",
+      "No reliable evidence was found for samples, triggers, drum replacement, quantization, or digital editing on Solid Gold.",
+      "Use tape or tape-style saturation, console EQ, and restrained compression.",
+      "Modern equivalents from research notes include Neve/API/Trident/TG-style preamps or console paths, 1176/DBX/RS124/Fairchild-style compression, and dark short plate or chamber reverb only if needed.",
+      "Avoid huge sub kick, ultra-bright cymbals, hard sample-like snare, wide stereo room mics, and obvious gated reverb."
+    ],
+    "variations": [
+      {
+        "name": "What We All Want",
+        "notes": "Main reference: dense, funk-driven, kick/snare/bass-forward, controlled cymbal energy.",
+        "confidence": "source-supported reference track / practical adaptation"
+      },
+      {
+        "name": "Paralysed",
+        "notes": "Use less room and overhead, keep snare dry, and leave arrangement space exposed.",
+        "confidence": "audible inference"
+      },
+      {
+        "name": "Outside the Trains Don't Run on Time / He'd Send in the Army",
+        "notes": "Public sources identify these as re-recordings of earlier singles; no reliable song-specific mic or mix documentation found.",
+        "confidence": "confirmed re-recording context / unknown technical setup"
+      }
+    ],
+    "whatMattersMost": [
+      "drummer restraint and consistency",
+      "tight kick/snare/hi-hat relationship with bass",
+      "controlled cymbals",
+      "close, phase-coherent drum capture",
+      "short drum sustain",
+      "limited room sound",
+      "analog-style density from console/tape/compression",
+      "arrangement space"
+    ],
+    "optionalElements": [
+      "exact Abbey Road room",
+      "exact historic microphones",
+      "exact drum brand",
+      "exact preamps",
+      "exact tape machine",
+      "far room mics",
+      "stereo overhead width",
+      "heavy parallel compression"
+    ],
+    "studioBookingChecklist": [
+      "Ask for a controlled medium live room.",
+      "Ask for gobos, rugs, and baffles.",
+      "Use a compact drum kit.",
+      "Use a controlled 14 inch snare with short decay.",
+      "Use tight hi-hats and restrained cymbals.",
+      "Prioritize dynamic and ribbon mics over very bright condensers.",
+      "Use close mics on kick, snare, toms, and hi-hat.",
+      "Use mono or narrow stereo overheads.",
+      "Add a front-of-kit mic only if it helps density.",
+      "Use room mics sparingly or not at all.",
+      "Use analog-style preamps or console color.",
+      "Use light to moderate compression.",
+      "Use short dark reverb only if needed.",
+      "Check phase constantly in mono.",
+      "Do not rely on sample replacement.",
+      "Do not over-edit the performance.",
+      "Keep drums rhythmically exposed."
+    ],
+    "unresolvedQuestions": [
+      "Exact Abbey Road room used for drums.",
+      "Exact kit brand and drum sizes.",
+      "Exact snare, cymbals, heads, sticks, and muffling.",
+      "Exact microphone list.",
+      "Exact mic placements.",
+      "Exact console path, preamps, EQ, compression, tape speed, and tape formulation.",
+      "Song-specific drum setup changes."
+    ],
+    "lastVerified": "2026-07-06"
+  }
+]

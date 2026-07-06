@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drum Mic Planner</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ------------------------------------------------------------------
+     Design tokens — light studio, high contrast
+     ------------------------------------------------------------------ */
+  :root {
+    --bg:        #e8e9eb;  /* viewport background        */
+    --panel:     #f7f7f8;  /* control surface            */
+    --panel-2:   #ffffff;  /* inputs                     */
+    --line:      #aeb1b7;  /* borders (strong)           */
+    --line-soft: #cdcfd3;
+    --text:      #141518;  /* primary text               */
+    --text-dim:  #4e525a;  /* labels, captions           */
+    --accent:    #b25c00;  /* selection amber, AA on white */
+    --danger:    #a8352b;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0; height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px;
+    overflow: hidden;
+  }
+
+  #app { display: flex; height: 100%; }
+
+  /* ---- 3D viewport ------------------------------------------------ */
+  #viewport { position: relative; flex: 1; min-width: 0; }
+  #viewport canvas { display: block; }
+
+  /* Hover tooltip — the only text in the viewer */
+  #tooltip {
+    position: absolute; display: none;
+    pointer-events: none; z-index: 5;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #fff; background: #202227;
+    padding: 3px 8px; border-radius: 3px;
+    white-space: nowrap;
+    transform: translate(12px, -24px);
+  }
+
+  /* ---- Control panel ---------------------------------------------- */
+  #panel {
+    width: 330px; flex: none;
+    background: var(--panel);
+    border-left: 1px solid var(--line);
+    display: flex; flex-direction: column;
+    overflow-y: auto;
+  }
+
+  header { padding: 14px 16px 12px; border-bottom: 1px solid var(--line); }
+  header h1 {
+    margin: 0; font-size: 13px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  header p { margin: 4px 0 0; font-size: 11px; color: var(--text-dim); }
+
+  section { padding: 12px 16px; border-bottom: 1px solid var(--line-soft); }
+
+  .sec-title {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.16em;
+    text-transform: uppercase; color: var(--text-dim);
+    margin: 0 0 10px;
+  }
+
+  .row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .row:last-child { margin-bottom: 0; }
+  .field { flex: 1; min-width: 0; }
+  .field label {
+    display: block; font-size: 10px; color: var(--text-dim);
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 3px;
+  }
+  input[type="number"], input[type="text"], select {
+    width: 100%;
+    background: var(--panel-2);
+    border: 1px solid var(--line); border-radius: 3px;
+    color: var(--text);
+    font: inherit; font-size: 12px;
+    padding: 5px 7px;
+  }
+  input:focus, select:focus, button:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: -1px;
+    border-color: var(--accent);
+  }
+  .check { display: flex; align-items: center; gap: 7px; font-size: 12px; }
+  .check input { accent-color: var(--accent); }
+
+  button {
+    font: inherit; font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+    background: var(--panel-2); color: var(--text);
+    border: 1px solid var(--line); border-radius: 3px;
+    padding: 6px 8px; cursor: pointer;
+    text-transform: uppercase;
+  }
+  button:hover { border-color: var(--text); background: #eef0f2; }
+  button.primary { border-color: var(--accent); color: var(--accent); }
+  button.primary:hover { background: rgba(178,92,0,0.08); }
+  button.danger:hover { border-color: var(--danger); color: var(--danger); }
+  .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+  /* ---- Toast -------------------------------------------------------- */
+  #toast {
+    position: absolute; left: 50%; bottom: 20px; transform: translateX(-50%);
+    background: #202227; border: 1px solid var(--accent);
+    color: #f6c67d; font-size: 11px; letter-spacing: 0.08em;
+    padding: 7px 14px; border-radius: 3px;
+    opacity: 0; transition: opacity 0.25s; pointer-events: none;
+    text-transform: uppercase; z-index: 6;
+  }
+  #toast.show { opacity: 1; }
+
+  .hint { font-size: 10px; color: var(--text-dim); margin: 10px 0 0; line-height: 1.5; }
+
+  @media (prefers-reduced-motion: reduce) { #toast { transition: none; } }
+  @media (max-width: 760px) {
+    #app { flex-direction: column; }
+    #panel { width: 100%; border-left: none; border-top: 1px solid var(--line); max-height: 45%; }
+  }
+</style>
+
+<!-- Three.js from CDN, no build step -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+
+<div id="app">
+  <div id="viewport">
+    <div id="tooltip"></div>
+    <div id="toast"></div>
+  </div>
+
+  <div id="panel">
+    <header>
+      <h1>Drum Mic Planner</h1>
+      <p>Sketch the kit, place the mics. Units in feet. Hover objects for names; click a mic to select it.</p>
+    </header>
+
+    <!-- Room -->
+    <section>
+      <p class="sec-title">Room</p>
+      <div class="row">
+        <div class="field"><label for="roomW">Width</label>
+          <input type="number" id="roomW" min="6" max="100" step="0.5"></div>
+        <div class="field"><label for="roomL">Length</label>
+          <input type="number" id="roomL" min="6" max="100" step="0.5"></div>
+        <div class="field"><label for="roomH">Height</label>
+          <input type="number" id="roomH" min="6" max="40" step="0.5"></div>
+      </div>
+      <div class="row">
+        <label class="check"><input type="checkbox" id="showCables"> Show cable runs to stage box</label>
+      </div>
+    </section>
+
+    <!-- Kit sizes -->
+    <section>
+      <p class="sec-title">Kit sizes</p>
+      <div class="row">
+        <div class="field"><label for="kitPiece">Piece</label>
+          <select id="kitPiece"></select></div>
+        <div class="field"><label for="kitSize">Standard size</label>
+          <select id="kitSize"></select></div>
+      </div>
+    </section>
+
+    <!-- Microphone editor -->
+    <section>
+      <p class="sec-title">Microphone</p>
+      <div class="row">
+        <div class="field"><label for="micSelect">Selected mic</label>
+          <select id="micSelect"></select></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="micName">Name</label>
+          <input type="text" id="micName"></div>
+        <div class="field"><label for="micType">Body type</label>
+          <select id="micType">
+            <option value="dynamic">Dynamic</option>
+            <option value="pencil">Pencil condenser</option>
+            <option value="ldc">Large condenser</option>
+            <option value="kickmic">Kick mic</option>
+          </select></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="micX">X (L / R)</label>
+          <input type="number" id="micX" step="0.1"></div>
+        <div class="field"><label for="micY">Y (F / B)</label>
+          <input type="number" id="micY" step="0.1"></div>
+        <div class="field"><label for="micZ">Z (height)</label>
+          <input type="number" id="micZ" step="0.1"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="micPattern">Pattern</label>
+          <select id="micPattern">
+            <option value="cardioid">Cardioid</option>
+            <option value="supercardioid">Supercardioid</option>
+            <option value="omni">Omni</option>
+            <option value="figure-8">Figure-8</option>
+          </select></div>
+        <div class="field"><label for="micTarget">Target</label>
+          <select id="micTarget"></select></div>
+      </div>
+      <div class="row">
+        <label class="check"><input type="checkbox" id="micStand"> Stand</label>
+      </div>
+      <div class="btn-grid" style="margin-top:10px;">
+        <button id="btnAddMic" class="primary">Add mic</button>
+        <button id="btnDeleteMic" class="danger">Delete mic</button>
+      </div>
+    </section>
+
+    <!-- Gobos -->
+    <section>
+      <p class="sec-title">Gobos</p>
+      <div class="row">
+        <div class="field"><label for="goboSelect">Selected gobo</label>
+          <select id="goboSelect"></select></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="goboX">X</label>
+          <input type="number" id="goboX" step="0.1"></div>
+        <div class="field"><label for="goboY">Y</label>
+          <input type="number" id="goboY" step="0.1"></div>
+        <div class="field"><label for="goboRot">Angle (deg)</label>
+          <input type="number" id="goboRot" step="5"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="goboW">Width</label>
+          <input type="number" id="goboW" min="1" max="12" step="0.5"></div>
+        <div class="field"><label for="goboH">Height</label>
+          <input type="number" id="goboH" min="1" max="12" step="0.5"></div>
+      </div>
+      <div class="btn-grid" style="margin-top:10px;">
+        <button id="btnAddGobo" class="primary">Add gobo</button>
+        <button id="btnDeleteGobo" class="danger">Delete gobo</button>
+      </div>
+    </section>
+
+    <!-- Setup actions -->
+    <section>
+      <p class="sec-title">Setup</p>
+      <div class="btn-grid">
+        <button id="btnSave">Save setup</button>
+        <button id="btnLoad">Load saved</button>
+        <button id="btnExport">Export JSON</button>
+        <button id="btnImport">Import JSON</button>
+        <button id="btnShare">Copy share link</button>
+        <button id="btnReset">Reset default</button>
+      </div>
+      <input type="file" id="importFile" accept=".json,application/json" style="display:none;">
+      <p class="hint">
+        Drag to orbit · right-drag to pan · scroll to zoom.
+        Save keeps the setup in this browser. Share link encodes the full setup in the URL.
+      </p>
+    </section>
+  </div>
+</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+/* ====================================================================
+   Coordinate convention (app space, feet):
+     X = left(-)/right(+), Y = front(-)/back(+), Z = height, floor Z=0.
+   Three.js is Y-up, so:  scene.x = X,  scene.y = Z,  scene.z = -Y.
+   ==================================================================== */
+const toScene = (x, y, z) => new THREE.Vector3(x, z, -y);
+
+const STORAGE_KEY = 'drum-mic-planner-v2';
+const PATTERNS = ['cardioid', 'supercardioid', 'omni', 'figure-8'];
+const MIC_TYPES = ['dynamic', 'pencil', 'ldc', 'kickmic'];
+
+/* Standard sizes per kit piece: [diameter_in, depth_in] or diameter_in for cymbals. */
+const KIT_SIZES = {
+  'kick':   [[18,14],[20,14],[22,14],[22,16],[24,14]],
+  'snare':  [[13,6],[14,5],[14,5.5],[14,6.5]],
+  'tom-hi': [[8,7],[10,8],[12,9],[13,10]],
+  'tom-lo': [[14,14],[16,16],[18,16]],
+  'hihat':  [13,14,15],
+  'crash':  [16,17,18,19,20],
+  'ride':   [20,21,22,24],
+};
+const inft = n => n / 12;
+
+/* --------------------------------------------------------------------
+   Default state
+   -------------------------------------------------------------------- */
+function createDefaultState() {
+  return {
+    room: { width: 18, length: 24, height: 10 },
+    options: { cables: true },
+    // Drummer sits at +Y (back), front of kit faces -Y.
+    kit: [
+      { id: 'kick',   name: 'Kick',       type: 'kick',   x:  0.0, y:  0.0, z: 0.97, diameter: inft(22), height: inft(14) },
+      { id: 'snare',  name: 'Snare',      type: 'drum',   x: -1.1, y:  1.3, z: 1.20, diameter: inft(14), height: inft(5.5) },
+      { id: 'tom-hi', name: 'Hi/Mid Tom', type: 'drum',   x: -0.3, y:  0.6, z: 2.35, diameter: inft(12), height: inft(9) },
+      { id: 'tom-lo', name: 'Low Tom',    type: 'drum',   x:  1.8, y:  1.3, z: 1.30, diameter: inft(16), height: inft(16) },
+      { id: 'hihat',  name: 'Hi Hat',     type: 'cymbal', x: -2.3, y:  1.0, z: 2.55, diameter: inft(14) },
+      { id: 'crash',  name: 'Crash',      type: 'cymbal', x: -2.0, y: -0.9, z: 3.60, diameter: inft(18) },
+      { id: 'ride',   name: 'Ride',       type: 'cymbal', x:  2.1, y: -0.5, z: 3.20, diameter: inft(20) },
+    ],
+    mics: [
+      { id: 'mic-kick-in', name: 'Kick In',    micType: 'kickmic', x:  0.0, y: -1.4, z: 0.9, pattern: 'cardioid', target: 'Kick',       stand: true },
+      { id: 'mic-snare',   name: 'Snare Top',  micType: 'dynamic', x: -1.6, y:  1.8, z: 1.9, pattern: 'cardioid', target: 'Snare',      stand: true },
+      { id: 'mic-tom',     name: 'Tom',        micType: 'dynamic', x: -0.5, y:  0.1, z: 3.1, pattern: 'cardioid', target: 'Hi/Mid Tom', stand: true },
+      { id: 'mic-tom-lo',  name: 'Floor Tom',  micType: 'dynamic', x:  2.4, y:  1.9, z: 2.1, pattern: 'cardioid', target: 'Low Tom',    stand: true },
+      { id: 'mic-hihat',   name: 'Hi Hat',     micType: 'pencil',  x: -2.7, y:  1.6, z: 3.2, pattern: 'cardioid', target: 'Hi Hat',     stand: true },
+      { id: 'mic-oh-l',    name: 'Overhead L', micType: 'pencil',  x: -2.6, y:  0.2, z: 6.2, pattern: 'cardioid', target: 'Snare',      stand: true },
+      { id: 'mic-oh-r',    name: 'Overhead R', micType: 'pencil',  x:  2.6, y:  0.2, z: 6.2, pattern: 'cardioid', target: 'Snare',      stand: true },
+      { id: 'mic-room',    name: 'Room Mic',   micType: 'ldc',     x:  0.0, y: -8.0, z: 4.5, pattern: 'omni',     target: 'Kick',       stand: true },
+    ],
+    gobos: [
+      { id: 'gobo-l', name: 'Gobo L', x: -5.5, y: 2.5, rot:  25, w: 4, h: 6 },
+      { id: 'gobo-r', name: 'Gobo R', x:  5.5, y: 2.5, rot: -25, w: 4, h: 6 },
+    ],
+  };
+}
+
+/* --------------------------------------------------------------------
+   App state
+   -------------------------------------------------------------------- */
+let state = createDefaultState();
+let selectedMicIndex = 0;
+let selectedGoboIndex = 0;
+
+/* --------------------------------------------------------------------
+   Three.js scene setup — light studio
+   -------------------------------------------------------------------- */
+const viewport = document.getElementById('viewport');
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xe8e9eb);
+scene.fog = new THREE.Fog(0xe8e9eb, 70, 160);
+
+const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 500);
+camera.position.set(16, 14, 22);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+viewport.prepend(renderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 2.5, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.maxPolarAngle = Math.PI * 0.52;
+
+// Bright, even light so dark objects read crisply against the light floor.
+scene.add(new THREE.AmbientLight(0xffffff, 0.85));
+const key = new THREE.DirectionalLight(0xffffff, 1.4);
+key.position.set(14, 26, 12);
+scene.add(key);
+const fill = new THREE.DirectionalLight(0xdfe6f0, 0.5);
+fill.position.set(-12, 12, -16);
+scene.add(fill);
+
+const roomGroup  = new THREE.Group();
+const kitGroup   = new THREE.Group();
+const micsGroup  = new THREE.Group();
+const goboGroup  = new THREE.Group();
+const cableGroup = new THREE.Group();
+scene.add(roomGroup, kitGroup, micsGroup, goboGroup, cableGroup);
+
+// Meshes the pointer can hit; each carries userData { label, micIndex? }.
+let pickables = [];
+
+/* --------------------------------------------------------------------
+   Shared materials — dark objects on a light ground for contrast
+   -------------------------------------------------------------------- */
+const MAT = {
+  floor:   new THREE.MeshStandardMaterial({ color: 0xdcdddf, roughness: 1 }),
+  shell:   new THREE.MeshStandardMaterial({ color: 0x2f343b, roughness: 0.7, metalness: 0.1 }),
+  head:    new THREE.MeshStandardMaterial({ color: 0xf2efe7, roughness: 0.55 }),           // coated heads
+  cymbal:  new THREE.MeshStandardMaterial({ color: 0xc9a24b, roughness: 0.32, metalness: 0.8, side: THREE.DoubleSide }),
+  pole:    new THREE.MeshStandardMaterial({ color: 0x6b7078, roughness: 0.45, metalness: 0.6 }),
+  micBody: new THREE.MeshStandardMaterial({ color: 0x24272c, roughness: 0.45, metalness: 0.4 }),
+  micSel:  new THREE.MeshStandardMaterial({ color: 0xb25c00, roughness: 0.4, metalness: 0.3, emissive: 0x2e1800 }),
+  grille:  new THREE.MeshStandardMaterial({ color: 0x8b9097, roughness: 0.6, metalness: 0.7 }),
+  grilleSel: new THREE.MeshStandardMaterial({ color: 0xd08a33, roughness: 0.5, metalness: 0.5 }),
+  cable:   new THREE.MeshStandardMaterial({ color: 0x2a2c30, roughness: 0.9 }),
+  wood:    new THREE.MeshStandardMaterial({ color: 0x9c7b52, roughness: 0.85 }),
+  fabric:  new THREE.MeshStandardMaterial({ color: 0x7d8289, roughness: 1 }),
+  box:     new THREE.MeshStandardMaterial({ color: 0x33363b, roughness: 0.7 }),
+};
+
+/* --------------------------------------------------------------------
+   Helpers
+   -------------------------------------------------------------------- */
+function disposeGroup(group) {
+  group.traverse(obj => {
+    if (obj.geometry) obj.geometry.dispose();
+    // Shared MAT materials are reused; only dispose one-off materials.
+    if (obj.material && obj.userData.ownMaterial) {
+      (Array.isArray(obj.material) ? obj.material : [obj.material]).forEach(m => m.dispose());
+    }
+  });
+  group.clear();
+}
+
+function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+
+function clampMic(mic) {
+  const hw = state.room.width / 2 + 1, hl = state.room.length / 2 + 1;
+  mic.x = clamp(mic.x, -hw, hw);
+  mic.y = clamp(mic.y, -hl, hl);
+  mic.z = clamp(mic.z, 0.1, state.room.height + 1);
+}
+
+function clampGobo(g) {
+  const hw = state.room.width / 2, hl = state.room.length / 2;
+  g.x = clamp(g.x, -hw, hw);
+  g.y = clamp(g.y, -hl, hl);
+  g.w = clamp(g.w, 1, 12);
+  g.h = clamp(g.h, 1, Math.min(12, state.room.height));
+}
+
+function findDrumByName(name) {
+  return state.kit.find(d => d.name === name) || null;
+}
+
+function stageBoxPos() {
+  // Cable snake lands at the back-right corner of the room.
+  return { x: state.room.width / 2 - 1.2, y: state.room.length / 2 - 1.2 };
+}
+
+function pick(mesh, label, micIndex) {
+  mesh.userData.label = label;
+  if (micIndex !== undefined) mesh.userData.micIndex = micIndex;
+  pickables.push(mesh);
+  return mesh;
+}
+
+/* --------------------------------------------------------------------
+   rebuildRoom()
+   -------------------------------------------------------------------- */
+function rebuildRoom() {
+  disposeGroup(roomGroup);
+  const { width: w, length: l, height: h } = state.room;
+
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(w, l), MAT.floor);
+  floor.rotation.x = -Math.PI / 2;
+  roomGroup.add(floor);
+
+  // Exact 1-ft grid across the footprint.
+  const gridPts = [];
+  for (let x = Math.ceil(-w / 2); x <= Math.floor(w / 2); x++) gridPts.push(x, 0, -l / 2, x, 0, l / 2);
+  for (let z = Math.ceil(-l / 2); z <= Math.floor(l / 2); z++) gridPts.push(-w / 2, 0, z, w / 2, 0, z);
+  const gridGeo = new THREE.BufferGeometry();
+  gridGeo.setAttribute('position', new THREE.Float32BufferAttribute(gridPts, 3));
+  const grid = new THREE.LineSegments(gridGeo, new THREE.LineBasicMaterial({ color: 0xb6b9be }));
+  grid.position.y = 0.01;
+  grid.material.transparent = true;
+  roomGroup.add(grid);
+
+  // Room volume: crisp edges, barely-there walls.
+  const box = new THREE.BoxGeometry(w, h, l);
+  const faces = new THREE.Mesh(box, new THREE.MeshBasicMaterial({
+    color: 0x8090a8, transparent: true, opacity: 0.04, side: THREE.BackSide, depthWrite: false,
+  }));
+  faces.position.y = h / 2;
+  faces.userData.ownMaterial = true;
+  roomGroup.add(faces);
+
+  const edges = new THREE.LineSegments(
+    new THREE.EdgesGeometry(box),
+    new THREE.LineBasicMaterial({ color: 0x55585e })
+  );
+  edges.position.y = h / 2;
+  roomGroup.add(edges);
+
+  // Front-of-room chevron on the floor (hover for the name).
+  const tri = new THREE.Shape();
+  tri.moveTo(-0.5, 0); tri.lineTo(0.5, 0); tri.lineTo(0, -0.7); tri.closePath();
+  const chevron = new THREE.Mesh(new THREE.ShapeGeometry(tri),
+    new THREE.MeshBasicMaterial({ color: 0x55585e }));
+  chevron.rotation.x = -Math.PI / 2;
+  chevron.position.copy(toScene(0, -l / 2 + 0.9, 0.02));
+  chevron.userData.ownMaterial = true;
+  roomGroup.add(pick(chevron, 'Front of room'));
+
+  // Stage box in the back corner — where all cable runs land.
+  if (state.options.cables) {
+    const sb = stageBoxPos();
+    const boxMesh = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.35, 0.8), MAT.box);
+    boxMesh.position.copy(toScene(sb.x, sb.y, 0.18));
+    roomGroup.add(pick(boxMesh, 'Stage box'));
+  }
+}
+
+/* --------------------------------------------------------------------
+   rebuildKit()
+   -------------------------------------------------------------------- */
+function addPole(group, x, y, topZ) {
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, topZ, 8), MAT.pole);
+  pole.position.copy(toScene(x, y, topZ / 2));
+  group.add(pole);
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.4, 0.05, 16), MAT.pole);
+  base.position.copy(toScene(x, y, 0.03));
+  group.add(base);
+}
+
+function rebuildKit() {
+  disposeGroup(kitGroup);
+
+  for (const d of state.kit) {
+    const r = d.diameter / 2;
+
+    if (d.type === 'kick') {
+      const shell = new THREE.Mesh(new THREE.CylinderGeometry(r, r, d.height, 28), MAT.shell);
+      shell.rotation.x = Math.PI / 2;              // axis along front/back
+      shell.position.copy(toScene(d.x, d.y, d.z));
+      kitGroup.add(pick(shell, `${d.name} · ${Math.round(d.diameter * 12)}"×${Math.round(d.height * 12)}"`));
+      const head = new THREE.Mesh(new THREE.CircleGeometry(r * 0.98, 28), MAT.head);
+      head.position.copy(toScene(d.x, d.y - d.height / 2 - 0.01, d.z));
+      kitGroup.add(head);
+
+    } else if (d.type === 'drum') {
+      const shell = new THREE.Mesh(new THREE.CylinderGeometry(r, r, d.height, 28), MAT.shell);
+      shell.position.copy(toScene(d.x, d.y, d.z));
+      kitGroup.add(pick(shell, `${d.name} · ${Math.round(d.diameter * 12)}"×${Math.round(d.height * 12)}"`));
+      const head = new THREE.Mesh(new THREE.CircleGeometry(r * 0.98, 28), MAT.head);
+      head.rotation.x = -Math.PI / 2;
+      head.position.copy(toScene(d.x, d.y, d.z + d.height / 2 + 0.01));
+      kitGroup.add(head);
+      if (d.z - d.height / 2 > 0.35) addPole(kitGroup, d.x, d.y, d.z - d.height / 2);
+
+    } else if (d.type === 'cymbal') {
+      const disk = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.025, 28), MAT.cymbal);
+      disk.position.copy(toScene(d.x, d.y, d.z));
+      disk.rotation.z = 0.12;
+      kitGroup.add(pick(disk, `${d.name} · ${Math.round(d.diameter * 12)}"`));
+      const bell = new THREE.Mesh(new THREE.SphereGeometry(r * 0.16, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2), MAT.cymbal);
+      bell.position.copy(toScene(d.x, d.y, d.z + 0.02));
+      kitGroup.add(bell);
+      addPole(kitGroup, d.x, d.y, d.z - 0.02);
+      if (d.id === 'hihat') {
+        const bottom = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.97, r * 0.97, 0.025, 28), MAT.cymbal);
+        bottom.position.copy(toScene(d.x, d.y, d.z - 0.12));
+        kitGroup.add(bottom);
+      }
+    }
+  }
+}
+
+/* --------------------------------------------------------------------
+   Mic body geometry — recognizable studio silhouettes.
+   Each builder returns a Group whose forward axis is local +Y and whose
+   rear (cable connector) sits at local -Y.
+   -------------------------------------------------------------------- */
+function buildMicMesh(micType, selected) {
+  const g = new THREE.Group();
+  const body = selected ? MAT.micSel : MAT.micBody;
+  const grille = selected ? MAT.grilleSel : MAT.grille;
+
+  if (micType === 'pencil') {
+    // Small-diaphragm condenser: long thin tube, short grille tip.
+    const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.42, 12), body);
+    g.add(tube);
+    const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.03, 0.07, 12), grille);
+    tip.position.y = 0.245;
+    g.add(tip);
+    g.userData.rear = 0.21;
+
+  } else if (micType === 'ldc') {
+    // Large-diaphragm condenser: fat body, tall headbasket, shockmount ring.
+    const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.085, 0.085, 0.26, 16), body);
+    tube.position.y = -0.06;
+    g.add(tube);
+    const basket = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.085, 0.15, 16), grille);
+    basket.position.y = 0.145;
+    g.add(basket);
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(0.09, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), grille);
+    dome.position.y = 0.22;
+    g.add(dome);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.13, 0.012, 8, 24), MAT.pole);
+    ring.rotation.x = Math.PI / 2;
+    ring.position.y = -0.06;
+    g.add(ring);
+    g.userData.rear = 0.19;
+
+  } else if (micType === 'kickmic') {
+    // Kick mic: stubby wedge body with a bulbous grille (D112-ish).
+    const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.075, 0.16, 14), body);
+    tube.position.y = -0.08;
+    g.add(tube);
+    const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.095, 16, 12), grille);
+    bulb.scale.set(1, 1.15, 1);
+    bulb.position.y = 0.06;
+    g.add(bulb);
+    g.userData.rear = 0.16;
+
+  } else {
+    // Dynamic (57-style): slim handle, tapered grille head.
+    const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.048, 0.2, 12), body);
+    handle.position.y = -0.05;
+    g.add(handle);
+    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.052, 0.042, 0.05, 12), body);
+    neck.position.y = 0.075;
+    g.add(neck);
+    const head = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.052, 0.08, 12), grille);
+    head.position.y = 0.14;
+    g.add(head);
+    g.userData.rear = 0.15;
+  }
+  return g;
+}
+
+function micDirection(mic) {
+  const from = toScene(mic.x, mic.y, mic.z);
+  const drum = findDrumByName(mic.target);
+  const to = drum ? toScene(drum.x, drum.y, drum.z) : toScene(0, 0.5, 1.5);
+  const dir = to.sub(from);
+  return dir.lengthSq() < 1e-6 ? new THREE.Vector3(0, -1, 0) : dir.normalize();
+}
+
+/* --------------------------------------------------------------------
+   rebuildMics() — stand, shaped body, aim line for selection, cables
+   -------------------------------------------------------------------- */
+function rebuildMics() {
+  disposeGroup(micsGroup);
+  disposeGroup(cableGroup);
+  const UP = new THREE.Vector3(0, 1, 0);
+  const sb = stageBoxPos();
+
+  state.mics.forEach((mic, i) => {
+    const selected = i === selectedMicIndex;
+    const pos = toScene(mic.x, mic.y, mic.z);
+    const dir = micDirection(mic);
+    const quat = new THREE.Quaternion().setFromUnitVectors(UP, dir);
+
+    if (mic.stand) {
+      const stand = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, mic.z, 8), MAT.pole);
+      stand.position.copy(toScene(mic.x, mic.y, mic.z / 2));
+      micsGroup.add(stand);
+      const base = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.35, 0.04, 12), MAT.pole);
+      base.position.copy(toScene(mic.x, mic.y, 0.02));
+      micsGroup.add(base);
+    }
+
+    // Shaped mic body, aimed at the target.
+    const bodyGroup = buildMicMesh(mic.micType, selected);
+    bodyGroup.position.copy(pos);
+    bodyGroup.quaternion.copy(quat);
+    bodyGroup.children.forEach(child => pick(child, `${mic.name} · ${mic.pattern}`, i));
+    micsGroup.add(bodyGroup);
+
+    // Selected mic: dashed aim line to its target so placement reads instantly.
+    if (selected && findDrumByName(mic.target)) {
+      const drum = findDrumByName(mic.target);
+      const lineGeo = new THREE.BufferGeometry().setFromPoints([pos, toScene(drum.x, drum.y, drum.z)]);
+      const line = new THREE.Line(lineGeo, new THREE.LineDashedMaterial({
+        color: 0xb25c00, dashSize: 0.25, gapSize: 0.18,
+      }));
+      line.computeLineDistances();
+      line.userData.ownMaterial = true;
+      micsGroup.add(line);
+    }
+
+    // Cable run: connector -> sag to floor by the stand -> along floor -> stage box.
+    if (state.options.cables) {
+      const rear = bodyGroup.userData.rear || 0.15;
+      const connector = pos.clone().add(dir.clone().multiplyScalar(-rear - 0.02));
+      const toBoxX = Math.sign(sb.x - mic.x) * 0.35 || 0.35;
+      const toBoxY = Math.sign(sb.y - mic.y) * 0.35 || 0.35;
+      const pts = [
+        connector,
+        toScene(mic.x + toBoxX * 0.5, mic.y + toBoxY * 0.5, Math.max(0.15, mic.z * 0.45)),
+        toScene(mic.x + toBoxX, mic.y + toBoxY, 0.03),
+        toScene((mic.x + sb.x) / 2, (mic.y + sb.y) / 2, 0.03),
+        toScene(sb.x, sb.y, 0.3),
+      ];
+      const curve = new THREE.CatmullRomCurve3(pts);
+      const cable = new THREE.Mesh(new THREE.TubeGeometry(curve, 40, 0.016, 6), MAT.cable);
+      cableGroup.add(cable);
+    }
+  });
+}
+
+/* --------------------------------------------------------------------
+   rebuildGobos() — freestanding acoustic panels on feet
+   -------------------------------------------------------------------- */
+function rebuildGobos() {
+  disposeGroup(goboGroup);
+
+  state.gobos.forEach((g, i) => {
+    const grp = new THREE.Group();
+    const t = 0.3;                       // panel thickness (ft)
+
+    const frame = new THREE.Mesh(new THREE.BoxGeometry(g.w, g.h, t), MAT.wood);
+    frame.position.y = g.h / 2 + 0.15;   // raised on feet
+    grp.add(pick(frame, `${g.name} · ${g.w}'×${g.h}'`));
+
+    // Absorptive fabric faces, slightly inset.
+    for (const side of [1, -1]) {
+      const face = new THREE.Mesh(new THREE.PlaneGeometry(g.w * 0.9, g.h * 0.9), MAT.fabric);
+      face.position.set(0, g.h / 2 + 0.15, side * (t / 2 + 0.005));
+      if (side < 0) face.rotation.y = Math.PI;
+      grp.add(face);
+    }
+
+    // Feet.
+    for (const fx of [-g.w / 2 + 0.4, g.w / 2 - 0.4]) {
+      const foot = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.15, 1.2), MAT.wood);
+      foot.position.set(fx, 0.075, 0);
+      grp.add(foot);
+    }
+
+    grp.position.copy(toScene(g.x, g.y, 0));
+    grp.rotation.y = THREE.MathUtils.degToRad(g.rot);
+    goboGroup.add(grp);
+  });
+}
+
+/* --------------------------------------------------------------------
+   renderScene()
+   -------------------------------------------------------------------- */
+function renderScene() {
+  pickables = [];
+  rebuildRoom();
+  rebuildKit();
+  rebuildMics();
+  rebuildGobos();
+}
+
+/* --------------------------------------------------------------------
+   Hover tooltip + click-to-select (raycasting)
+   -------------------------------------------------------------------- */
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+const tooltip = document.getElementById('tooltip');
+let downPos = null;
+
+function rayHit(e) {
+  const rect = renderer.domElement.getBoundingClientRect();
+  pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+  pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(pickables, false);
+  return hits.length ? hits[0].object : null;
+}
+
+renderer.domElement.addEventListener('pointermove', e => {
+  const hit = rayHit(e);
+  if (hit) {
+    tooltip.textContent = hit.userData.label;
+    tooltip.style.display = 'block';
+    const rect = viewport.getBoundingClientRect();
+    tooltip.style.left = (e.clientX - rect.left) + 'px';
+    tooltip.style.top  = (e.clientY - rect.top) + 'px';
+    renderer.domElement.style.cursor = hit.userData.micIndex !== undefined ? 'pointer' : 'default';
+  } else {
+    tooltip.style.display = 'none';
+    renderer.domElement.style.cursor = 'default';
+  }
+});
+renderer.domElement.addEventListener('pointerleave', () => { tooltip.style.display = 'none'; });
+
+renderer.domElement.addEventListener('pointerdown', e => { downPos = [e.clientX, e.clientY]; });
+renderer.domElement.addEventListener('pointerup', e => {
+  // Treat as a click only if the pointer barely moved (not an orbit drag).
+  if (!downPos) return;
+  const moved = Math.hypot(e.clientX - downPos[0], e.clientY - downPos[1]);
+  downPos = null;
+  if (moved > 5) return;
+  const hit = rayHit(e);
+  if (hit && hit.userData.micIndex !== undefined) {
+    selectedMicIndex = hit.userData.micIndex;
+    els.micSelect.value = String(selectedMicIndex);
+    updateMicForm();
+    rebuildMics();
+  }
+});
+
+/* --------------------------------------------------------------------
+   UI wiring
+   -------------------------------------------------------------------- */
+const $ = id => document.getElementById(id);
+const els = {
+  roomW: $('roomW'), roomL: $('roomL'), roomH: $('roomH'), showCables: $('showCables'),
+  kitPiece: $('kitPiece'), kitSize: $('kitSize'),
+  micSelect: $('micSelect'), micName: $('micName'), micType: $('micType'),
+  micX: $('micX'), micY: $('micY'), micZ: $('micZ'),
+  micPattern: $('micPattern'), micTarget: $('micTarget'), micStand: $('micStand'),
+  goboSelect: $('goboSelect'), goboX: $('goboX'), goboY: $('goboY'),
+  goboRot: $('goboRot'), goboW: $('goboW'), goboH: $('goboH'),
+};
+
+function toast(msg) {
+  const t = $('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toast._h);
+  toast._h = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+/* ---- Kit sizes ---- */
+function sizeLabel(entry) {
+  return Array.isArray(entry) ? `${entry[0]}" × ${entry[1]}"` : `${entry}"`;
+}
+
+function updateKitPieceList() {
+  els.kitPiece.innerHTML = '';
+  state.kit.forEach((d, i) => {
+    const opt = document.createElement('option');
+    opt.value = i; opt.textContent = d.name;
+    els.kitPiece.appendChild(opt);
+  });
+  updateKitSizeList();
+}
+
+function updateKitSizeList() {
+  const d = state.kit[parseInt(els.kitPiece.value, 10) || 0];
+  els.kitSize.innerHTML = '';
+  if (!d) return;
+  const sizes = KIT_SIZES[d.id] || [];
+  let matched = false;
+  sizes.forEach((s, i) => {
+    const opt = document.createElement('option');
+    opt.value = i; opt.textContent = sizeLabel(s);
+    const dia = Array.isArray(s) ? s[0] : s;
+    const dep = Array.isArray(s) ? s[1] : null;
+    const isMatch = Math.abs(d.diameter - inft(dia)) < 0.01 &&
+                    (dep === null || Math.abs(d.height - inft(dep)) < 0.01);
+    if (isMatch) { opt.selected = true; matched = true; }
+    els.kitSize.appendChild(opt);
+  });
+  if (!matched) {
+    const opt = document.createElement('option');
+    opt.value = 'custom'; opt.textContent = 'Custom'; opt.selected = true;
+    els.kitSize.appendChild(opt);
+  }
+}
+
+function applyKitSize() {
+  const d = state.kit[parseInt(els.kitPiece.value, 10) || 0];
+  if (!d || els.kitSize.value === 'custom') return;
+  const s = (KIT_SIZES[d.id] || [])[parseInt(els.kitSize.value, 10)];
+  if (s === undefined) return;
+
+  if (Array.isArray(s)) {
+    // Keep the batter head at the same height while depth changes.
+    const topZ = d.type === 'drum' ? d.z + d.height / 2 : null;
+    d.diameter = inft(s[0]);
+    d.height = inft(s[1]);
+    if (d.type === 'kick') {
+      d.z = d.diameter / 2 + 0.05;         // rests on the floor
+    } else if (topZ !== null) {
+      d.z = Math.max(d.height / 2 + 0.05, topZ - d.height / 2);
+    }
+  } else {
+    d.diameter = inft(s);                   // cymbal: diameter only
+  }
+  rebuildKit();
+  rebuildMics();                            // aim lines may shift with the drum
+  updateKitSizeList();
+}
+
+els.kitPiece.addEventListener('change', updateKitSizeList);
+els.kitSize.addEventListener('change', applyKitSize);
+
+/* ---- Mic list / form ---- */
+function updateMicList() {
+  els.micSelect.innerHTML = '';
+  state.mics.forEach((m, i) => {
+    const opt = document.createElement('option');
+    opt.value = i; opt.textContent = m.name;
+    els.micSelect.appendChild(opt);
+  });
+  selectedMicIndex = clamp(selectedMicIndex, 0, Math.max(0, state.mics.length - 1));
+  els.micSelect.value = String(selectedMicIndex);
+
+  els.micTarget.innerHTML = '';
+  const none = document.createElement('option');
+  none.value = ''; none.textContent = '— none —';
+  els.micTarget.appendChild(none);
+  state.kit.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d.name; opt.textContent = d.name;
+    els.micTarget.appendChild(opt);
+  });
+}
+
+function updateMicForm() {
+  const mic = state.mics[selectedMicIndex];
+  const disabled = !mic;
+  ['micName','micType','micX','micY','micZ','micPattern','micTarget','micStand']
+    .forEach(k => els[k].disabled = disabled);
+  if (!mic) return;
+  els.micName.value = mic.name;
+  els.micType.value = mic.micType;
+  els.micX.value = mic.x;
+  els.micY.value = mic.y;
+  els.micZ.value = mic.z;
+  els.micPattern.value = mic.pattern;
+  els.micTarget.value = findDrumByName(mic.target) ? mic.target : '';
+  els.micStand.checked = !!mic.stand;
+}
+
+/* ---- Gobo list / form ---- */
+function updateGoboList() {
+  els.goboSelect.innerHTML = '';
+  state.gobos.forEach((g, i) => {
+    const opt = document.createElement('option');
+    opt.value = i; opt.textContent = g.name;
+    els.goboSelect.appendChild(opt);
+  });
+  selectedGoboIndex = clamp(selectedGoboIndex, 0, Math.max(0, state.gobos.length - 1));
+  els.goboSelect.value = String(selectedGoboIndex);
+}
+
+function updateGoboForm() {
+  const g = state.gobos[selectedGoboIndex];
+  const disabled = !g;
+  ['goboX','goboY','goboRot','goboW','goboH'].forEach(k => els[k].disabled = disabled);
+  if (!g) return;
+  els.goboX.value = g.x;
+  els.goboY.value = g.y;
+  els.goboRot.value = g.rot;
+  els.goboW.value = g.w;
+  els.goboH.value = g.h;
+}
+
+function updateRoomForm() {
+  els.roomW.value = state.room.width;
+  els.roomL.value = state.room.length;
+  els.roomH.value = state.room.height;
+  els.showCables.checked = !!state.options.cables;
+}
+
+function refreshAll() {
+  updateRoomForm();
+  updateKitPieceList();
+  updateMicList();
+  updateMicForm();
+  updateGoboList();
+  updateGoboForm();
+  renderScene();
+}
+
+/* ---- Room inputs ---- */
+[['roomW','width'],['roomL','length'],['roomH','height']].forEach(([id, key]) => {
+  els[id].addEventListener('input', () => {
+    const v = parseFloat(els[id].value);
+    if (!Number.isFinite(v) || v < 4) return;
+    state.room[key] = clamp(v, 4, 200);
+    state.mics.forEach(clampMic);
+    state.gobos.forEach(clampGobo);
+    renderScene();
+    updateMicForm();
+    updateGoboForm();
+  });
+});
+els.showCables.addEventListener('change', () => {
+  state.options.cables = els.showCables.checked;
+  renderScene();
+});
+
+/* ---- Mic selection + edits ---- */
+els.micSelect.addEventListener('change', () => {
+  selectedMicIndex = parseInt(els.micSelect.value, 10) || 0;
+  updateMicForm();
+  rebuildMics();
+});
+
+function onMicEdit() {
+  const mic = state.mics[selectedMicIndex];
+  if (!mic) return;
+  mic.name = els.micName.value.trim() || mic.name;
+  mic.micType = els.micType.value;
+  mic.x = parseFloat(els.micX.value);
+  mic.y = parseFloat(els.micY.value);
+  mic.z = parseFloat(els.micZ.value);
+  mic.pattern = els.micPattern.value;
+  mic.target = els.micTarget.value;
+  mic.stand = els.micStand.checked;
+  if (!Number.isFinite(mic.x)) mic.x = 0;
+  if (!Number.isFinite(mic.y)) mic.y = 0;
+  if (!Number.isFinite(mic.z)) mic.z = 1;
+  clampMic(mic);
+  // Rebuild mics only, but pickables include kit/room — rebuild all pick lists cheaply.
+  renderScene();
+  els.micSelect.options[selectedMicIndex].textContent = mic.name;
+}
+['micName','micX','micY','micZ'].forEach(k => els[k].addEventListener('input', onMicEdit));
+['micType','micPattern','micTarget','micStand'].forEach(k => els[k].addEventListener('change', onMicEdit));
+
+$('btnAddMic').addEventListener('click', () => {
+  state.mics.push({
+    id: 'mic-' + Date.now(),
+    name: 'Mic ' + (state.mics.length + 1),
+    micType: 'dynamic',
+    x: 0, y: -4, z: 3,
+    pattern: 'cardioid',
+    target: state.kit[0] ? state.kit[0].name : '',
+    stand: true,
+  });
+  selectedMicIndex = state.mics.length - 1;
+  updateMicList(); updateMicForm(); renderScene();
+  toast('Mic added');
+});
+
+$('btnDeleteMic').addEventListener('click', () => {
+  if (!state.mics.length) return;
+  const name = state.mics[selectedMicIndex].name;
+  state.mics.splice(selectedMicIndex, 1);
+  selectedMicIndex = Math.max(0, selectedMicIndex - 1);
+  updateMicList(); updateMicForm(); renderScene();
+  toast(`Deleted ${name}`);
+});
+
+/* ---- Gobo selection + edits ---- */
+els.goboSelect.addEventListener('change', () => {
+  selectedGoboIndex = parseInt(els.goboSelect.value, 10) || 0;
+  updateGoboForm();
+});
+
+function onGoboEdit() {
+  const g = state.gobos[selectedGoboIndex];
+  if (!g) return;
+  g.x = parseFloat(els.goboX.value);
+  g.y = parseFloat(els.goboY.value);
+  g.rot = parseFloat(els.goboRot.value);
+  g.w = parseFloat(els.goboW.value);
+  g.h = parseFloat(els.goboH.value);
+  if (!Number.isFinite(g.x)) g.x = 0;
+  if (!Number.isFinite(g.y)) g.y = 0;
+  if (!Number.isFinite(g.rot)) g.rot = 0;
+  if (!Number.isFinite(g.w)) g.w = 4;
+  if (!Number.isFinite(g.h)) g.h = 6;
+  clampGobo(g);
+  renderScene();
+}
+['goboX','goboY','goboRot','goboW','goboH'].forEach(k => els[k].addEventListener('input', onGoboEdit));
+
+$('btnAddGobo').addEventListener('click', () => {
+  state.gobos.push({
+    id: 'gobo-' + Date.now(),
+    name: 'Gobo ' + (state.gobos.length + 1),
+    x: 0, y: -5, rot: 0, w: 4, h: 6,
+  });
+  selectedGoboIndex = state.gobos.length - 1;
+  updateGoboList(); updateGoboForm(); renderScene();
+  toast('Gobo added');
+});
+
+$('btnDeleteGobo').addEventListener('click', () => {
+  if (!state.gobos.length) return;
+  const name = state.gobos[selectedGoboIndex].name;
+  state.gobos.splice(selectedGoboIndex, 1);
+  selectedGoboIndex = Math.max(0, selectedGoboIndex - 1);
+  updateGoboList(); updateGoboForm(); renderScene();
+  toast(`Deleted ${name}`);
+});
+
+/* --------------------------------------------------------------------
+   Persistence: localStorage
+   -------------------------------------------------------------------- */
+function saveToLocalStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    toast('Setup saved');
+  } catch {
+    toast('Save failed');
+  }
+}
+
+function loadFromLocalStorage() {
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if (!raw) { toast('No saved setup'); return; }
+  const parsed = validateState(raw);
+  if (!parsed) { toast('Saved setup unreadable'); return; }
+  state = parsed;
+  selectedMicIndex = 0;
+  selectedGoboIndex = 0;
+  refreshAll();
+  toast('Setup loaded');
+}
+
+/* --------------------------------------------------------------------
+   Validation — enough to keep bad JSON from breaking the app.
+   Also migrates v1 exports (no micType/gobos/options).
+   -------------------------------------------------------------------- */
+function validateState(json) {
+  let obj;
+  try { obj = typeof json === 'string' ? JSON.parse(json) : json; }
+  catch { return null; }
+  if (!obj || typeof obj !== 'object') return null;
+
+  const def = createDefaultState();
+  const num = (v, fb) => (Number.isFinite(Number(v)) ? Number(v) : fb);
+
+  const room = obj.room || {};
+  const out = {
+    room: {
+      width:  clamp(num(room.width,  def.room.width),  4, 200),
+      length: clamp(num(room.length, def.room.length), 4, 200),
+      height: clamp(num(room.height, def.room.height), 4, 60),
+    },
+    options: { cables: obj.options ? !!obj.options.cables : true },
+    kit: [], mics: [], gobos: [],
+  };
+
+  const kitSrc = Array.isArray(obj.kit) && obj.kit.length ? obj.kit : def.kit;
+  out.kit = kitSrc.map((d, i) => ({
+    id: String(d.id || 'drum-' + i),
+    name: String(d.name || 'Drum ' + (i + 1)),
+    type: ['kick','drum','cymbal'].includes(d.type) ? d.type : 'drum',
+    x: num(d.x, 0), y: num(d.y, 0), z: num(d.z, 1),
+    diameter: clamp(num(d.diameter, 1.2), 0.3, 4),
+    height: clamp(num(d.height, 0.8), 0.02, 3),
+  }));
+
+  const micsSrc = Array.isArray(obj.mics) ? obj.mics : [];
+  out.mics = micsSrc.map((m, i) => ({
+    id: String(m.id || 'mic-' + i),
+    name: String(m.name || 'Mic ' + (i + 1)),
+    micType: MIC_TYPES.includes(m.micType) ? m.micType : 'dynamic',
+    x: num(m.x, 0), y: num(m.y, 0), z: num(m.z, 3),
+    pattern: PATTERNS.includes(m.pattern) ? m.pattern : 'cardioid',
+    target: String(m.target || ''),
+    stand: !!m.stand,
+  }));
+
+  const goboSrc = Array.isArray(obj.gobos) ? obj.gobos : [];
+  out.gobos = goboSrc.map((g, i) => ({
+    id: String(g.id || 'gobo-' + i),
+    name: String(g.name || 'Gobo ' + (i + 1)),
+    x: num(g.x, 0), y: num(g.y, 0),
+    rot: clamp(num(g.rot, 0), -180, 180),
+    w: clamp(num(g.w, 4), 1, 12),
+    h: clamp(num(g.h, 6), 1, 12),
+  }));
+
+  // Clamp positions against the imported room.
+  const saved = state; state = out;
+  out.mics.forEach(clampMic);
+  out.gobos.forEach(clampGobo);
+  state = saved;
+
+  return out;
+}
+
+/* --------------------------------------------------------------------
+   Export / import / share
+   -------------------------------------------------------------------- */
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'drum-mic-setup.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('JSON exported');
+}
+
+function importJSON(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    const parsed = validateState(reader.result);
+    if (!parsed) { toast('File is not a valid setup'); return; }
+    state = parsed;
+    selectedMicIndex = 0;
+    selectedGoboIndex = 0;
+    refreshAll();
+    toast('Setup imported');
+  };
+  reader.onerror = () => toast('Could not read file');
+  reader.readAsText(file);
+}
+
+function encodeShare() {
+  return btoa(unescape(encodeURIComponent(JSON.stringify(state))));
+}
+function decodeShare(hash) {
+  try { return decodeURIComponent(escape(atob(hash))); }
+  catch { return null; }
+}
+
+$('btnSave').addEventListener('click', saveToLocalStorage);
+$('btnLoad').addEventListener('click', loadFromLocalStorage);
+$('btnExport').addEventListener('click', exportJSON);
+$('btnImport').addEventListener('click', () => $('importFile').click());
+$('importFile').addEventListener('change', e => {
+  if (e.target.files[0]) importJSON(e.target.files[0]);
+  e.target.value = '';
+});
+$('btnReset').addEventListener('click', () => {
+  state = createDefaultState();
+  selectedMicIndex = 0;
+  selectedGoboIndex = 0;
+  refreshAll();
+  toast('Reset to default kit');
+});
+$('btnShare').addEventListener('click', async () => {
+  const url = location.origin + location.pathname + '#' + encodeShare();
+  history.replaceState(null, '', '#' + encodeShare());
+  try {
+    await navigator.clipboard.writeText(url);
+    toast('Share link copied');
+  } catch {
+    window.prompt('Copy this share link:', url);
+  }
+});
+
+/* --------------------------------------------------------------------
+   Boot: URL hash > localStorage > defaults
+   -------------------------------------------------------------------- */
+(function boot() {
+  let loaded = null;
+  if (location.hash.length > 1) {
+    const json = decodeShare(location.hash.slice(1));
+    if (json) loaded = validateState(json);
+  }
+  if (!loaded) {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) loaded = validateState(raw);
+  }
+  if (loaded) state = loaded;
+  refreshAll();
+})();
+
+/* --------------------------------------------------------------------
+   Resize + render loop
+   -------------------------------------------------------------------- */
+function onResize() {
+  const w = viewport.clientWidth, h = viewport.clientHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}
+window.addEventListener('resize', onResize);
+onResize();
+
+renderer.setAnimationLoop(() => {
+  controls.update();
+  renderer.render(scene, camera);
+});
+</script>
+</body>
+</html>

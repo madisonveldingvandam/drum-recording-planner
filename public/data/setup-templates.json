@@ -1,0 +1,168 @@
+[
+  {
+    "id": "minimal-four",
+    "name": "Minimal 4 Mic",
+    "description": "Kick, snare, spaced overhead pair.",
+    "mics": [
+      {
+        "name": "Kick In",
+        "catalogId": "akg-d112",
+        "channel": 1,
+        "target": "Kick",
+        "x": 0,
+        "y": -1.4,
+        "z": 0.9
+      },
+      {
+        "name": "Snare Top",
+        "catalogId": "shure-sm57",
+        "channel": 2,
+        "target": "Snare",
+        "x": 1.6,
+        "y": 1.8,
+        "z": 1.9
+      },
+      {
+        "name": "Overhead L",
+        "catalogId": "neumann-km184",
+        "channel": 3,
+        "target": "Snare",
+        "x": 2.6,
+        "y": 0.2,
+        "z": 6.2
+      },
+      {
+        "name": "Overhead R",
+        "catalogId": "neumann-km184",
+        "channel": 4,
+        "target": "Snare",
+        "x": -2.6,
+        "y": 0.2,
+        "z": 6.2
+      }
+    ]
+  },
+  {
+    "id": "glyn-johns",
+    "name": "Glyn Johns",
+    "description": "Kick, snare, one overhead, one side mic.",
+    "mics": [
+      {
+        "name": "Kick",
+        "catalogId": "akg-d112",
+        "channel": 1,
+        "target": "Kick",
+        "x": 0,
+        "y": -1.7,
+        "z": 1
+      },
+      {
+        "name": "Snare",
+        "catalogId": "shure-sm57",
+        "channel": 2,
+        "target": "Snare",
+        "x": 1.6,
+        "y": 1.8,
+        "z": 1.9
+      },
+      {
+        "name": "Overhead",
+        "catalogId": "akg-c414",
+        "channel": 3,
+        "target": "Snare",
+        "x": 0,
+        "y": 0.6,
+        "z": 6.4
+      },
+      {
+        "name": "Side",
+        "catalogId": "akg-c414",
+        "channel": 4,
+        "target": "Snare",
+        "x": -3.2,
+        "y": 1.1,
+        "z": 3.5
+      }
+    ]
+  },
+  {
+    "id": "full-close",
+    "name": "Full Close Mic",
+    "description": "Kick, snare, toms, hat, overhead pair, room.",
+    "mics": [
+      {
+        "name": "Kick In",
+        "catalogId": "akg-d112",
+        "channel": 1,
+        "target": "Kick",
+        "x": 0,
+        "y": -1.4,
+        "z": 0.9
+      },
+      {
+        "name": "Snare Top",
+        "catalogId": "shure-sm57",
+        "channel": 2,
+        "target": "Snare",
+        "x": 1.6,
+        "y": 1.8,
+        "z": 1.9
+      },
+      {
+        "name": "Tom",
+        "catalogId": "sennheiser-md421",
+        "channel": 3,
+        "target": "Hi/Mid Tom",
+        "x": 0.75,
+        "y": 0.1,
+        "z": 3.1
+      },
+      {
+        "name": "Floor Tom",
+        "catalogId": "sennheiser-md421",
+        "channel": 4,
+        "target": "Low Tom",
+        "x": -2.4,
+        "y": 1.9,
+        "z": 2.1
+      },
+      {
+        "name": "Hi Hat",
+        "catalogId": "neumann-km184",
+        "channel": 5,
+        "target": "Hi Hat",
+        "x": 2.8,
+        "y": 1.6,
+        "z": 3.2
+      },
+      {
+        "name": "Overhead L",
+        "catalogId": "neumann-km184",
+        "channel": 6,
+        "target": "Snare",
+        "x": 2.6,
+        "y": 0.2,
+        "z": 6.2
+      },
+      {
+        "name": "Overhead R",
+        "catalogId": "neumann-km184",
+        "channel": 7,
+        "target": "Snare",
+        "x": -2.6,
+        "y": 0.2,
+        "z": 6.2
+      },
+      {
+        "name": "Room Mic",
+        "catalogId": "akg-c414",
+        "channel": 8,
+        "target": "Kick",
+        "x": 0,
+        "y": -8,
+        "z": 4.5,
+        "pattern": "omni"
+      }
+    ]
+  }
+]

@@ -1,0 +1,20 @@
+{
+  "name": "drum-mic-planner",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "build:site": "VITE_BASE_PATH=/drum-recording-planner/ vite build --outDir dist-site",
+    "build:cargo": "vite build --outDir dist-cargo && node scripts/create-cargo-embed.mjs dist-cargo deploy/cargo-custom-html.html",
+    "preview": "vite preview --host 127.0.0.1"
+  },
+  "dependencies": {
+    "lucide": "^0.468.0",
+    "three": "^0.160.0"
+  },
+  "devDependencies": {
+    "vite": "^8.1.3"
+  }
+}

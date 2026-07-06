@@ -1,4 +1,4 @@
-export const APP_SCHEMA_VERSION = 3;
+export const APP_SCHEMA_VERSION = 4;
 
 export const SPEED_OF_SOUND_FTPS = 1125;
 
@@ -36,7 +36,38 @@ export const KIT_SIZES = {
   ride: [20, 21, 22, 24],
 };
 
+export const GOBO_STANDARD_SIZES = [
+  { id: 'amp-3x2', name: '3 x 2 ft amp screen', w: 3, h: 2, depth: 0.25 },
+  { id: 'portable-2x4', name: '2 x 4 ft portable panel', w: 2, h: 4, depth: 0.25 },
+  { id: 'low-4x3', name: '4 x 3 ft low screen', w: 4, h: 3, depth: 0.3 },
+  { id: 'square-4x4', name: '4 x 4 ft square panel', w: 4, h: 4, depth: 0.3 },
+  { id: 'tall-3x6', name: '3 x 6 ft tall panel', w: 3, h: 6, depth: 0.3 },
+  { id: 'large-4x6', name: '4 x 6 ft large panel', w: 4, h: 6, depth: 0.3 },
+  { id: 'vocal-4x7', name: '4 x 7 ft vocal screen', w: 4, h: 7, depth: 0.3 },
+  { id: 'full-4x8', name: '4 x 8 ft full baffle', w: 4, h: 8, depth: 0.3 },
+];
+
+export const GOBO_KINDS = [
+  { id: 'panel', name: 'Gobo panel', depth: 0.3 },
+  { id: 'curtain', name: 'Curtain', depth: 0.05 },
+  { id: 'blanket', name: 'Sound blanket', depth: 0.08 },
+  { id: 'custom', name: 'Custom item', depth: 0.25 },
+];
+
 export const inft = (inches) => inches / 12;
+
+export function goboStandardSizeById(id) {
+  return GOBO_STANDARD_SIZES.find((size) => size.id === id) || null;
+}
+
+export function inferGoboStandardSize(gobo) {
+  if (!gobo) return null;
+  return (
+    GOBO_STANDARD_SIZES.find(
+      (size) => Math.abs(Number(gobo.w) - size.w) < 0.05 && Math.abs(Number(gobo.h) - size.h) < 0.05,
+    ) || null
+  );
+}
 
 export function createId(prefix = 'id') {
   if (globalThis.crypto?.randomUUID) return `${prefix}-${globalThis.crypto.randomUUID()}`;
@@ -250,9 +281,6 @@ export function createDefaultState() {
         notes: '',
       },
     ],
-    gobos: [
-      { id: 'gobo-l', name: 'Gobo L', x: -5.5, y: 2.5, rot: 25, w: 4, h: 6 },
-      { id: 'gobo-r', name: 'Gobo R', x: 5.5, y: 2.5, rot: -25, w: 4, h: 6 },
-    ],
+    gobos: [],
   };
 }

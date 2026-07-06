@@ -486,24 +486,30 @@ export function createPlannerScene({ viewport, tooltip, onMicSelect, onGoboSelec
 
     state.gobos.forEach((gobo, index) => {
       const group = new THREE.Group();
-      const thickness = 0.3;
+      const kind = gobo.kind || 'panel';
+      const thickness = Math.max(0.02, Number(gobo.depth) || (kind === 'curtain' ? 0.05 : 0.3));
       const selected = index === selectedGoboIndex;
+      const bodyMaterial = selected ? MAT.micSel : kind === 'curtain' || kind === 'blanket' ? MAT.fabric : MAT.wood;
 
-      const frame = new THREE.Mesh(new THREE.BoxGeometry(gobo.w, gobo.h, thickness), selected ? MAT.micSel : MAT.wood);
+      const frame = new THREE.Mesh(new THREE.BoxGeometry(gobo.w, gobo.h, thickness), bodyMaterial);
       frame.position.y = gobo.h / 2 + 0.15;
       group.add(pick(frame, `${gobo.name} · ${gobo.w}'×${gobo.h}'`, { goboIndex: index }));
 
-      for (const side of [1, -1]) {
-        const face = new THREE.Mesh(new THREE.PlaneGeometry(gobo.w * 0.9, gobo.h * 0.9), MAT.fabric);
-        face.position.set(0, gobo.h / 2 + 0.15, side * (thickness / 2 + 0.005));
-        if (side < 0) face.rotation.y = Math.PI;
-        group.add(face);
+      if (kind === 'panel' || kind === 'custom') {
+        for (const side of [1, -1]) {
+          const face = new THREE.Mesh(new THREE.PlaneGeometry(gobo.w * 0.9, gobo.h * 0.9), MAT.fabric);
+          face.position.set(0, gobo.h / 2 + 0.15, side * (thickness / 2 + 0.005));
+          if (side < 0) face.rotation.y = Math.PI;
+          group.add(face);
+        }
       }
 
-      for (const footX of [-gobo.w / 2 + 0.4, gobo.w / 2 - 0.4]) {
-        const foot = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.15, 1.2), MAT.wood);
-        foot.position.set(footX, 0.075, 0);
-        group.add(foot);
+      if (kind !== 'curtain') {
+        for (const footX of [-gobo.w / 2 + 0.4, gobo.w / 2 - 0.4]) {
+          const foot = new THREE.Mesh(new THREE.BoxGeometry(0.35, 0.15, 1.2), MAT.wood);
+          foot.position.set(footX, 0.075, 0);
+          group.add(foot);
+        }
       }
 
       group.position.copy(toScene(gobo.x, gobo.y, 0));
@@ -606,8 +612,8 @@ export function createPlannerScene({ viewport, tooltip, onMicSelect, onGoboSelec
   return {
     setState(nextState) {
       state = nextState;
-      selectedMicIndex = Math.min(selectedMicIndex, Math.max(0, state.mics.length - 1));
-      selectedGoboIndex = Math.min(selectedGoboIndex, Math.max(0, state.gobos.length - 1));
+      selectedMicIndex = state.mics.length ? Math.max(0, Math.min(selectedMicIndex, state.mics.length - 1)) : 0;
+      selectedGoboIndex = state.gobos.length ? Math.max(0, Math.min(selectedGoboIndex, state.gobos.length - 1)) : 0;
       renderScene();
     },
     setSelectedMicIndex(index) {

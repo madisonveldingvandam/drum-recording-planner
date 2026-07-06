@@ -349,6 +349,44 @@ section {
   margin-bottom: 10px;
 }
 
+.advanced-panel {
+  margin-top: 12px;
+  border-top: 1px solid var(--line-soft);
+}
+
+.advanced-panel summary {
+  display: block;
+  padding: 10px 0 4px;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.advanced-panel summary::marker,
+.advanced-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.advanced-panel summary::before {
+  content: "+";
+  display: inline-block;
+  width: 14px;
+  color: var(--accent);
+}
+
+.advanced-panel[open] summary::before {
+  content: "-";
+}
+
+.advanced-panel > .row,
+.advanced-panel > .slider-stack,
+.advanced-panel > .field {
+  margin-top: 8px;
+}
+
 .slider-field {
   margin-bottom: 0;
 }

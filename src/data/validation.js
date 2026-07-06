@@ -1,11 +1,14 @@
 import {
   APP_SCHEMA_VERSION,
+  GOBO_KINDS,
   KIT_SIZES,
   MIC_TYPES,
   PATTERNS,
   clone,
   createDefaultState,
   createId,
+  goboStandardSizeById,
+  inferGoboStandardSize,
   inft,
 } from './defaultState.js';
 
@@ -22,6 +25,31 @@ function text(value, fallback = '') {
   return typeof value === 'string' ? value : fallback;
 }
 
+function near(value, expected) {
+  return Math.abs(num(value, 0) - expected) < 0.01;
+}
+
+function isLegacyDefaultGoboSet(gobos) {
+  if (!Array.isArray(gobos) || gobos.length !== 2) return false;
+  const [left, right] = gobos;
+  return (
+    left?.id === 'gobo-l' &&
+    right?.id === 'gobo-r' &&
+    left?.name === 'Gobo L' &&
+    right?.name === 'Gobo R' &&
+    near(left.x, -5.5) &&
+    near(left.y, 2.5) &&
+    near(left.rot, 25) &&
+    near(left.w, 4) &&
+    near(left.h, 6) &&
+    near(right.x, 5.5) &&
+    near(right.y, 2.5) &&
+    near(right.rot, -25) &&
+    near(right.w, 4) &&
+    near(right.h, 6)
+  );
+}
+
 export function clampMicToRoom(mic, room) {
   const halfWidth = room.width / 2 + 1;
   const halfLength = room.length / 2 + 1;
@@ -34,11 +62,17 @@ export function clampMicToRoom(mic, room) {
 export function clampGoboToRoom(gobo, room) {
   const halfWidth = room.width / 2;
   const halfLength = room.length / 2;
+  const inferredSize = inferGoboStandardSize(gobo);
+  const standardSize = goboStandardSizeById(gobo.standardSizeId) || inferredSize;
+  const kind = GOBO_KINDS.find((item) => item.id === gobo.kind) || GOBO_KINDS[0];
   gobo.x = clamp(num(gobo.x, 0), -halfWidth, halfWidth);
   gobo.y = clamp(num(gobo.y, 0), -halfLength, halfLength);
   gobo.rot = clamp(num(gobo.rot, 0), -180, 180);
   gobo.w = clamp(num(gobo.w, 4), 1, 12);
   gobo.h = clamp(num(gobo.h, 6), 1, Math.min(12, room.height));
+  gobo.standardSizeId = standardSize?.id || 'custom';
+  gobo.kind = kind.id;
+  gobo.depth = clamp(num(gobo.depth, standardSize?.depth || kind.depth || 0.3), 0.02, 2);
   return gobo;
 }
 
@@ -117,17 +151,20 @@ export function validatePlannerState(input) {
     ),
   );
 
-  const goboSource = Array.isArray(obj.gobos) ? obj.gobos : def.gobos;
+  const goboSource = isLegacyDefaultGoboSet(obj.gobos) ? [] : Array.isArray(obj.gobos) ? obj.gobos : def.gobos;
   out.gobos = goboSource.map((gobo, index) =>
     clampGoboToRoom(
       {
         id: text(gobo.id, `gobo-${index + 1}`),
         name: text(gobo.name, `Gobo ${index + 1}`),
+        standardSizeId: text(gobo.standardSizeId, ''),
+        kind: text(gobo.kind, 'panel'),
         x: num(gobo.x, 0),
         y: num(gobo.y, 0),
         rot: num(gobo.rot, 0),
         w: num(gobo.w, 4),
         h: num(gobo.h, 6),
+        depth: num(gobo.depth, 0.3),
       },
       out.room,
     ),

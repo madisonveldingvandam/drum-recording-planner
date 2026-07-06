@@ -17,7 +17,19 @@ import {
   Upload,
   createIcons,
 } from 'lucide';
-import { clone, createDefaultState, createId, inft, KIT_SIZES, MIC_TYPES, PATTERNS } from './data/defaultState.js';
+import {
+  GOBO_KINDS,
+  GOBO_STANDARD_SIZES,
+  KIT_SIZES,
+  MIC_TYPES,
+  PATTERNS,
+  clone,
+  createDefaultState,
+  createId,
+  goboStandardSizeById,
+  inferGoboStandardSize,
+  inft,
+} from './data/defaultState.js';
 import {
   applyKitSize,
   clampGoboToRoom,
@@ -133,22 +145,29 @@ app.innerHTML = `
 
         <div class="tab-panel" data-panel="kit">
           <section>
-            <p class="sec-title">Kit piece</p>
-            <div class="row">
-              <label class="field"><span>Piece</span><select id="kitPiece"></select></label>
-              <label class="field"><span>Standard size</span><select id="kitSize"></select></label>
-            </div>
+            <p class="sec-title">Kit position</p>
             <div class="slider-stack">
-              <label class="field slider-field"><span>X <output id="kitXValue"></output></span><input id="kitX" type="range" step="0.1" /></label>
-              <label class="field slider-field"><span>Y <output id="kitYValue"></output></span><input id="kitY" type="range" step="0.1" /></label>
-              <label class="field slider-field"><span>Z <output id="kitZValue"></output></span><input id="kitZ" type="range" min="0.1" step="0.1" /></label>
-              <label class="field slider-field"><span>Diameter <output id="kitDiaValue"></output></span><input id="kitDia" type="range" min="6" max="30" step="1" /></label>
-              <label class="field slider-field"><span>Depth <output id="kitDepthValue"></output></span><input id="kitDepth" type="range" min="1" max="24" step="0.5" /></label>
+              <label class="field slider-field"><span>Kit X <output id="kitGroupXValue"></output></span><input id="kitGroupX" type="range" step="0.25" /></label>
+              <label class="field slider-field"><span>Kit Y <output id="kitGroupYValue"></output></span><input id="kitGroupY" type="range" step="0.25" /></label>
             </div>
             <div class="button-row">
               <button id="btnStandardKit" type="button"><i data-lucide="refresh-cw"></i><span>Standard right-handed kit</span></button>
               <button id="btnLeftHandedKit" type="button"><i data-lucide="refresh-cw"></i><span>Standard left-handed kit</span></button>
             </div>
+            <details class="advanced-panel">
+              <summary>Drum nudges</summary>
+              <div class="row">
+                <label class="field"><span>Piece</span><select id="kitPiece"></select></label>
+                <label class="field"><span>Standard size</span><select id="kitSize"></select></label>
+              </div>
+              <div class="slider-stack">
+                <label class="field slider-field"><span>X <output id="kitXValue"></output></span><input id="kitX" type="range" step="0.1" /></label>
+                <label class="field slider-field"><span>Y <output id="kitYValue"></output></span><input id="kitY" type="range" step="0.1" /></label>
+                <label class="field slider-field"><span>Z <output id="kitZValue"></output></span><input id="kitZ" type="range" min="0.1" step="0.1" /></label>
+                <label class="field slider-field"><span>Diameter <output id="kitDiaValue"></output></span><input id="kitDia" type="range" min="6" max="30" step="1" /></label>
+                <label class="field slider-field"><span>Depth <output id="kitDepthValue"></output></span><input id="kitDepth" type="range" min="1" max="24" step="0.5" /></label>
+              </div>
+            </details>
           </section>
         </div>
 
@@ -187,18 +206,31 @@ app.innerHTML = `
         <div class="tab-panel" data-panel="gobos">
           <section>
             <p class="sec-title">Gobos</p>
-            <label class="field"><span>Selected gobo</span><select id="goboSelect"></select></label>
+            <div class="row">
+              <label class="field"><span>Selected gobo</span><select id="goboSelect"></select></label>
+              <label class="field"><span>Standard size</span><select id="goboSize"></select></label>
+            </div>
             <div class="slider-stack">
               <label class="field slider-field"><span>X <output id="goboXValue"></output></span><input id="goboX" type="range" step="0.1" /></label>
               <label class="field slider-field"><span>Y <output id="goboYValue"></output></span><input id="goboY" type="range" step="0.1" /></label>
               <label class="field slider-field"><span>Angle <output id="goboRotValue"></output></span><input id="goboRot" type="range" min="-180" max="180" step="1" /></label>
-              <label class="field slider-field"><span>Width <output id="goboWValue"></output></span><input id="goboW" type="range" min="1" max="12" step="0.1" /></label>
-              <label class="field slider-field"><span>Height <output id="goboHValue"></output></span><input id="goboH" type="range" min="1" max="12" step="0.1" /></label>
             </div>
             <div class="button-row">
               <button id="btnAddGobo" type="button"><i data-lucide="plus"></i><span>Add gobo</span></button>
               <button id="btnDeleteGobo" type="button"><i data-lucide="trash-2"></i><span>Delete gobo</span></button>
             </div>
+            <details class="advanced-panel">
+              <summary>Specialized specs</summary>
+              <label class="field"><span>Name</span><input id="goboName" type="text" autocomplete="off" /></label>
+              <div class="row">
+                <label class="field"><span>Type</span><select id="goboKind"></select></label>
+                <label class="field slider-field"><span>Depth <output id="goboDepthValue"></output></span><input id="goboDepth" type="range" min="0.02" max="2" step="0.01" /></label>
+              </div>
+              <div class="slider-stack">
+                <label class="field slider-field"><span>Width <output id="goboWValue"></output></span><input id="goboW" type="range" min="1" max="12" step="0.1" /></label>
+                <label class="field slider-field"><span>Height <output id="goboHValue"></output></span><input id="goboH" type="range" min="1" max="12" step="0.1" /></label>
+              </div>
+            </details>
           </section>
         </div>
 
@@ -289,6 +321,17 @@ const MIC_FORM_IDS = [
   'micZ',
   'micStand',
   'micNotes',
+];
+
+const GOBO_FORM_IDS = [
+  'goboName',
+  'goboKind',
+  'goboX',
+  'goboY',
+  'goboRot',
+  'goboDepth',
+  'goboW',
+  'goboH',
 ];
 
 const STANDARD_MIC_PRESETS = [
@@ -406,6 +449,77 @@ function catalogById(id) {
   return catalog.find((item) => item.id === id) || null;
 }
 
+function kitAnchor() {
+  const kick = state.kit.find((drum) => drum.id === 'kick' || drum.name === 'Kick');
+  if (kick) return { x: kick.x, y: kick.y };
+  if (!state.kit.length) return { x: 0, y: 0 };
+  return state.kit.reduce(
+    (anchor, drum, index, drums) => ({
+      x: anchor.x + drum.x / drums.length,
+      y: anchor.y + drum.y / drums.length,
+    }),
+    { x: 0, y: 0 },
+  );
+}
+
+function moveKitLayout(dx, dy) {
+  if (Math.abs(dx) < 0.001 && Math.abs(dy) < 0.001) return;
+  const kitTargets = new Set(state.kit.map((drum) => drum.name));
+  state.kit.forEach((drum) => {
+    drum.x += dx;
+    drum.y += dy;
+  });
+  state.mics.forEach((mic) => {
+    if (!kitTargets.has(mic.target)) return;
+    mic.x += dx;
+    mic.y += dy;
+    clampMicToRoom(mic, state.room);
+  });
+}
+
+function goboSizeLabel(size) {
+  return size ? size.name : '4 x 6 ft large panel';
+}
+
+function defaultGoboSize() {
+  return goboStandardSizeById('large-4x6') || GOBO_STANDARD_SIZES[0];
+}
+
+function goboKindById(id) {
+  return GOBO_KINDS.find((kind) => kind.id === id) || GOBO_KINDS[0];
+}
+
+function applyGoboStandardSize(gobo, sizeId) {
+  const size = goboStandardSizeById(sizeId);
+  if (!gobo || !size) return gobo;
+  gobo.standardSizeId = size.id;
+  gobo.w = size.w;
+  gobo.h = size.h;
+  gobo.depth = size.depth;
+  if (!gobo.kind) gobo.kind = 'panel';
+  return gobo;
+}
+
+function createGoboFromStandardSize(sizeId) {
+  const size = goboStandardSizeById(sizeId) || defaultGoboSize();
+  const count = state.gobos.length + 1;
+  return clampGoboToRoom(
+    {
+      id: createId('gobo'),
+      name: `Gobo ${count}`,
+      standardSizeId: size.id,
+      kind: 'panel',
+      x: Math.min(state.room.width / 2 - 1, Math.max(-state.room.width / 2 + 1, (count - 1) * 0.6)),
+      y: Math.min(state.room.length / 2 - 1, 3 + (count - 1) * 0.5),
+      rot: 0,
+      w: size.w,
+      h: size.h,
+      depth: size.depth,
+    },
+    state.room,
+  );
+}
+
 function applyCatalogToMic(mic, catalogId) {
   const item = catalogById(catalogId);
   mic.catalogId = catalogId || '';
@@ -417,8 +531,8 @@ function applyCatalogToMic(mic, catalogId) {
 
 function updateState({ autosave = true, refreshForms = false } = {}) {
   state = validatePlannerState(state);
-  selectedMicIndex = Math.min(selectedMicIndex, Math.max(0, state.mics.length - 1));
-  selectedGoboIndex = Math.min(selectedGoboIndex, Math.max(0, state.gobos.length - 1));
+  selectedMicIndex = state.mics.length ? Math.max(0, Math.min(selectedMicIndex, state.mics.length - 1)) : 0;
+  selectedGoboIndex = state.gobos.length ? Math.max(0, Math.min(selectedGoboIndex, state.gobos.length - 1)) : 0;
   state.project.updatedAt = new Date().toISOString();
   sceneApi.setState(state);
   sceneApi.setSelectedMicIndex(selectedMicIndex);
@@ -477,6 +591,10 @@ function renderRoomFields() {
 }
 
 function renderKitSelectors() {
+  const anchor = kitAnchor();
+  writeSlider('kitGroupX', anchor.x, { min: -state.room.width / 2, max: state.room.width / 2, step: 0.25 });
+  writeSlider('kitGroupY', anchor.y, { min: -state.room.length / 2, max: state.room.length / 2, step: 0.25 });
+  if (!state.kit.length) return;
   $('kitPiece').innerHTML = state.kit.map((drum, index) => option(drum.name, index, index === Number($('kitPiece').value || 0))).join('');
   const index = Math.min(Number($('kitPiece').value || 0), state.kit.length - 1);
   const drum = state.kit[index];
@@ -572,14 +690,53 @@ function updateMicSelectLabel() {
   select.value = String(selectedMicIndex);
 }
 
-function renderGoboSelectors() {
-  $('goboSelect').innerHTML = state.gobos.map((gobo, index) => option(gobo.name, index, index === selectedGoboIndex)).join('');
+function updateGoboSelectLabel() {
   const gobo = state.gobos[selectedGoboIndex];
-  if (!gobo) return;
+  const select = $('goboSelect');
+  if (!gobo || !select?.options[selectedGoboIndex]) return;
+  select.options[selectedGoboIndex].textContent = gobo.name;
+  select.value = String(selectedGoboIndex);
+}
+
+function renderGoboSizeOptions() {
+  const gobo = state.gobos[selectedGoboIndex];
+  const matchedSize = inferGoboStandardSize(gobo);
+  const selectedSize = matchedSize || defaultGoboSize();
+  $('goboSize').innerHTML =
+    GOBO_STANDARD_SIZES.map((size) => option(goboSizeLabel(size), size.id, size.id === selectedSize.id)).join('') +
+    (gobo && !matchedSize ? option('Custom/spec', 'custom', true) : '');
+}
+
+function renderGoboSelectors() {
+  const hasGobo = state.gobos.length > 0;
+  $('goboSelect').innerHTML = hasGobo
+    ? state.gobos.map((gobo, index) => option(gobo.name, index, index === selectedGoboIndex)).join('')
+    : option('None', '');
+  const gobo = state.gobos[selectedGoboIndex];
+  renderGoboSizeOptions();
+  const selectedSize = inferGoboStandardSize(gobo) || defaultGoboSize();
+  setDisabled(GOBO_FORM_IDS, !gobo);
+  $('btnDeleteGobo').disabled = !gobo;
+
+  if (!gobo) {
+    writeSlider('goboX', 0, { min: -state.room.width / 2, max: state.room.width / 2, disabled: true });
+    writeSlider('goboY', 0, { min: -state.room.length / 2, max: state.room.length / 2, disabled: true });
+    writeSlider('goboRot', 0, { min: -180, max: 180, step: 1, suffix: '°', digits: 0, disabled: true });
+    writeValue('goboName', '');
+    $('goboKind').innerHTML = GOBO_KINDS.map((kind) => option(kind.name, kind.id)).join('');
+    writeSlider('goboDepth', selectedSize.depth, { min: 0.02, max: 2, step: 0.01, suffix: ' ft', digits: 2, disabled: true });
+    writeSlider('goboW', selectedSize.w, { min: 1, max: 12, disabled: true });
+    writeSlider('goboH', selectedSize.h, { min: 1, max: Math.min(12, state.room.height), disabled: true });
+    return;
+  }
+
   writeValue('goboSelect', selectedGoboIndex);
+  writeValue('goboName', gobo.name);
+  $('goboKind').innerHTML = GOBO_KINDS.map((kind) => option(kind.name, kind.id, kind.id === gobo.kind)).join('');
   writeSlider('goboX', gobo.x, { min: -state.room.width / 2, max: state.room.width / 2 });
   writeSlider('goboY', gobo.y, { min: -state.room.length / 2, max: state.room.length / 2 });
   writeSlider('goboRot', gobo.rot, { min: -180, max: 180, step: 1, suffix: '°', digits: 0 });
+  writeSlider('goboDepth', gobo.depth, { min: 0.02, max: 2, step: 0.01, suffix: ' ft', digits: 2 });
   writeSlider('goboW', gobo.w, { min: 1, max: 12 });
   writeSlider('goboH', gobo.h, { min: 1, max: Math.min(12, state.room.height) });
 }
@@ -818,6 +975,18 @@ function selectedKitIndex() {
   return Math.min(Number($('kitPiece').value || 0), state.kit.length - 1);
 }
 
+function syncKitGroupFromFields() {
+  const anchor = kitAnchor();
+  const nextX = readNumber('kitGroupX', anchor.x);
+  const nextY = readNumber('kitGroupY', anchor.y);
+  moveKitLayout(nextX - anchor.x, nextY - anchor.y);
+  updateSliderOutput('kitGroupX');
+  updateSliderOutput('kitGroupY');
+  updateState({ refreshForms: false });
+  renderKitSelectors();
+  renderMicSelectors();
+}
+
 function syncKitFromFields() {
   const drum = state.kit[selectedKitIndex()];
   if (!drum) return;
@@ -830,6 +999,7 @@ function syncKitFromFields() {
   updateSliderOutput('kitDia', { suffix: '"', digits: 0 });
   updateSliderOutput('kitDepth', { suffix: '"' });
   updateState({ refreshForms: false });
+  renderKitSelectors();
 }
 
 function syncMicFromFields() {
@@ -854,15 +1024,36 @@ function syncMicFromFields() {
 function syncGoboFromFields() {
   const gobo = state.gobos[selectedGoboIndex];
   if (!gobo) return;
+  gobo.name = $('goboName').value.trim() || `Gobo ${selectedGoboIndex + 1}`;
+  gobo.kind = $('goboKind').value || 'panel';
   gobo.x = readNumber('goboX', gobo.x);
   gobo.y = readNumber('goboY', gobo.y);
   gobo.rot = readNumber('goboRot', gobo.rot);
+  gobo.depth = readNumber('goboDepth', gobo.depth || goboKindById(gobo.kind).depth);
   gobo.w = readNumber('goboW', gobo.w);
   gobo.h = readNumber('goboH', gobo.h);
+  gobo.standardSizeId = inferGoboStandardSize(gobo)?.id || 'custom';
   clampGoboToRoom(gobo, state.room);
   ['goboX', 'goboY', 'goboW', 'goboH'].forEach((id) => updateSliderOutput(id));
   updateSliderOutput('goboRot', { suffix: '°', digits: 0 });
+  updateSliderOutput('goboDepth', { suffix: ' ft', digits: 2 });
   updateState({ refreshForms: false });
+  updateGoboSelectLabel();
+  renderGoboSizeOptions();
+}
+
+function syncGoboSizeFromFields() {
+  const gobo = state.gobos[selectedGoboIndex];
+  if (!gobo) return;
+  const sizeId = $('goboSize').value;
+  if (sizeId === 'custom') {
+    gobo.standardSizeId = 'custom';
+    updateState({ refreshForms: false });
+    return;
+  }
+  applyGoboStandardSize(gobo, sizeId);
+  clampGoboToRoom(gobo, state.room);
+  updateState({ refreshForms: true });
 }
 
 function downloadText(filename, text, type = 'application/json') {
@@ -1137,6 +1328,7 @@ function bindEvents() {
     if (value !== 'custom') setKitSize(drum, sizes[Number(value)]);
     updateState({ refreshForms: true });
   });
+  ['kitGroupX', 'kitGroupY'].forEach((id) => $(id).addEventListener('input', syncKitGroupFromFields));
   ['kitX', 'kitY', 'kitZ', 'kitDia', 'kitDepth'].forEach((id) => $(id).addEventListener('input', syncKitFromFields));
   $('btnStandardKit').addEventListener('click', () => restoreStandardKit('right'));
   $('btnLeftHandedKit').addEventListener('click', () => restoreStandardKit('left'));
@@ -1175,9 +1367,13 @@ function bindEvents() {
     sceneApi.setSelectedGoboIndex(selectedGoboIndex);
     renderGoboSelectors();
   });
-  ['goboX', 'goboY', 'goboRot', 'goboW', 'goboH'].forEach((id) => $(id).addEventListener('input', syncGoboFromFields));
+  $('goboSize').addEventListener('change', syncGoboSizeFromFields);
+  ['goboName', 'goboX', 'goboY', 'goboRot', 'goboDepth', 'goboW', 'goboH'].forEach((id) =>
+    $(id).addEventListener('input', syncGoboFromFields),
+  );
+  $('goboKind').addEventListener('change', syncGoboFromFields);
   $('btnAddGobo').addEventListener('click', () => {
-    state.gobos.push({ id: createId('gobo'), name: `Gobo ${state.gobos.length + 1}`, x: 0, y: 3, rot: 0, w: 4, h: 6 });
+    state.gobos.push(createGoboFromStandardSize($('goboSize').value));
     selectedGoboIndex = state.gobos.length - 1;
     updateState({ refreshForms: true });
   });

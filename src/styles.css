@@ -137,6 +137,18 @@ button:focus-visible {
   text-transform: uppercase;
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .project-bar {
   display: grid;
   grid-template-columns: minmax(200px, 1.2fr) minmax(180px, 1fr) auto auto auto;
@@ -153,7 +165,7 @@ button:focus-visible {
 
 .stage-column {
   display: grid;
-  grid-template-rows: minmax(360px, 1fr) 156px;
+  grid-template-rows: minmax(360px, 1fr);
   min-width: 0;
   min-height: 0;
 }
@@ -218,26 +230,6 @@ button:focus-visible {
 
 #toast.show {
   opacity: 1;
-}
-
-.analysis-dock {
-  display: grid;
-  grid-template-columns: 1.05fr 1fr 1fr;
-  gap: 0;
-  min-height: 0;
-  background: var(--panel);
-  border-top: 1px solid var(--line);
-}
-
-.analysis-dock section {
-  min-width: 0;
-  padding: 12px 14px;
-  border-right: 1px solid var(--line-soft);
-  overflow: auto;
-}
-
-.analysis-dock section:last-child {
-  border-right: 0;
 }
 
 .inspector {
@@ -377,11 +369,26 @@ section {
 
 .reference-readout {
   display: grid;
-  gap: 8px;
+  gap: 7px;
 }
 
-.readout-block strong {
+.library-readout {
+  margin-top: 10px;
+}
+
+.readout-head {
+  display: grid;
+  gap: 2px;
+}
+
+.readout-head strong {
   color: var(--ink);
+  font-size: 12px;
+}
+
+.readout-head span {
+  color: var(--muted);
+  font-size: 10px;
 }
 
 .readout-grid {
@@ -405,20 +412,22 @@ section {
   font-weight: 600;
 }
 
-.source-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+.technical-checks {
+  display: grid;
+  gap: 12px;
 }
 
-.source-links a {
-  color: var(--accent);
-  text-decoration: none;
-  border-bottom: 1px solid currentColor;
+.check-group {
+  min-width: 0;
 }
 
-.source-links a:hover {
-  color: var(--ink);
+.check-title {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .metric-grid {
@@ -568,7 +577,6 @@ tr:last-child td {
   .project-bar,
   .row,
   .row.three,
-  .analysis-dock,
   .button-grid {
     grid-template-columns: 1fr;
   }

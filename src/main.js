@@ -48,7 +48,7 @@ app.innerHTML = `
     <header class="topbar">
       <div class="brand-block">
         <div class="brand">Drum Mic Planner</div>
-        <div class="status-line" id="statusLine">Loading data</div>
+        <div class="status-line sr-only" id="statusLine" aria-live="polite"></div>
       </div>
       <div class="project-bar">
         <label class="field compact-field">
@@ -77,20 +77,6 @@ app.innerHTML = `
           </div>
         </div>
 
-        <div class="analysis-dock">
-          <section>
-            <p class="sec-title">Selected mic</p>
-            <div id="selectedMetrics" class="metric-grid"></div>
-          </section>
-          <section>
-            <p class="sec-title">Phase checks</p>
-            <div id="phaseMetrics" class="metric-list"></div>
-          </section>
-          <section>
-            <p class="sec-title">Overheads</p>
-            <div id="overheadMetrics" class="metric-list"></div>
-          </section>
-        </div>
       </section>
 
       <aside class="inspector">
@@ -123,9 +109,9 @@ app.innerHTML = `
           </section>
           <section>
             <p class="sec-title">Reference presets</p>
-            <label class="field"><span>Configuration</span><select id="referenceConfigSelect"></select></label>
+            <label class="field"><span>Preset</span><select id="referenceConfigSelect"></select></label>
             <div class="row">
-              <label class="field"><span>Preset</span><select id="referencePresetSelect"></select></label>
+              <label class="field"><span>Layout</span><select id="referencePresetSelect"></select></label>
               <button id="btnApplyReferencePreset" type="button"><i data-lucide="refresh-cw"></i><span>Apply</span></button>
             </div>
             <div id="referenceConfigDetails" class="data-readout reference-readout"></div>
@@ -226,7 +212,25 @@ app.innerHTML = `
               <button id="btnReport" type="button"><i data-lucide="file-text"></i><span>Report</span></button>
               <button id="btnReset" type="button"><i data-lucide="refresh-cw"></i><span>Reset</span></button>
             </div>
+            <div id="libraryDetails" class="data-readout library-readout"></div>
             <input id="importFile" type="file" accept=".json,application/json" hidden />
+          </section>
+          <section>
+            <p class="sec-title">Technical checks</p>
+            <div class="technical-checks">
+              <div class="check-group">
+                <p class="check-title">Selected mic</p>
+                <div id="selectedMetrics" class="metric-grid"></div>
+              </div>
+              <div class="check-group">
+                <p class="check-title">Phase checks</p>
+                <div id="phaseMetrics" class="metric-list"></div>
+              </div>
+              <div class="check-group">
+                <p class="check-title">Overheads</p>
+                <div id="overheadMetrics" class="metric-list"></div>
+              </div>
+            </div>
           </section>
           <section>
             <p class="sec-title">Patch list</p>
@@ -312,7 +316,8 @@ function toast(message) {
 }
 
 function setStatus(message) {
-  $('statusLine').textContent = message;
+  const node = $('statusLine');
+  if (node) node.textContent = message;
 }
 
 async function loadJsonFile(path, fallback) {
@@ -468,6 +473,12 @@ function renderGoboSelectors() {
   writeValue('goboH', gobo.h);
 }
 
+function renderLibraryDetails() {
+  const node = $('libraryDetails');
+  if (!node) return;
+  node.textContent = `${catalog.length} mic profiles · ${templates.length} mic packages · ${referenceConfigs.length} reference presets`;
+}
+
 function renderTemplates() {
   $('templateSelect').innerHTML = templates.map((template) => option(template.name, template.id)).join('');
   updateTemplateDetails();
@@ -480,6 +491,32 @@ function updateTemplateDetails() {
 
 function selectedReferenceConfig() {
   return referenceConfigs.find((config) => config.id === $('referenceConfigSelect')?.value) || referenceConfigs[0] || null;
+}
+
+function referenceConfigLabel(config) {
+  return config?.artistAlbumEngineer?.album || config?.name || 'Reference preset';
+}
+
+function referenceConfigContext(config) {
+  const meta = config?.artistAlbumEngineer || {};
+  const studio = meta.studio || (meta.knownStudios || []).slice(0, 2).join(' / ');
+  return [meta.artist, meta.year, studio].filter(Boolean).join(' · ');
+}
+
+function referenceLayoutLabel(candidate) {
+  if (!candidate) return '—';
+  if (/minimum|minimal|basic/i.test(candidate.id) || /minimum|minimal|basic/i.test(candidate.name)) return 'Basic';
+  if (/expanded|controlled/i.test(candidate.id) || /expanded|controlled/i.test(candidate.name)) return 'Expanded';
+  return candidate.name;
+}
+
+function referenceTone(config) {
+  const album = referenceConfigLabel(config).toLowerCase();
+  if (album === 'pinkerton') return 'Raw room rock; close punch; controlled cymbals.';
+  if (album === 'antics') return 'Room-heavy post-punk; close punch; compressed far room.';
+  if (album === 'fever to tell') return 'Raw trio drums; midrange kit picture; room edge.';
+  if (album === 'solid gold') return 'Dry close funk-punk; tight kit image; controlled room.';
+  return String(config?.soundGoal?.summary || config?.soundGoal || config?.accuracyBoundary?.summary || '').split('.')[0] || 'Reference drum layout.';
 }
 
 function referenceCandidateLabels(config) {
@@ -495,7 +532,7 @@ function renderReferenceConfigs() {
   const select = $('referenceConfigSelect');
   if (!select) return;
   select.innerHTML = referenceConfigs.length
-    ? referenceConfigs.map((config) => option(config.name, config.id, config.id === select.value)).join('')
+    ? referenceConfigs.map((config) => option(referenceConfigLabel(config), config.id, config.id === select.value)).join('')
     : option('No reference presets loaded', '');
   renderReferencePresetSelect();
   updateReferenceConfigDetails();
@@ -507,21 +544,15 @@ function renderReferencePresetSelect() {
   const select = $('referencePresetSelect');
   if (!select) return;
   select.innerHTML = candidates.length
-    ? candidates.map((candidate) => option(candidate.name, candidate.id, candidate.id === select.value)).join('')
+    ? candidates.map((candidate) => option(referenceLayoutLabel(candidate), candidate.id, candidate.id === select.value)).join('')
     : option('No app layout labels', '');
 }
 
 function compactList(values = [], limit = 4) {
-  const items = values.filter(Boolean).slice(0, limit);
-  const extra = values.length > limit ? ` +${values.length - limit}` : '';
+  const filtered = values.filter(Boolean);
+  const items = filtered.slice(0, limit);
+  const extra = filtered.length > limit ? ` +${filtered.length - limit}` : '';
   return items.length ? `${items.join(', ')}${extra}` : '—';
-}
-
-function sourceLinks(config) {
-  return (config?.sources || [])
-    .slice(0, 4)
-    .map((source) => `<a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(source.title)}</a>`)
-    .join('');
 }
 
 function updateReferenceConfigDetails() {
@@ -534,17 +565,17 @@ function updateReferenceConfigDetails() {
   }
   const candidate = selectedReferenceCandidate(config);
   const channels = candidate?.channels || [];
-  const soundGoal = config.soundGoal?.summary || config.soundGoal || '';
-  const unknowns = config.unknowns || config.unresolvedQuestions || config.accuracyBoundary?.undocumentedScope || [];
+  const context = referenceConfigContext(config);
   node.innerHTML = `
-    <div class="readout-block"><strong>${escapeHtml(config.name)}</strong></div>
-    <div class="readout-block">${escapeHtml(soundGoal || config.accuracyBoundary?.summary || '')}</div>
-    <div class="readout-grid">
-      <span>Preset</span><strong>${escapeHtml(candidate?.name || '—')}</strong>
-      <span>Channels</span><strong>${escapeHtml(compactList(channels, 6))}</strong>
-      <span>Unknowns</span><strong>${escapeHtml(compactList(unknowns, 3))}</strong>
+    <div class="readout-head">
+      <strong>${escapeHtml(referenceConfigLabel(config))}</strong>
+      ${context ? `<span>${escapeHtml(context)}</span>` : ''}
     </div>
-    <div class="source-links">${sourceLinks(config)}</div>
+    <div class="readout-grid">
+      <span>Layout</span><strong>${escapeHtml(referenceLayoutLabel(candidate))}</strong>
+      <span>Channels</span><strong>${escapeHtml(`${channels.length || '—'} · ${compactList(channels, 5)}`)}</strong>
+      <span>Focus</span><strong>${escapeHtml(referenceTone(config))}</strong>
+    </div>
   `;
 }
 
@@ -562,6 +593,7 @@ function renderForms() {
   renderKitSelectors();
   renderMicSelectors();
   renderGoboSelectors();
+  renderLibraryDetails();
   renderTemplates();
   renderReferenceConfigs();
   renderAnalysis();
@@ -811,7 +843,7 @@ function findReferenceMicRow(config, sourceName) {
 
 function referenceMicNotes(config, candidate, layoutMic) {
   const row = findReferenceMicRow(config, layoutMic.researchSource);
-  const lines = [`Reference: ${config.name}`, `Preset: ${candidate?.name || layoutMic.name}`];
+  const lines = [`Reference: ${referenceConfigLabel(config)}`, `Layout: ${referenceLayoutLabel(candidate) || layoutMic.name}`];
   if (layoutMic.researchSource) lines.push(`Research source: ${layoutMic.researchSource}`);
   if (row?.confidence) lines.push(`Confidence: ${row.confidence}`);
   if (row?.placement) lines.push(`Placement: ${row.placement}`);
@@ -1103,7 +1135,7 @@ async function init() {
   sceneApi.setState(state);
   await refreshProjectList();
   renderForms();
-  setStatus(`${catalog.length} mic profiles · ${templates.length} templates · ${referenceConfigs.length} presets`);
+  setStatus('Data loaded');
 }
 
 init().catch((error) => {

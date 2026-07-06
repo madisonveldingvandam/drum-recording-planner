@@ -91,11 +91,15 @@ Paste this file into the Cargo page's Code View:
 deploy/cargo-github-pages-iframe.html
 ```
 
-If you prefer the Cargo URL to immediately leave for GitHub Pages, paste this file into the page's Code View instead:
+The iframe option is the recommended Cargo deployment. It has been verified to work with Cargo page Code View.
+
+If you prefer the Cargo URL to immediately leave for GitHub Pages, use this file only in Cargo's site-wide raw Custom HTML area, not page Code View:
 
 ```text
 deploy/cargo-github-pages-redirect.html
 ```
+
+Cargo page Code View can render an iframe, but it may strip, escape, or ignore redirect scripts and body-level meta refresh. The redirect snippet is path-gated so it does not affect the rest of the Cargo site when installed site-wide.
 
 Cargo also has a generated full-inline fallback, but this is less reliable because it asks Cargo to store and execute a large bundled JavaScript app:
 

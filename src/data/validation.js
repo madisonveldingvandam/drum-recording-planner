@@ -74,7 +74,6 @@ export function validatePlannerState(input) {
       height: clamp(num(roomSource.height, def.room.height), 4, 60),
     },
     options: {
-      cables: obj.options ? obj.options.cables !== false : true,
       autosave: obj.options ? obj.options.autosave !== false : true,
       measurementRays: obj.options ? obj.options.measurementRays !== false : true,
       topView: obj.options ? obj.options.topView === true : false,
@@ -96,11 +95,12 @@ export function validatePlannerState(input) {
     height: drum.type === 'cymbal' ? undefined : clamp(num(drum.height, 0.8), 0.02, 3),
   }));
 
-  const micSource = Array.isArray(obj.mics) && obj.mics.length ? obj.mics : def.mics;
+  const micSource = Array.isArray(obj.mics) ? obj.mics : def.mics;
   out.mics = micSource.map((mic, index) =>
     clampMicToRoom(
       {
         id: text(mic.id, `mic-${index + 1}`),
+        standardId: text(mic.standardId, ''),
         channel: clamp(Math.round(num(mic.channel, index + 1)), 1, 128),
         name: text(mic.name, `Mic ${index + 1}`),
         catalogId: text(mic.catalogId, ''),

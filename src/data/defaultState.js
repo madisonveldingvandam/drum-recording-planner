@@ -63,7 +63,6 @@ export function createDefaultState() {
     },
     room: { width: 18, length: 24, height: 10 },
     options: {
-      cables: true,
       autosave: true,
       measurementRays: true,
       topView: false,

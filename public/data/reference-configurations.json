@@ -171,7 +171,32 @@
         "close-to-room mic balance"
       ],
       "practicalSubstitute": "Use a medium-to-large live room with hard floor reflections, controlled but lively ambience, and enough space for room mics 10-18 ft from the kit. Avoid a small dead booth unless adding hallway, chamber, or re-amped room depth.",
-      "confidence": "confirmed context / inferred practical plan"
+      "confidence": "confirmed context / inferred practical plan",
+      "plannerRoomApproximation": {
+        "unit": "ft",
+        "presets": [
+          {
+            "presetId": "pinkerton-informed-minimum-rock-room",
+            "label": "Electric Lady Studio A live room",
+            "width": 35,
+            "length": 38,
+            "height": 14,
+            "confidence": "confirmed footprint / approximate height",
+            "source": "Electric Lady publishes Studio A live room as 35 ft x 38 ft; height was not found in the checked source.",
+            "sourceUrl": "https://electricladystudios.com/studio-a/"
+          },
+          {
+            "presetId": "pinkerton-informed-sound-city-expanded",
+            "label": "Sound City live-room approximation",
+            "width": 38,
+            "length": 43,
+            "height": 20,
+            "confidence": "approximate",
+            "source": "Exact Sound City dimensions were not verified; planner size is based on documented Sound City room/studio context plus the 15-18 ft room-mic working distance in the Sound City comparison source.",
+            "sourceUrl": "https://www.musicradar.com/drums/dave-grohl-and-nirvana-drum-week"
+          }
+        ]
+      }
     },
     "kitContext": {
       "confirmed": [
@@ -723,7 +748,32 @@
         "whether baffles, blankets, risers, or special treatments were used"
       ],
       "practicalSubstitute": "Use a medium live room with reflective surfaces, wood floor if possible, enough ceiling height for the kit to breathe, and a hallway/stairwell/doorway/distant-corner position for a mono extreme room mic.",
-      "confidence": "confirmed context / inferred practical plan"
+      "confidence": "confirmed context / inferred practical plan",
+      "plannerRoomApproximation": {
+        "unit": "ft",
+        "presets": [
+          {
+            "presetId": "antics-minimum-room-hybrid",
+            "label": "Tarquin attic/live-room approximation",
+            "width": 26,
+            "length": 30,
+            "height": 12,
+            "confidence": "approximate",
+            "source": "Tape Op documents Tarquin as a top-floor residential studio with a wood-floored live-room context and enough live-band isolation space; exact live-room dimensions were not found.",
+            "sourceUrl": "https://tapeop.com/interviews/31/tarquin-studios/"
+          },
+          {
+            "presetId": "antics-tarquin-expanded-room",
+            "label": "Tarquin attic/live-room approximation",
+            "width": 26,
+            "length": 30,
+            "height": 12,
+            "confidence": "approximate",
+            "source": "Same Tarquin room approximation, with additional gobo and far-room positions for the expanded app layout.",
+            "sourceUrl": "https://tapeop.com/interviews/31/tarquin-studios/"
+          }
+        ]
+      }
     },
     "kitContext": {
       "confirmed": [
@@ -1291,7 +1341,32 @@
         "chamber use"
       ],
       "practicalSubstituteFromNotes": "Small-to-medium live room with attitude, fast reflections, and controlled decay. Wood, brick, plaster, or concrete room with movable absorption. Avoid a huge polished rock room unless room mics can stay tight and aggressive.",
-      "confidence": "confirmed studio / unknown room specifics"
+      "confidence": "confirmed studio / unknown room specifics",
+      "plannerRoomApproximation": {
+        "unit": "ft",
+        "presets": [
+          {
+            "presetId": "fever-to-tell-minimum-raw-trio",
+            "label": "Headgear Brooklyn tracking-room approximation",
+            "width": 24,
+            "length": 30,
+            "height": 12,
+            "confidence": "approximate",
+            "source": "Tape Op documents Headgear as a subdivided Williamsburg building with 2,000 sq ft studio zones and Fever to Tell as an early session; exact live-room dimensions were not found.",
+            "sourceUrl": "https://tapeop.com/interviews/65/headgear/"
+          },
+          {
+            "presetId": "fever-to-tell-expanded-headgear",
+            "label": "Headgear Brooklyn tracking-room approximation",
+            "width": 24,
+            "length": 30,
+            "height": 12,
+            "confidence": "approximate",
+            "source": "Same Headgear room approximation, with added hallway/far-room and gobo positions for the expanded app layout.",
+            "sourceUrl": "https://tapeop.com/interviews/65/headgear/"
+          }
+        ]
+      }
     },
     "kitContext": {
       "confirmed": [
@@ -1762,7 +1837,32 @@
         "whether Studio Two, Studio Three, or another Abbey Road space was used"
       ],
       "practicalSubstituteFromNotes": "Controlled medium live room, not a huge reflective rock room and not a fully dead booth. Some natural air, controlled with gobos, rugs, and baffles.",
-      "confidence": "confirmed studio / unknown room specifics"
+      "confidence": "confirmed studio / unknown room specifics",
+      "plannerRoomApproximation": {
+        "unit": "ft",
+        "presets": [
+          {
+            "presetId": "solid-gold-minimum-close-funk",
+            "label": "Abbey Road Studio Two context",
+            "width": 38.25,
+            "length": 60.17,
+            "height": 24,
+            "confidence": "confirmed Studio Two dimensions / exact Solid Gold room unknown",
+            "source": "Tape Op cites Studio Two at approximately 38 ft x 60 ft with a 24 ft ceiling and 1.2 s reverb; Solid Gold sources credit Abbey Road but do not confirm the exact room.",
+            "sourceUrl": "https://tapeop.com/interviews/11/abbey-road-pictorial/"
+          },
+          {
+            "presetId": "solid-gold-controlled-expanded",
+            "label": "Abbey Road Studio Two context",
+            "width": 38.25,
+            "length": 60.17,
+            "height": 24,
+            "confidence": "confirmed Studio Two dimensions / exact Solid Gold room unknown",
+            "source": "Same Abbey Road Studio Two dimensional context, with controlled gobo layout for the app preset. This does not confirm the original Solid Gold drum room.",
+            "sourceUrl": "https://tapeop.com/interviews/11/abbey-road-pictorial/"
+          }
+        ]
+      }
     },
     "kitContext": {
       "confirmed": [

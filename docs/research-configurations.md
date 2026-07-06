@@ -67,6 +67,11 @@ Sound City variation: let the room mics matter more. The room identity is centra
 
 Electric Lady variation: use the same close/overhead framework, but do not assume the Sound City room is the source of the sound unless stronger song-specific evidence appears.
 
+Planner room approximations:
+
+- Electric Lady minimum preset: 35 ft W x 38 ft L x 14 ft H. Footprint is from Electric Lady's published Studio A live-room size; height is an app approximation until verified.
+- Sound City expanded preset: 38 ft W x 43 ft L x 20 ft H. Exact dimensions were not verified; this is an app approximation based on Sound City room context and the 15 to 18 ft room-mic distance in the comparison source.
+
 ### Kit Notes
 
 Confirmed only: Patrick Wilson played drums on the album. Karl Koch is credited with percussion on "Butterfly".
@@ -376,6 +381,8 @@ Unknown:
 - Whether baffles, blankets, risers, or unusual drum-specific treatments were used.
 
 Practical substitute: use a medium live room with reflective surfaces, wood floor if possible, enough ceiling height for the kit to breathe, and at least one far-room/hallway/stairwell/doorway position for a mono extreme-room mic. Avoid a totally dead booth unless another ambient space can be captured or re-amped.
+
+Planner room approximation: 26 ft W x 30 ft L x 12 ft H for both Antics presets. This is approximate app geometry based on the Tarquin top-floor/residential live-room context, not a documented Tarquin room measurement.
 
 ### Kit Notes
 
@@ -721,6 +728,8 @@ Unknown:
 
 Practical substitute from research notes: use a small-to-medium live room with attitude, fast reflections, and controlled decay. A wood, brick, plaster, or concrete room with movable absorption is a practical substitute. Avoid a huge polished rock room unless room mics can be kept tight and aggressive.
 
+Planner room approximation: 24 ft W x 30 ft L x 12 ft H for both Fever to Tell presets. This is approximate app geometry based on Headgear studio context; exact Headgear live-room dimensions were not found.
+
 ### Kit Notes
 
 Confirmed: Brian Chase played drums.
@@ -1004,6 +1013,8 @@ Unknown:
 - Whether Studio Two, Studio Three, or another Abbey Road space was used.
 
 Practical substitute from research notes: controlled medium live room, not a huge reflective rock room and not a fully dead booth. The room should allow some natural air but be easy to control with gobos, rugs, and baffles.
+
+Planner room approximation: 38.25 ft W x 60.17 ft L x 24 ft H for both Solid Gold presets. These are Abbey Road Studio Two context dimensions from the research source, not proof that Solid Gold drums were tracked in Studio Two.
 
 ### Kit Notes
 

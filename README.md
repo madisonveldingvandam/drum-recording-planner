@@ -15,8 +15,6 @@ The app now has a real project structure, a data layer, saved local projects, fe
 - Technical readouts:
   - mic-to-source distance
   - sound arrival time in milliseconds
-  - estimated cable length to stage box
-  - standard cable pick
   - selected-source 3:1 phase checks
   - overhead L/R distance matching for snare and kick
 - Exports:

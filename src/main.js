@@ -17,7 +17,7 @@ import {
   Upload,
   createIcons,
 } from 'lucide';
-import { createDefaultState, createId, KIT_SIZES, MIC_TYPES, PATTERNS } from './data/defaultState.js';
+import { clone, createDefaultState, createId, inft, KIT_SIZES, MIC_TYPES, PATTERNS } from './data/defaultState.js';
 import {
   applyKitSize,
   clampGoboToRoom,
@@ -36,7 +36,7 @@ import {
   rowsToCsv,
   selectedMicReport,
 } from './data/metrics.js';
-import { REFERENCE_PRESET_LAYOUTS } from './data/referencePresetLayouts.js';
+import { REFERENCE_PRESET_CONTEXTS, REFERENCE_PRESET_LAYOUTS } from './data/referencePresetLayouts.js';
 import { createPlannerScene } from './render/scene.js';
 
 const DATA_BASE = `${import.meta.env.BASE_URL}data/`;
@@ -126,7 +126,6 @@ app.innerHTML = `
               <label class="field"><span>Length</span><input id="roomL" type="number" min="4" max="200" step="0.5" /></label>
               <label class="field"><span>Height</span><input id="roomH" type="number" min="4" max="60" step="0.5" /></label>
             </div>
-            <label class="check"><input id="showCables" type="checkbox" /> Cable runs to stage box</label>
             <label class="check"><input id="measurementRays" type="checkbox" /> Measurement ray for selected mic</label>
             <label class="check"><input id="autoSave" type="checkbox" /> Autosave project data</label>
           </section>
@@ -139,16 +138,17 @@ app.innerHTML = `
               <label class="field"><span>Piece</span><select id="kitPiece"></select></label>
               <label class="field"><span>Standard size</span><select id="kitSize"></select></label>
             </div>
-            <div class="row three">
-              <label class="field"><span>X</span><input id="kitX" type="number" step="0.1" /></label>
-              <label class="field"><span>Y</span><input id="kitY" type="number" step="0.1" /></label>
-              <label class="field"><span>Z</span><input id="kitZ" type="number" step="0.1" /></label>
+            <div class="slider-stack">
+              <label class="field slider-field"><span>X <output id="kitXValue"></output></span><input id="kitX" type="range" step="0.1" /></label>
+              <label class="field slider-field"><span>Y <output id="kitYValue"></output></span><input id="kitY" type="range" step="0.1" /></label>
+              <label class="field slider-field"><span>Z <output id="kitZValue"></output></span><input id="kitZ" type="range" min="0.1" step="0.1" /></label>
+              <label class="field slider-field"><span>Diameter <output id="kitDiaValue"></output></span><input id="kitDia" type="range" min="6" max="30" step="1" /></label>
+              <label class="field slider-field"><span>Depth <output id="kitDepthValue"></output></span><input id="kitDepth" type="range" min="1" max="24" step="0.5" /></label>
             </div>
-            <div class="row">
-              <label class="field"><span>Diameter</span><input id="kitDia" type="number" min="0.3" max="4" step="0.01" /></label>
-              <label class="field"><span>Depth</span><input id="kitDepth" type="number" min="0.02" max="3" step="0.01" /></label>
+            <div class="button-row">
+              <button id="btnStandardKit" type="button"><i data-lucide="refresh-cw"></i><span>Standard right-handed kit</span></button>
+              <button id="btnLeftHandedKit" type="button"><i data-lucide="refresh-cw"></i><span>Standard left-handed kit</span></button>
             </div>
-            <button id="btnStandardKit" type="button"><i data-lucide="refresh-cw"></i><span>Standard right-handed kit</span></button>
           </section>
         </div>
 
@@ -156,6 +156,10 @@ app.innerHTML = `
           <section>
             <p class="sec-title">Microphone</p>
             <label class="field"><span>Selected mic</span><select id="micSelect"></select></label>
+            <div class="row">
+              <label class="field"><span>Add standard mic</span><select id="standardMicSelect"></select></label>
+              <button id="btnAddMic" type="button"><i data-lucide="plus"></i><span>Add</span></button>
+            </div>
             <div class="row">
               <label class="field small-field"><span>Channel</span><input id="micChannel" type="number" min="1" max="128" step="1" /></label>
               <label class="field"><span>Name</span><input id="micName" type="text" autocomplete="off" /></label>
@@ -167,15 +171,14 @@ app.innerHTML = `
               <label class="field"><span>Pattern</span><select id="micPattern"></select></label>
             </div>
             <label class="field"><span>Target</span><select id="micTarget"></select></label>
-            <div class="row three">
-              <label class="field"><span>X</span><input id="micX" type="number" step="0.1" /></label>
-              <label class="field"><span>Y</span><input id="micY" type="number" step="0.1" /></label>
-              <label class="field"><span>Z</span><input id="micZ" type="number" min="0.1" step="0.1" /></label>
+            <div class="slider-stack">
+              <label class="field slider-field"><span>X <output id="micXValue"></output></span><input id="micX" type="range" step="0.1" /></label>
+              <label class="field slider-field"><span>Y <output id="micYValue"></output></span><input id="micY" type="range" step="0.1" /></label>
+              <label class="field slider-field"><span>Z <output id="micZValue"></output></span><input id="micZ" type="range" min="0.1" step="0.1" /></label>
             </div>
             <label class="check"><input id="micStand" type="checkbox" /> Stand</label>
             <label class="field"><span>Mic notes</span><textarea id="micNotes" rows="3"></textarea></label>
-            <div class="button-row">
-              <button id="btnAddMic" type="button"><i data-lucide="plus"></i><span>Add mic</span></button>
+            <div class="button-row single-action">
               <button id="btnDeleteMic" type="button"><i data-lucide="trash-2"></i><span>Delete mic</span></button>
             </div>
           </section>
@@ -185,14 +188,12 @@ app.innerHTML = `
           <section>
             <p class="sec-title">Gobos</p>
             <label class="field"><span>Selected gobo</span><select id="goboSelect"></select></label>
-            <div class="row three">
-              <label class="field"><span>X</span><input id="goboX" type="number" step="0.1" /></label>
-              <label class="field"><span>Y</span><input id="goboY" type="number" step="0.1" /></label>
-              <label class="field"><span>Angle</span><input id="goboRot" type="number" min="-180" max="180" step="1" /></label>
-            </div>
-            <div class="row">
-              <label class="field"><span>Width</span><input id="goboW" type="number" min="1" max="12" step="0.1" /></label>
-              <label class="field"><span>Height</span><input id="goboH" type="number" min="1" max="12" step="0.1" /></label>
+            <div class="slider-stack">
+              <label class="field slider-field"><span>X <output id="goboXValue"></output></span><input id="goboX" type="range" step="0.1" /></label>
+              <label class="field slider-field"><span>Y <output id="goboYValue"></output></span><input id="goboY" type="range" step="0.1" /></label>
+              <label class="field slider-field"><span>Angle <output id="goboRotValue"></output></span><input id="goboRot" type="range" min="-180" max="180" step="1" /></label>
+              <label class="field slider-field"><span>Width <output id="goboWValue"></output></span><input id="goboW" type="range" min="1" max="12" step="0.1" /></label>
+              <label class="field slider-field"><span>Height <output id="goboHValue"></output></span><input id="goboH" type="range" min="1" max="12" step="0.1" /></label>
             </div>
             <div class="button-row">
               <button id="btnAddGobo" type="button"><i data-lucide="plus"></i><span>Add gobo</span></button>
@@ -274,8 +275,48 @@ let projects = [];
 let autosaveTimer = null;
 let sceneApi = null;
 
+const REF_NOTE_START = '[Reference preset context]';
+const REF_NOTE_END = '[/Reference preset context]';
+const MIC_FORM_IDS = [
+  'micChannel',
+  'micName',
+  'micCatalog',
+  'micType',
+  'micPattern',
+  'micTarget',
+  'micX',
+  'micY',
+  'micZ',
+  'micStand',
+  'micNotes',
+];
+
+const STANDARD_MIC_PRESETS = [
+  { id: 'kick-in', name: 'Kick In', catalogId: 'akg-d112', target: 'Kick', x: 0, y: -1.35, z: 0.9 },
+  { id: 'kick-out', name: 'Kick Out', catalogId: 'neumann-fet47', micType: 'ldc', target: 'Kick', x: 0, y: -2.5, z: 1.1 },
+  { id: 'snare-top', name: 'Snare Top', catalogId: 'shure-sm57', target: 'Snare', x: 1.6, y: 1.8, z: 1.9 },
+  { id: 'snare-bottom', name: 'Snare Btm', catalogId: 'akg-c451', micType: 'pencil', target: 'Snare', x: 1.35, y: 1.55, z: 0.9 },
+  { id: 'rack-tom', name: 'Rack Tom', catalogId: 'sennheiser-md421', target: 'Hi/Mid Tom', x: 0.75, y: 0.1, z: 3.1 },
+  { id: 'floor-tom', name: 'Floor Tom', catalogId: 'sennheiser-md421', target: 'Low Tom', x: -2.4, y: 1.9, z: 2.1 },
+  { id: 'hi-hat', name: 'Hi Hat', catalogId: 'akg-c451', micType: 'pencil', target: 'Hi Hat', x: 2.8, y: 1.6, z: 3.2 },
+  { id: 'ride', name: 'Ride Spot', catalogId: 'neumann-km184', micType: 'pencil', target: 'Ride', x: -2.8, y: -0.8, z: 3.7 },
+  { id: 'overhead-l', name: 'Overhead L', catalogId: 'akg-c414', micType: 'ldc', target: 'Snare', x: 2.4, y: 0.15, z: 5.8 },
+  { id: 'overhead-r', name: 'Overhead R', catalogId: 'akg-c414', micType: 'ldc', target: 'Snare', x: -2.4, y: 0.15, z: 5.8 },
+  { id: 'mono-overhead', name: 'Mono Overhead', catalogId: 'rca-ribbon', micType: 'ldc', pattern: 'figure-8', target: 'Snare', x: 0, y: 0.25, z: 5.0 },
+  { id: 'front-crush', name: 'Front/Crush', catalogId: 'shure-sm7b', micType: 'dynamic', target: 'Kick', x: 0, y: -4.0, z: 2.5 },
+  { id: 'room-l', name: 'Room L', catalogId: 'neumann-u87', micType: 'ldc', pattern: 'omni', target: 'Kick', x: 3.2, y: -8.5, z: 4.2 },
+  { id: 'room-r', name: 'Room R', catalogId: 'neumann-u87', micType: 'ldc', pattern: 'omni', target: 'Kick', x: -3.2, y: -8.5, z: 4.2 },
+  { id: 'mono-room', name: 'Mono Room', catalogId: 'altec-639', micType: 'ldc', pattern: 'figure-8', target: 'Kick', x: 0, y: -10.5, z: 4.1 },
+  { id: 'trash-room', name: 'Trash Room', catalogId: 'ev-635a', micType: 'dynamic', pattern: 'omni', target: 'Kick', x: -4.5, y: -7.5, z: 1.4 },
+];
+
 function fmt(value, digits = 2) {
   return Number.isFinite(value) ? value.toFixed(digits) : '—';
+}
+
+function compactNumber(value, digits = 1) {
+  if (!Number.isFinite(value)) return '—';
+  return value.toFixed(digits).replace(/\.0$/, '');
 }
 
 function writeValue(id, value) {
@@ -283,6 +324,35 @@ function writeValue(id, value) {
   if (!el) return;
   const next = value == null ? '' : String(value);
   if (el.value !== next) el.value = next;
+}
+
+function writeSlider(id, value, { min, max, step = 0.1, suffix = ' ft', digits = 1, disabled = false } = {}) {
+  const el = $(id);
+  if (!el) return;
+  if (min != null) el.min = String(min);
+  if (max != null) el.max = String(max);
+  el.step = String(step);
+  el.disabled = disabled;
+  const fallback = Number(el.min || 0);
+  const numeric = Number.isFinite(value) ? value : fallback;
+  const clamped = Math.min(Number(el.max || numeric), Math.max(Number(el.min || numeric), numeric));
+  writeValue(id, compactNumber(clamped, digits));
+  const readout = $(`${id}Value`);
+  if (readout) readout.textContent = disabled ? '—' : `${compactNumber(clamped, digits)}${suffix}`;
+}
+
+function updateSliderOutput(id, { suffix = ' ft', digits = 1 } = {}) {
+  const el = $(id);
+  const readout = $(`${id}Value`);
+  if (!el || !readout) return;
+  readout.textContent = el.disabled ? '—' : `${compactNumber(Number(el.value), digits)}${suffix}`;
+}
+
+function setDisabled(ids, disabled) {
+  ids.forEach((id) => {
+    const el = $(id);
+    if (el) el.disabled = disabled;
+  });
 }
 
 function escapeHtml(value) {
@@ -402,7 +472,6 @@ function renderRoomFields() {
   writeValue('roomW', state.room.width);
   writeValue('roomL', state.room.length);
   writeValue('roomH', state.room.height);
-  setChecked('showCables', state.options.cables);
   setChecked('measurementRays', state.options.measurementRays);
   setChecked('autoSave', state.options.autosave);
 }
@@ -420,20 +489,62 @@ function renderKitSelectors() {
         return option(label, String(sizeIndex), JSON.stringify(size) === JSON.stringify(current));
       })
       .join('') + option('Custom', 'custom', current === 'custom');
-  writeValue('kitX', drum.x);
-  writeValue('kitY', drum.y);
-  writeValue('kitZ', drum.z);
-  writeValue('kitDia', drum.diameter);
-  writeValue('kitDepth', drum.height ?? '');
-  $('kitDepth').disabled = drum.type === 'cymbal';
+  writeSlider('kitX', drum.x, { min: -state.room.width / 2, max: state.room.width / 2 });
+  writeSlider('kitY', drum.y, { min: -state.room.length / 2, max: state.room.length / 2 });
+  writeSlider('kitZ', drum.z, { min: 0.1, max: state.room.height, suffix: ' ft' });
+  writeSlider('kitDia', drum.diameter * 12, { min: 6, max: 30, step: 1, suffix: '"', digits: 0 });
+  writeSlider('kitDepth', (drum.height || 0) * 12, {
+    min: 1,
+    max: 24,
+    step: 0.5,
+    suffix: '"',
+    disabled: drum.type === 'cymbal',
+  });
+}
+
+function standardMicAlreadyAdded(preset) {
+  const name = preset.name.toLowerCase();
+  return state.mics.some((mic) => {
+    if (mic.standardId === preset.id || mic.name.toLowerCase() === name) return true;
+    if (preset.id === 'rack-tom') return mic.target === 'Hi/Mid Tom' && /tom/i.test(mic.name);
+    if (preset.id === 'mono-room') return mic.target === 'Kick' && /room mic|mono room/i.test(mic.name);
+    return false;
+  });
+}
+
+function renderStandardMicPicker() {
+  const select = $('standardMicSelect');
+  if (!select) return;
+  const available = STANDARD_MIC_PRESETS.filter((preset) => !standardMicAlreadyAdded(preset));
+  select.innerHTML = available.length
+    ? available.map((preset) => option(preset.name, preset.id)).join('')
+    : option('All standard mics added', '');
+  $('btnAddMic').disabled = !available.length;
 }
 
 function renderMicSelectors() {
-  $('micSelect').innerHTML = state.mics
-    .map((mic, index) => option(`CH ${mic.channel} · ${mic.name}`, index, index === selectedMicIndex))
-    .join('');
+  const hasMic = state.mics.length > 0;
+  $('micSelect').innerHTML = hasMic
+    ? state.mics.map((mic, index) => option(`CH ${mic.channel} · ${mic.name}`, index, index === selectedMicIndex)).join('')
+    : option('None', '');
+  renderStandardMicPicker();
+  setDisabled(MIC_FORM_IDS, !hasMic);
+  $('btnDeleteMic').disabled = !hasMic;
   const mic = state.mics[selectedMicIndex];
-  if (!mic) return;
+  if (!mic) {
+    writeValue('micChannel', '');
+    writeValue('micName', '');
+    writeValue('micNotes', '');
+    $('micCatalog').innerHTML = option('Unassigned', '');
+    $('micType').innerHTML = MIC_TYPES.map((type) => option(type, type)).join('');
+    $('micPattern').innerHTML = PATTERNS.map((pattern) => option(pattern, pattern)).join('');
+    $('micTarget').innerHTML = option('— none —', '');
+    writeSlider('micX', 0, { min: -state.room.width / 2, max: state.room.width / 2, disabled: true });
+    writeSlider('micY', 0, { min: -state.room.length / 2, max: state.room.length / 2, disabled: true });
+    writeSlider('micZ', 0, { min: 0.1, max: state.room.height + 1, disabled: true });
+    setChecked('micStand', false);
+    return;
+  }
   writeValue('micSelect', selectedMicIndex);
   writeValue('micChannel', mic.channel);
   writeValue('micName', mic.name);
@@ -446,9 +557,9 @@ function renderMicSelectors() {
   $('micPattern').innerHTML = PATTERNS.map((pattern) => option(pattern, pattern, pattern === mic.pattern)).join('');
   $('micTarget').innerHTML =
     option('— none —', '', !mic.target) + state.kit.map((drum) => option(drum.name, drum.name, drum.name === mic.target)).join('');
-  writeValue('micX', mic.x);
-  writeValue('micY', mic.y);
-  writeValue('micZ', mic.z);
+  writeSlider('micX', mic.x, { min: -state.room.width / 2 - 1, max: state.room.width / 2 + 1 });
+  writeSlider('micY', mic.y, { min: -state.room.length / 2 - 1, max: state.room.length / 2 + 1 });
+  writeSlider('micZ', mic.z, { min: 0.1, max: state.room.height + 1 });
   writeValue('micNotes', mic.notes);
   setChecked('micStand', mic.stand);
 }
@@ -466,11 +577,11 @@ function renderGoboSelectors() {
   const gobo = state.gobos[selectedGoboIndex];
   if (!gobo) return;
   writeValue('goboSelect', selectedGoboIndex);
-  writeValue('goboX', gobo.x);
-  writeValue('goboY', gobo.y);
-  writeValue('goboRot', gobo.rot);
-  writeValue('goboW', gobo.w);
-  writeValue('goboH', gobo.h);
+  writeSlider('goboX', gobo.x, { min: -state.room.width / 2, max: state.room.width / 2 });
+  writeSlider('goboY', gobo.y, { min: -state.room.length / 2, max: state.room.length / 2 });
+  writeSlider('goboRot', gobo.rot, { min: -180, max: 180, step: 1, suffix: '°', digits: 0 });
+  writeSlider('goboW', gobo.w, { min: 1, max: 12 });
+  writeSlider('goboH', gobo.h, { min: 1, max: Math.min(12, state.room.height) });
 }
 
 function renderLibraryDetails() {
@@ -517,6 +628,11 @@ function referenceTone(config) {
   if (album === 'fever to tell') return 'Raw trio drums; midrange kit picture; room edge.';
   if (album === 'solid gold') return 'Dry close funk-punk; tight kit image; controlled room.';
   return String(config?.soundGoal?.summary || config?.soundGoal || config?.accuracyBoundary?.summary || '').split('.')[0] || 'Reference drum layout.';
+}
+
+function referenceRoomText(room) {
+  if (!room) return 'No preset room context';
+  return `${room.width} ft W x ${room.length} ft L x ${room.height} ft H`;
 }
 
 function referenceCandidateLabels(config) {
@@ -566,6 +682,8 @@ function updateReferenceConfigDetails() {
   const candidate = selectedReferenceCandidate(config);
   const channels = candidate?.channels || [];
   const context = referenceConfigContext(config);
+  const presetContext = candidate ? REFERENCE_PRESET_CONTEXTS[candidate.id] : null;
+  const room = presetContext?.room || null;
   node.innerHTML = `
     <div class="readout-head">
       <strong>${escapeHtml(referenceConfigLabel(config))}</strong>
@@ -574,8 +692,11 @@ function updateReferenceConfigDetails() {
     <div class="readout-grid">
       <span>Layout</span><strong>${escapeHtml(referenceLayoutLabel(candidate))}</strong>
       <span>Channels</span><strong>${escapeHtml(`${channels.length || '—'} · ${compactList(channels, 5)}`)}</strong>
+      <span>Room</span><strong>${escapeHtml(referenceRoomText(room))}</strong>
+      <span>Basis</span><strong>${escapeHtml(room?.confidence || 'No room context')}</strong>
       <span>Focus</span><strong>${escapeHtml(referenceTone(config))}</strong>
     </div>
+    ${room?.source ? `<div class="readout-note">${escapeHtml(room.source)}</div>` : ''}
   `;
 }
 
@@ -612,8 +733,6 @@ function renderAnalysis() {
     $('selectedMetrics').innerHTML = [
       metric('Target distance', report.distance == null ? '—' : `${fmt(report.distance)} ft`),
       metric('Arrival', report.arrival == null ? '—' : `${fmt(report.arrival)} ms`),
-      metric('Cable estimate', `${fmt(report.cable, 1)} ft`),
-      metric('Cable pick', `${report.standardCable} ft`),
     ].join('');
   }
 
@@ -646,22 +765,25 @@ function renderPatchTable() {
   $('patchTable').innerHTML = `
     <table>
       <thead>
-        <tr><th>Ch</th><th>Mic</th><th>Source</th><th>Model</th><th>Cable</th></tr>
+        <tr><th>Ch</th><th>Mic</th><th>Source</th><th>Model</th></tr>
       </thead>
       <tbody>
-        ${rows
-          .map(
-            (row) => `
+        ${
+          rows.length
+            ? rows
+                .map(
+                  (row) => `
               <tr>
                 <td>${row.channel}</td>
                 <td>${escapeHtml(row.name)}</td>
                 <td>${escapeHtml(row.target)}</td>
                 <td>${escapeHtml(row.model || row.type)}</td>
-                <td>${row.standardCable} ft</td>
               </tr>
             `,
-          )
-          .join('')}
+                )
+                .join('')
+            : '<tr><td colspan="4">No microphones</td></tr>'
+        }
       </tbody>
     </table>
   `;
@@ -685,7 +807,6 @@ function syncRoomFromFields() {
   state.room.width = readNumber('roomW', state.room.width);
   state.room.length = readNumber('roomL', state.room.length);
   state.room.height = readNumber('roomH', state.room.height);
-  state.options.cables = $('showCables').checked;
   state.options.measurementRays = $('measurementRays').checked;
   state.options.autosave = $('autoSave').checked;
   state.mics.forEach((mic) => clampMicToRoom(mic, state.room));
@@ -703,8 +824,11 @@ function syncKitFromFields() {
   drum.x = readNumber('kitX', drum.x);
   drum.y = readNumber('kitY', drum.y);
   drum.z = readNumber('kitZ', drum.z);
-  drum.diameter = readNumber('kitDia', drum.diameter);
-  if (drum.type !== 'cymbal') drum.height = readNumber('kitDepth', drum.height);
+  drum.diameter = inft(readNumber('kitDia', drum.diameter * 12));
+  if (drum.type !== 'cymbal') drum.height = inft(readNumber('kitDepth', (drum.height || 0) * 12));
+  ['kitX', 'kitY', 'kitZ'].forEach((id) => updateSliderOutput(id));
+  updateSliderOutput('kitDia', { suffix: '"', digits: 0 });
+  updateSliderOutput('kitDepth', { suffix: '"' });
   updateState({ refreshForms: false });
 }
 
@@ -722,6 +846,7 @@ function syncMicFromFields() {
   mic.stand = $('micStand').checked;
   mic.notes = $('micNotes').value;
   clampMicToRoom(mic, state.room);
+  ['micX', 'micY', 'micZ'].forEach((id) => updateSliderOutput(id));
   updateState({ refreshForms: false });
   updateMicSelectLabel();
 }
@@ -735,6 +860,8 @@ function syncGoboFromFields() {
   gobo.w = readNumber('goboW', gobo.w);
   gobo.h = readNumber('goboH', gobo.h);
   clampGoboToRoom(gobo, state.room);
+  ['goboX', 'goboY', 'goboW', 'goboH'].forEach((id) => updateSliderOutput(id));
+  updateSliderOutput('goboRot', { suffix: '°', digits: 0 });
   updateState({ refreshForms: false });
 }
 
@@ -766,13 +893,13 @@ function buildReport() {
     '',
     '## Patch List',
     '',
-    '| Ch | Mic | Source | Model | Pattern | Target ft | Arrival ms | Cable |',
-    '| --- | --- | --- | --- | --- | ---: | ---: | ---: |',
+    '| Ch | Mic | Source | Model | Pattern | Target ft | Arrival ms |',
+    '| --- | --- | --- | --- | --- | ---: | ---: |',
     ...rows.map(
       (row) =>
         `| ${row.channel} | ${row.name} | ${row.target} | ${row.model || row.type} | ${row.pattern} | ${
           row.distance == null ? '' : row.distance.toFixed(2)
-        } | ${row.arrival == null ? '' : row.arrival.toFixed(2)} | ${row.standardCable} ft |`,
+        } | ${row.arrival == null ? '' : row.arrival.toFixed(2)} |`,
     ),
     '',
     '## Selected Mic',
@@ -828,6 +955,51 @@ function applyTemplate(templateId) {
   toast('Template applied');
 }
 
+function nextMicChannel() {
+  return Math.max(0, ...state.mics.map((mic) => Number(mic.channel) || 0)) + 1;
+}
+
+function createMicFromStandardPreset(preset) {
+  const item = catalogById(preset.catalogId);
+  const targetExists = state.kit.some((drum) => drum.name === preset.target);
+  return clampMicToRoom(
+    {
+      id: createId('mic'),
+      standardId: preset.id,
+      channel: nextMicChannel(),
+      name: preset.name,
+      catalogId: preset.catalogId || '',
+      micType: preset.micType || item?.micType || 'dynamic',
+      pattern: preset.pattern || item?.defaultPattern || 'cardioid',
+      target: targetExists ? preset.target : '',
+      x: preset.x,
+      y: preset.y,
+      z: preset.z,
+      stand: preset.stand !== false,
+      notes: '',
+    },
+    state.room,
+  );
+}
+
+function restoreStandardKit(handedness = 'right') {
+  const standard = createDefaultState();
+  state.kit = clone(standard.kit);
+  state.mics = clone(standard.mics);
+  if (handedness === 'left') {
+    state.kit.forEach((drum) => {
+      if (drum.id !== 'kick') drum.x *= -1;
+    });
+    state.mics.forEach((mic) => {
+      mic.x *= -1;
+    });
+  }
+  selectedMicIndex = 0;
+  selectedGoboIndex = Math.min(selectedGoboIndex, Math.max(0, state.gobos.length - 1));
+  updateState({ refreshForms: true });
+  toast(handedness === 'left' ? 'Left-handed kit restored' : 'Standard kit restored');
+}
+
 function referenceMicRows(config) {
   return [...(config?.micList || []), ...(config?.recommendedModernReproduction || [])];
 }
@@ -851,6 +1023,56 @@ function referenceMicNotes(config, candidate, layoutMic) {
   if (row?.processingNotes) lines.push(`Processing: ${row.processingNotes}`);
   if (!row?.confidence && config.accuracyBoundary?.summary) lines.push(config.accuracyBoundary.summary);
   return lines.join('\n');
+}
+
+function referencePresetProjectNote(config, candidate, presetContext) {
+  const room = presetContext?.room || null;
+  const lines = [
+    REF_NOTE_START,
+    `Reference: ${referenceConfigLabel(config)}`,
+    `Layout: ${referenceLayoutLabel(candidate)}`,
+  ];
+  if (room) {
+    lines.push(`Planner room: ${room.label || 'Reference room'} - ${referenceRoomText(room)}`);
+    lines.push(`Room confidence: ${room.confidence}`);
+    lines.push(`Room source: ${room.source}`);
+  }
+  lines.push(REF_NOTE_END);
+  return lines.join('\n');
+}
+
+function replaceReferencePresetProjectNote(notes, nextNote) {
+  const source = String(notes || '').trim();
+  const start = source.indexOf(REF_NOTE_START);
+  const end = source.indexOf(REF_NOTE_END);
+  let kept = source;
+
+  if (start !== -1 && end !== -1 && end >= start) {
+    kept = `${source.slice(0, start).trim()}\n\n${source.slice(end + REF_NOTE_END.length).trim()}`.trim();
+  }
+
+  return [kept, nextNote].filter(Boolean).join('\n\n');
+}
+
+function applyReferencePresetContext(config, candidate, presetContext) {
+  if (!presetContext) return;
+  if (presetContext.room) {
+    state.room = {
+      width: presetContext.room.width,
+      length: presetContext.room.length,
+      height: presetContext.room.height,
+    };
+    if (presetContext.room.label) state.project.venue = presetContext.room.label;
+  }
+  if (Array.isArray(presetContext.kit)) state.kit = clone(presetContext.kit);
+  if (Array.isArray(presetContext.gobos)) {
+    state.gobos = clone(presetContext.gobos).map((gobo) => clampGoboToRoom(gobo, state.room));
+    selectedGoboIndex = 0;
+  }
+  state.project.notes = replaceReferencePresetProjectNote(
+    state.project.notes,
+    referencePresetProjectNote(config, candidate, presetContext),
+  );
 }
 
 function createMicFromReferencePreset(config, candidate, layoutMic, index) {
@@ -878,10 +1100,12 @@ function applyReferencePreset(configId, presetId) {
   const config = referenceConfigs.find((item) => item.id === configId);
   const candidate = config ? referenceCandidateLabels(config).find((item) => item.id === presetId) : null;
   const layout = candidate ? REFERENCE_PRESET_LAYOUTS[candidate.id] : null;
+  const presetContext = candidate ? REFERENCE_PRESET_CONTEXTS[candidate.id] : null;
   if (!config || !candidate || !layout) {
     toast('Preset unavailable');
     return;
   }
+  applyReferencePresetContext(config, candidate, presetContext);
   state.mics = layout.map((mic, index) => createMicFromReferencePreset(config, candidate, mic, index));
   selectedMicIndex = 0;
   updateState({ refreshForms: true });
@@ -902,8 +1126,8 @@ function bindEvents() {
     $(id).addEventListener('input', syncProjectFromFields);
   });
 
-  ['roomW', 'roomL', 'roomH'].forEach((id) => $(id).addEventListener('input', syncRoomFromFields));
-  ['showCables', 'measurementRays', 'autoSave'].forEach((id) => $(id).addEventListener('change', syncRoomFromFields));
+  ['roomW', 'roomL', 'roomH'].forEach((id) => $(id)?.addEventListener('input', syncRoomFromFields));
+  ['measurementRays', 'autoSave'].forEach((id) => $(id)?.addEventListener('change', syncRoomFromFields));
 
   $('kitPiece').addEventListener('change', renderKitSelectors);
   $('kitSize').addEventListener('change', () => {
@@ -914,18 +1138,11 @@ function bindEvents() {
     updateState({ refreshForms: true });
   });
   ['kitX', 'kitY', 'kitZ', 'kitDia', 'kitDepth'].forEach((id) => $(id).addEventListener('input', syncKitFromFields));
-  $('btnStandardKit').addEventListener('click', () => {
-    const standard = createDefaultState();
-    state.kit = standard.kit;
-    state.mics = standard.mics;
-    selectedMicIndex = 0;
-    selectedGoboIndex = Math.min(selectedGoboIndex, Math.max(0, state.gobos.length - 1));
-    updateState({ refreshForms: true });
-    toast('Standard kit restored');
-  });
+  $('btnStandardKit').addEventListener('click', () => restoreStandardKit('right'));
+  $('btnLeftHandedKit').addEventListener('click', () => restoreStandardKit('left'));
 
   $('micSelect').addEventListener('change', () => {
-    selectedMicIndex = Number($('micSelect').value);
+    selectedMicIndex = Number($('micSelect').value || 0);
     sceneApi.setSelectedMicIndex(selectedMicIndex);
     renderMicSelectors();
     renderAnalysis();
@@ -939,32 +1156,15 @@ function bindEvents() {
   ['micChannel', 'micName', 'micX', 'micY', 'micZ', 'micNotes'].forEach((id) => $(id).addEventListener('input', syncMicFromFields));
   ['micType', 'micPattern', 'micTarget', 'micStand'].forEach((id) => $(id).addEventListener('change', syncMicFromFields));
   $('btnAddMic').addEventListener('click', () => {
-    const selectedCatalog = catalogById($('micCatalog').value) || catalog[0];
-    const channel = Math.max(0, ...state.mics.map((mic) => Number(mic.channel) || 0)) + 1;
-    state.mics.push(
-      clampMicToRoom(
-        {
-          id: createId('mic'),
-          channel,
-          name: selectedCatalog ? selectedCatalog.model : `Mic ${channel}`,
-          catalogId: selectedCatalog?.id || '',
-          micType: selectedCatalog?.micType || 'dynamic',
-          pattern: selectedCatalog?.defaultPattern || 'cardioid',
-          target: state.kit[0]?.name || '',
-          x: 0,
-          y: -2,
-          z: 3,
-          stand: true,
-          notes: '',
-        },
-        state.room,
-      ),
-    );
+    const preset = STANDARD_MIC_PRESETS.find((item) => item.id === $('standardMicSelect').value);
+    if (!preset) return;
+    state.mics.push(createMicFromStandardPreset(preset));
     selectedMicIndex = state.mics.length - 1;
     updateState({ refreshForms: true });
+    toast(`${preset.name} added`);
   });
   $('btnDeleteMic').addEventListener('click', () => {
-    if (state.mics.length <= 1) return;
+    if (!state.mics.length) return;
     state.mics.splice(selectedMicIndex, 1);
     selectedMicIndex = Math.max(0, selectedMicIndex - 1);
     updateState({ refreshForms: true });

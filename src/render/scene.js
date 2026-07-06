@@ -1,6 +1,5 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { cableRoutePoints, stageBoxPos } from '../data/metrics.js';
 
 export const toScene = (x, y, z) => new THREE.Vector3(x, z, -y);
 
@@ -34,8 +33,7 @@ export function createPlannerScene({ viewport, tooltip, onMicSelect, onGoboSelec
   const kitGroup = new THREE.Group();
   const micsGroup = new THREE.Group();
   const goboGroup = new THREE.Group();
-  const cableGroup = new THREE.Group();
-  scene.add(roomGroup, kitGroup, micsGroup, goboGroup, cableGroup);
+  scene.add(roomGroup, kitGroup, micsGroup, goboGroup);
 
   const MAT = {
     floor: new THREE.MeshStandardMaterial({ color: 0xdcdddf, roughness: 1 }),
@@ -57,10 +55,8 @@ export function createPlannerScene({ viewport, tooltip, onMicSelect, onGoboSelec
     }),
     grille: new THREE.MeshStandardMaterial({ color: 0x8b9097, roughness: 0.6, metalness: 0.7 }),
     grilleSel: new THREE.MeshStandardMaterial({ color: 0xd08a33, roughness: 0.5, metalness: 0.5 }),
-    cable: new THREE.MeshStandardMaterial({ color: 0x2a2c30, roughness: 0.9 }),
     wood: new THREE.MeshStandardMaterial({ color: 0x9c7b52, roughness: 0.85 }),
     fabric: new THREE.MeshStandardMaterial({ color: 0x7d8289, roughness: 1 }),
-    box: new THREE.MeshStandardMaterial({ color: 0x33363b, roughness: 0.7 }),
     measure: new THREE.LineDashedMaterial({ color: 0xb25c00, dashSize: 0.25, gapSize: 0.18 }),
   };
 
@@ -268,13 +264,6 @@ export function createPlannerScene({ viewport, tooltip, onMicSelect, onGoboSelec
     chevron.position.copy(toScene(0, -length / 2 + 0.9, 0.02));
     chevron.userData.ownMaterial = true;
     roomGroup.add(pick(chevron, 'Front of room'));
-
-    if (state.options.cables) {
-      const sb = stageBoxPos(state);
-      const boxMesh = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.35, 0.8), MAT.box);
-      boxMesh.position.copy(toScene(sb.x, sb.y, 0.18));
-      roomGroup.add(pick(boxMesh, 'Stage box'));
-    }
   }
 
   function rebuildKit() {
@@ -324,12 +313,93 @@ export function createPlannerScene({ viewport, tooltip, onMicSelect, onGoboSelec
     }
   }
 
-  function buildMicMesh(micType, selected) {
+  function addPatternMarker(group, mic, selected) {
+    const marker = selected ? MAT.grilleSel : MAT.pole;
+    if (mic.pattern === 'figure-8') {
+      for (const x of [-0.12, 0.12]) {
+        const lobe = new THREE.Mesh(new THREE.SphereGeometry(0.025, 8, 6), marker);
+        lobe.position.set(x, 0.02, 0);
+        group.add(lobe);
+      }
+    } else if (mic.pattern === 'omni') {
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.105, 0.006, 6, 20), marker);
+      ring.rotation.x = Math.PI / 2;
+      ring.position.y = 0.02;
+      group.add(ring);
+    } else if (mic.pattern === 'supercardioid') {
+      const rearDot = new THREE.Mesh(new THREE.SphereGeometry(0.022, 8, 6), marker);
+      rearDot.position.y = -0.15;
+      group.add(rearDot);
+    }
+  }
+
+  function buildMicMesh(mic, selected) {
     const group = new THREE.Group();
     const body = selected ? MAT.micSel : MAT.micBody;
     const grille = selected ? MAT.grilleSel : MAT.grille;
+    const micType = mic.micType;
+    const catalogId = mic.catalogId || '';
+    const isRibbon = ['coles-4038', 'beyer-m160', 'rca-ribbon', 'altec-639'].includes(catalogId);
+    const isBroadcastDynamic = ['ev-re20', 'shure-sm7b'].includes(catalogId);
+    const isBoxCondenser = catalogId === 'akg-c414';
+    const isTubeLdc = catalogId === 'telefunken-ela-m-251';
+    const isFetLdc = catalogId === 'neumann-fet47';
+    const isVintageStick = ['akg-d19', 'ev-635a'].includes(catalogId);
 
-    if (micType === 'pencil') {
+    if (isRibbon) {
+      const ribbonBody = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.24, 0.08), body);
+      ribbonBody.position.y = -0.02;
+      group.add(ribbonBody);
+      const basket = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.2, 0.055), grille);
+      basket.position.y = 0.09;
+      group.add(basket);
+      const yoke = new THREE.Mesh(new THREE.TorusGeometry(0.13, 0.01, 8, 18), MAT.pole);
+      yoke.rotation.x = Math.PI / 2;
+      yoke.position.y = -0.11;
+      group.add(yoke);
+      group.userData.rear = 0.17;
+    } else if (isBroadcastDynamic) {
+      const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.082, 0.34, 18), body);
+      tube.position.y = -0.03;
+      group.add(tube);
+      const grilleHead = new THREE.Mesh(new THREE.CylinderGeometry(0.082, 0.078, 0.11, 18), grille);
+      grilleHead.position.y = 0.19;
+      group.add(grilleHead);
+      const rear = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.065, 0.08, 14), body);
+      rear.position.y = -0.24;
+      group.add(rear);
+      group.userData.rear = 0.27;
+    } else if (isVintageStick) {
+      const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.044, 0.38, 12), body);
+      group.add(tube);
+      const grilleBand = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.043, 0.13, 12), grille);
+      grilleBand.position.y = 0.17;
+      group.add(grilleBand);
+      group.userData.rear = 0.2;
+    } else if (isBoxCondenser) {
+      const bodyBox = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.18, 0.09), body);
+      bodyBox.position.y = -0.08;
+      group.add(bodyBox);
+      const basket = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.19, 0.08), grille);
+      basket.position.y = 0.11;
+      group.add(basket);
+      const mount = new THREE.Mesh(new THREE.TorusGeometry(0.135, 0.01, 8, 24), MAT.pole);
+      mount.rotation.x = Math.PI / 2;
+      mount.position.y = -0.12;
+      group.add(mount);
+      group.userData.rear = 0.18;
+    } else if (isTubeLdc || isFetLdc) {
+      const tube = new THREE.Mesh(new THREE.CylinderGeometry(isFetLdc ? 0.095 : 0.078, isFetLdc ? 0.09 : 0.07, 0.32, 18), body);
+      tube.position.y = -0.06;
+      group.add(tube);
+      const basket = new THREE.Mesh(new THREE.CylinderGeometry(isFetLdc ? 0.1 : 0.085, isFetLdc ? 0.095 : 0.078, 0.18, 18), grille);
+      basket.position.y = 0.19;
+      group.add(basket);
+      const dome = new THREE.Mesh(new THREE.SphereGeometry(isFetLdc ? 0.1 : 0.085, 18, 8, 0, Math.PI * 2, 0, Math.PI / 2), grille);
+      dome.position.y = 0.28;
+      group.add(dome);
+      group.userData.rear = 0.22;
+    } else if (micType === 'pencil') {
       const tube = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.42, 12), body);
       group.add(tube);
       const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.03, 0.07, 12), grille);
@@ -372,12 +442,12 @@ export function createPlannerScene({ viewport, tooltip, onMicSelect, onGoboSelec
       group.add(head);
       group.userData.rear = 0.15;
     }
+    addPatternMarker(group, mic, selected);
     return group;
   }
 
   function rebuildMics() {
     disposeGroup(micsGroup);
-    disposeGroup(cableGroup);
     const up = new THREE.Vector3(0, 1, 0);
 
     state.mics.forEach((mic, index) => {
@@ -395,7 +465,7 @@ export function createPlannerScene({ viewport, tooltip, onMicSelect, onGoboSelec
         micsGroup.add(base);
       }
 
-      const bodyGroup = buildMicMesh(mic.micType, selected);
+      const bodyGroup = buildMicMesh(mic, selected);
       bodyGroup.position.copy(pos);
       bodyGroup.quaternion.copy(quat);
       bodyGroup.children.forEach((child) => pick(child, `CH ${mic.channel} · ${mic.name} · ${mic.pattern}`, { micIndex: index }));
@@ -407,19 +477,6 @@ export function createPlannerScene({ viewport, tooltip, onMicSelect, onGoboSelec
         const line = new THREE.Line(lineGeo, MAT.measure);
         line.computeLineDistances();
         micsGroup.add(line);
-      }
-
-      if (state.options.cables) {
-        const points = cableRoutePoints(state, mic).map((point, pointIndex) => {
-          if (pointIndex === 0) {
-            const rear = bodyGroup.userData.rear || 0.15;
-            return pos.clone().add(dir.clone().multiplyScalar(-rear - 0.02));
-          }
-          return toScene(point.x, point.y, point.z);
-        });
-        const curve = new THREE.CatmullRomCurve3(points);
-        const cable = new THREE.Mesh(new THREE.TubeGeometry(curve, 40, 0.016, 6), MAT.cable);
-        cableGroup.add(cable);
       }
     });
   }

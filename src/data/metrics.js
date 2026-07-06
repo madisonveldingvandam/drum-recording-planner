@@ -17,41 +17,6 @@ export function arrivalMs(feet) {
   return (feet / SPEED_OF_SOUND_FTPS) * 1000;
 }
 
-export function stageBoxPos(state) {
-  return {
-    x: state.room.width / 2 - 1.2,
-    y: state.room.length / 2 - 1.2,
-    z: 0.3,
-  };
-}
-
-export function cableRoutePoints(state, mic) {
-  const box = stageBoxPos(state);
-  const toBoxX = Math.sign(box.x - mic.x) * 0.35 || 0.35;
-  const toBoxY = Math.sign(box.y - mic.y) * 0.35 || 0.35;
-  return [
-    { x: mic.x, y: mic.y, z: mic.z },
-    { x: mic.x + toBoxX * 0.5, y: mic.y + toBoxY * 0.5, z: Math.max(0.15, mic.z * 0.45) },
-    { x: mic.x + toBoxX, y: mic.y + toBoxY, z: 0.03 },
-    { x: (mic.x + box.x) / 2, y: (mic.y + box.y) / 2, z: 0.03 },
-    box,
-  ];
-}
-
-export function cableLengthFeet(state, mic) {
-  const points = cableRoutePoints(state, mic);
-  let length = 0;
-  for (let i = 1; i < points.length; i += 1) {
-    length += distanceFeet(points[i - 1], points[i]);
-  }
-  return length * 1.12 + 3;
-}
-
-export function nearestStandardCable(feet) {
-  const standards = [10, 15, 20, 25, 30, 50, 75, 100, 150];
-  return standards.find((length) => length >= feet) || Math.ceil(feet / 25) * 25;
-}
-
 export function selectedMicReport(state, selectedMicIndex) {
   const mic = state.mics[selectedMicIndex] || state.mics[0] || null;
   if (!mic) return null;
@@ -62,8 +27,6 @@ export function selectedMicReport(state, selectedMicIndex) {
     target,
     distance,
     arrival: distance == null ? null : arrivalMs(distance),
-    cable: cableLengthFeet(state, mic),
-    standardCable: nearestStandardCable(cableLengthFeet(state, mic)),
   };
 }
 
@@ -138,7 +101,6 @@ export function patchRows(state, catalog = []) {
       const target = targetForMic(state, mic);
       const distance = target ? distanceFeet(mic, target) : null;
       const catalogItem = catalog.find((item) => item.id === mic.catalogId);
-      const cable = cableLengthFeet(state, mic);
       return {
         channel: mic.channel,
         name: mic.name,
@@ -149,8 +111,6 @@ export function patchRows(state, catalog = []) {
         stand: mic.stand ? 'Yes' : 'No',
         distance,
         arrival: distance == null ? null : arrivalMs(distance),
-        cable,
-        standardCable: nearestStandardCable(cable),
         notes: mic.notes || '',
       };
     });
@@ -167,8 +127,6 @@ export function rowsToCsv(rows) {
     'Stand',
     'Distance ft',
     'Arrival ms',
-    'Cable ft',
-    'Cable pick',
     'Notes',
   ];
   const body = rows.map((row) => [
@@ -181,8 +139,6 @@ export function rowsToCsv(rows) {
     row.stand,
     row.distance == null ? '' : row.distance.toFixed(2),
     row.arrival == null ? '' : row.arrival.toFixed(2),
-    row.cable.toFixed(1),
-    row.standardCable,
     row.notes,
   ]);
   return [headers, ...body]

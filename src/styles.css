@@ -314,6 +314,10 @@ section {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
+.button-row.single-action {
+  grid-template-columns: 1fr;
+}
+
 .field {
   display: block;
   min-width: 0;
@@ -337,6 +341,45 @@ section {
 
 .small-field {
   max-width: 96px;
+}
+
+.slider-stack {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.slider-field {
+  margin-bottom: 0;
+}
+
+.slider-field > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.slider-field output {
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+input[type="range"] {
+  min-height: 26px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  accent-color: var(--accent);
+}
+
+input[type="range"]:focus {
+  outline-offset: 2px;
+}
+
+input[type="range"]:disabled {
+  opacity: 0.45;
 }
 
 .check {
@@ -410,6 +453,12 @@ section {
   color: var(--ink);
   font-size: 11px;
   font-weight: 600;
+}
+
+.readout-note {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.45;
 }
 
 .technical-checks {

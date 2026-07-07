@@ -93,8 +93,23 @@ function validateTemplateSet(templates, label) {
   return templateIds;
 }
 
-validateTemplateSet(publicTemplates, 'public setup templates');
-validateTemplateSet(SETUP_TEMPLATES_FALLBACK, 'fallback setup templates');
+const publicTemplateIds = validateTemplateSet(publicTemplates, 'public setup templates');
+const fallbackTemplateIds = validateTemplateSet(SETUP_TEMPLATES_FALLBACK, 'fallback setup templates');
+
+for (const id of publicTemplateIds) {
+  if (!fallbackTemplateIds.has(id)) fail(`fallback setup templates is missing public id "${id}"`);
+}
+
+for (const id of fallbackTemplateIds) {
+  if (!publicTemplateIds.has(id)) fail(`fallback setup templates has extra id "${id}"`);
+}
+
+for (const template of publicTemplates) {
+  const fallback = SETUP_TEMPLATES_FALLBACK.find((item) => item.id === template.id);
+  if (fallback && canonical(fallback) !== canonical(template)) {
+    fail(`fallback setup template differs from public setup template for "${template.id}"`);
+  }
+}
 
 const candidateIds = new Set();
 for (const config of referenceConfigs) {

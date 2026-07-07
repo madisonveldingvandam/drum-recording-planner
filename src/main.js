@@ -1054,13 +1054,27 @@ function renderStudioInventoryDetails() {
 }
 
 function renderTemplates() {
-  $('templateSelect').innerHTML = templates.map((template) => option(template.name, template.id)).join('');
+  const select = $('templateSelect');
+  const selectedTemplate =
+    templates.find((template) => template.id === select.value) ||
+    templates.find((template) => template.isDefault) ||
+    templates[0] ||
+    null;
+  select.innerHTML = templates
+    .map((template) => option(template.name, template.id, template.id === selectedTemplate?.id))
+    .join('');
   updateTemplateDetails();
 }
 
 function updateTemplateDetails() {
   const selected = templates.find((template) => template.id === $('templateSelect').value);
-  $('templateDetails').textContent = selected ? `${selected.mics.length} channels · ${selected.description}` : 'No template data loaded';
+  if (!selected) {
+    $('templateDetails').textContent = 'No template data loaded';
+    return;
+  }
+  const category = selected.category ? `${selected.category} - ` : '';
+  const useCase = selected.useCase ? ` ${selected.useCase}` : '';
+  $('templateDetails').textContent = `${category}${selected.mics.length} channels. ${selected.description}${useCase}`;
 }
 
 function selectedReferenceConfig() {
@@ -1079,9 +1093,19 @@ function referenceConfigContext(config) {
 
 function referenceLayoutLabel(candidate) {
   if (!candidate) return '—';
-  if (/minimum|minimal|basic/i.test(candidate.id) || /minimum|minimal|basic/i.test(candidate.name)) return 'Basic';
-  if (/expanded|controlled/i.test(candidate.id) || /expanded|controlled/i.test(candidate.name)) return 'Expanded';
+  if (candidate.candidateType === 'minimum') return `${candidate.name} (minimum/core)`;
+  if (candidate.candidateType === 'workflow') return `${candidate.name} (workflow expansion)`;
+  if (candidate.candidateType === 'studio-expansion') return `${candidate.name} (studio expansion)`;
+  if (/minimum|minimal|basic/i.test(candidate.id) || /minimum|minimal|basic/i.test(candidate.name)) return `${candidate.name} (minimum/core)`;
+  if (/expanded|controlled/i.test(candidate.id) || /expanded|controlled/i.test(candidate.name)) return `${candidate.name} (expanded)`;
   return candidate.name;
+}
+
+function referenceLayoutScope(candidate) {
+  if (!candidate) return 'No layout scope';
+  const type = candidate.candidateType ? candidate.candidateType.replaceAll('-', ' ') : 'reference';
+  const confidence = candidate.confidenceScope ? candidate.confidenceScope.replaceAll('-', ' ') : 'scope unspecified';
+  return `${type} / ${confidence}`;
 }
 
 function referenceTone(config) {
@@ -1105,7 +1129,14 @@ function referenceCandidateLabels(config) {
 
 function selectedReferenceCandidate(config = selectedReferenceConfig()) {
   const candidates = referenceCandidateLabels(config);
-  return candidates.find((candidate) => candidate.id === $('referencePresetSelect')?.value) || candidates[0] || null;
+  const selectedId = $('referencePresetSelect')?.value;
+  return (
+    candidates.find((candidate) => candidate.id === selectedId) ||
+    candidates.find((candidate) => candidate.id === config?.recommendedDefaultLayoutId) ||
+    candidates.find((candidate) => candidate.preferredDefault) ||
+    candidates[0] ||
+    null
+  );
 }
 
 function renderReferenceConfigs() {
@@ -1123,8 +1154,11 @@ function renderReferencePresetSelect() {
   const candidates = referenceCandidateLabels(config);
   const select = $('referencePresetSelect');
   if (!select) return;
+  const selectedCandidate = selectedReferenceCandidate(config);
   select.innerHTML = candidates.length
-    ? candidates.map((candidate) => option(referenceLayoutLabel(candidate), candidate.id, candidate.id === select.value)).join('')
+    ? candidates
+        .map((candidate) => option(referenceLayoutLabel(candidate), candidate.id, candidate.id === selectedCandidate?.id))
+        .join('')
     : option('No app layout labels', '');
 }
 
@@ -1156,12 +1190,14 @@ function updateReferenceConfigDetails() {
     </div>
     <div class="readout-grid">
       <span>Layout</span><strong>${escapeHtml(referenceLayoutLabel(candidate))}</strong>
+      <span>Scope</span><strong>${escapeHtml(referenceLayoutScope(candidate))}</strong>
       <span>Mics</span><strong>${escapeHtml(layout.length ? `${layout.length} rows` : '—')}</strong>
       <span>Sources</span><strong>${escapeHtml(compactList(sourceGroups, 5))}</strong>
       <span>Room</span><strong>${escapeHtml(referenceRoomText(room))}</strong>
       <span>Basis</span><strong>${escapeHtml(room?.confidence || 'No room context')}</strong>
       <span>Focus</span><strong>${escapeHtml(referenceTone(config))}</strong>
     </div>
+    ${candidate?.note ? `<div class="readout-note">${escapeHtml(candidate.note)}</div>` : ''}
     ${room?.source ? `<div class="readout-note">${escapeHtml(room.source)}</div>` : ''}
   `;
 }
@@ -1577,7 +1613,9 @@ function referencePresetProjectNote(config, candidate, presetContext) {
     REF_NOTE_START,
     `Reference: ${referenceConfigLabel(config)}`,
     `Layout: ${referenceLayoutLabel(candidate)}`,
+    `Layout scope: ${referenceLayoutScope(candidate)}`,
   ];
+  if (candidate?.note) lines.push(`Layout note: ${candidate.note}`);
   if (room) {
     lines.push(`Planner room: ${room.label || 'Reference room'} - ${referenceRoomText(room)}`);
     lines.push(`Room confidence: ${room.confidence}`);

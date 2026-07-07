@@ -3,26 +3,18 @@
     "id": "pinkerton-informed-sound-city-electric-lady-reconstruction",
     "name": "Pinkerton-informed raw live-band rock drums: Sound City / Electric Lady reconstruction",
     "status": "research-reference",
+    "recommendedDefaultLayoutId": "pinkerton-informed-sound-city-expanded",
     "appDataNotes": {
       "setupTemplatesChanged": false,
       "catalogingMode": true,
       "candidateSetupLabels": [
         {
-          "id": "pinkerton-informed-minimum-rock-room",
-          "name": "Pinkerton-Informed Minimum Rock Room",
-          "channels": [
-            "Kick close",
-            "Snare top",
-            "Rack tom",
-            "Floor tom",
-            "Stereo overheads",
-            "Mono front/crush"
-          ],
-          "note": "Label and channel grouping only; no planner coordinates created in this pass."
-        },
-        {
           "id": "pinkerton-informed-sound-city-expanded",
-          "name": "Pinkerton-Informed Sound City Expanded",
+          "name": "Pinkerton-Informed Studio Expansion",
+          "category": "Album Reference / Research",
+          "candidateType": "studio-expansion",
+          "confidenceScope": "practical-expansion",
+          "preferredDefault": true,
           "channels": [
             "Kick in",
             "Kick out",
@@ -35,7 +27,24 @@
             "Mono front/crush",
             "Optional hi-hat"
           ],
-          "note": "Label and channel grouping only; no compact app template entry created in this pass."
+          "note": "Expanded practical studio layout based on the research context; not a documented Pinkerton mic sheet."
+        },
+        {
+          "id": "pinkerton-informed-minimum-rock-room",
+          "name": "Pinkerton-Informed Minimum / Core Rock Room",
+          "category": "Album Reference / Research",
+          "candidateType": "minimum",
+          "confidenceScope": "core-picture",
+          "preferredDefault": false,
+          "channels": [
+            "Kick close",
+            "Snare top",
+            "Rack tom",
+            "Floor tom",
+            "Stereo overheads",
+            "Mono front/crush"
+          ],
+          "note": "Minimum/core reconstruction for the kit picture; not the recommended full studio tracking setup."
         }
       ]
     },
@@ -585,25 +594,18 @@
     "id": "interpol-antics-tarquin-room-heavy-hybrid",
     "name": "Interpol / Antics / Tarquin room-heavy hybrid drum configuration",
     "status": "research-reference",
+    "recommendedDefaultLayoutId": "antics-tarquin-expanded-room",
     "appDataNotes": {
       "setupTemplatesChanged": false,
       "catalogingMode": true,
       "candidateSetupLabels": [
         {
-          "id": "antics-minimum-room-hybrid",
-          "name": "Antics Minimum Room Hybrid",
-          "channels": [
-            "Kick in",
-            "Snare top",
-            "Toms as needed",
-            "Stereo overheads",
-            "Mono extreme room"
-          ],
-          "note": "Label and channel grouping only; no planner coordinates created in this pass."
-        },
-        {
           "id": "antics-tarquin-expanded-room",
-          "name": "Antics Tarquin Expanded Room",
+          "name": "Antics Tarquin Studio Expansion",
+          "category": "Album Reference / Research",
+          "candidateType": "studio-expansion",
+          "confidenceScope": "practical-expansion",
+          "preferredDefault": true,
           "channels": [
             "Kick in",
             "Kick out",
@@ -616,7 +618,23 @@
             "Mono extreme room",
             "Optional trash mic"
           ],
-          "note": "Label and channel grouping only; no compact app template entry created in this pass."
+          "note": "Expanded practical studio layout for the documented room-heavy context; not an exact historical close-mic sheet."
+        },
+        {
+          "id": "antics-minimum-room-hybrid",
+          "name": "Antics Minimum / Core Room Hybrid",
+          "category": "Album Reference / Research",
+          "candidateType": "minimum",
+          "confidenceScope": "core-picture",
+          "preferredDefault": false,
+          "channels": [
+            "Kick in",
+            "Snare top",
+            "Toms as needed",
+            "Stereo overheads",
+            "Mono extreme room"
+          ],
+          "note": "Minimum/core reconstruction for the room-heavy kit picture; not the recommended full studio tracking setup."
         }
       ]
     },
@@ -1172,24 +1190,18 @@
     "id": "yeah-yeah-yeahs-fever-to-tell-headgear-raw-trio",
     "name": "Yeah Yeah Yeahs - Fever to Tell / Headgear raw-trio drum configuration",
     "status": "research-reference",
+    "recommendedDefaultLayoutId": "fever-to-tell-expanded-headgear",
     "appDataNotes": {
       "setupTemplatesChanged": false,
       "catalogingMode": true,
       "candidateSetupLabels": [
         {
-          "id": "fever-to-tell-minimum-raw-trio",
-          "name": "Fever to Tell Minimum Raw Trio",
-          "channels": [
-            "Kick",
-            "Snare top",
-            "Mono overhead",
-            "Mono front-of-kit/crush"
-          ],
-          "note": "Label and channel grouping only; no planner coordinates created in this pass."
-        },
-        {
           "id": "fever-to-tell-expanded-headgear",
-          "name": "Fever to Tell Expanded Headgear",
+          "name": "Fever to Tell Studio Expansion",
+          "category": "Album Reference / Research",
+          "candidateType": "studio-expansion",
+          "confidenceScope": "practical-expansion",
+          "preferredDefault": true,
           "channels": [
             "Kick",
             "Snare top",
@@ -1202,7 +1214,22 @@
             "Far room/hall",
             "Optional hi-hat"
           ],
-          "note": "Label and channel grouping only; no compact app template entry created in this pass."
+          "note": "Expanded practical studio layout for the Headgear/raw-trio context; not a documented Fever to Tell mic sheet."
+        },
+        {
+          "id": "fever-to-tell-minimum-raw-trio",
+          "name": "Fever to Tell Minimum / Core Raw Trio",
+          "category": "Album Reference / Research",
+          "candidateType": "minimum",
+          "confidenceScope": "core-picture",
+          "preferredDefault": false,
+          "channels": [
+            "Kick",
+            "Snare top",
+            "Mono overhead",
+            "Mono front-of-kit/crush"
+          ],
+          "note": "Minimum/core reconstruction for the raw kit picture; not the recommended full studio tracking setup."
         }
       ]
     },
@@ -1624,24 +1651,18 @@
     "id": "gang-of-four-solid-gold-dry-close-funk-punk",
     "name": "Gang of Four / Solid Gold - dry-close, dense funk-punk drum configuration",
     "status": "research-reference",
+    "recommendedDefaultLayoutId": "solid-gold-controlled-expanded",
     "appDataNotes": {
       "setupTemplatesChanged": false,
       "catalogingMode": true,
       "candidateSetupLabels": [
         {
-          "id": "solid-gold-minimum-close-funk",
-          "name": "Solid Gold Minimum Close Funk",
-          "channels": [
-            "Kick",
-            "Snare top",
-            "Hi-hat",
-            "Mono/narrow overhead"
-          ],
-          "note": "Label and channel grouping only; no planner coordinates created in this pass."
-        },
-        {
           "id": "solid-gold-controlled-expanded",
-          "name": "Solid Gold Controlled Expanded",
+          "name": "Solid Gold Controlled Studio Expansion",
+          "category": "Album Reference / Research",
+          "candidateType": "studio-expansion",
+          "confidenceScope": "practical-expansion",
+          "preferredDefault": true,
           "channels": [
             "Kick",
             "Snare top",
@@ -1653,7 +1674,22 @@
             "Optional front/crush",
             "Optional low room"
           ],
-          "note": "Label and channel grouping only; no compact app template entry created in this pass."
+          "note": "Expanded practical studio layout for a controlled dry close-funk setup; not a documented Solid Gold mic sheet."
+        },
+        {
+          "id": "solid-gold-minimum-close-funk",
+          "name": "Solid Gold Minimum / Core Close Funk",
+          "category": "Album Reference / Research",
+          "candidateType": "minimum",
+          "confidenceScope": "core-picture",
+          "preferredDefault": false,
+          "channels": [
+            "Kick",
+            "Snare top",
+            "Hi-hat",
+            "Mono/narrow overhead"
+          ],
+          "note": "Minimum/core reconstruction for the close kit picture; not the recommended full studio tracking setup."
         }
       ]
     },
@@ -2113,26 +2149,18 @@
     "id": "queens-of-the-stone-age-songs-for-the-deaf-dry-shell-separate-cymbal",
     "name": "Queens of the Stone Age / Songs for the Deaf dry-shell + separate-cymbal overdub drum configuration",
     "status": "research-reference",
+    "recommendedDefaultLayoutId": "songs-for-the-deaf-expanded-overdub",
     "appDataNotes": {
       "setupTemplatesChanged": false,
       "catalogingMode": true,
       "candidateSetupLabels": [
         {
-          "id": "songs-for-the-deaf-dry-shell-basic",
-          "name": "Songs for the Deaf Dry Shell Basic",
-          "channels": [
-            "Kick in shell pass",
-            "Snare top shell pass",
-            "Rack tom shell pass",
-            "Floor tom shell pass",
-            "Shell front/glue",
-            "Cymbal pass overheads"
-          ],
-          "note": "App layout separates shell-pass close mics from cymbal-pass overheads; electronic cymbal pads and dummy drums are documented in notes rather than as audio channels."
-        },
-        {
           "id": "songs-for-the-deaf-expanded-overdub",
-          "name": "Songs for the Deaf Expanded Overdub",
+          "name": "Songs for the Deaf Expanded Workflow",
+          "category": "Album Reference / Research",
+          "candidateType": "workflow",
+          "confidenceScope": "practical-expansion",
+          "preferredDefault": true,
           "channels": [
             "Kick in",
             "Kick out",
@@ -2145,7 +2173,24 @@
             "Cymbal pass hat/ride spots",
             "Dead room dirt"
           ],
-          "note": "Expanded app layout for planning the separate-shell and separate-cymbal workflow; not an original session mic sheet."
+          "note": "Expanded app layout for planning the source-supported separate-shell and separate-cymbal workflow; not an original session mic sheet."
+        },
+        {
+          "id": "songs-for-the-deaf-dry-shell-basic",
+          "name": "Songs for the Deaf Basic / Core Workflow",
+          "category": "Album Reference / Research",
+          "candidateType": "minimum",
+          "confidenceScope": "core-workflow",
+          "preferredDefault": false,
+          "channels": [
+            "Kick in shell pass",
+            "Snare top shell pass",
+            "Rack tom shell pass",
+            "Floor tom shell pass",
+            "Shell front/glue",
+            "Cymbal pass overheads"
+          ],
+          "note": "Basic/core workflow reconstruction; electronic cymbal pads and dummy drums are documented in notes rather than as audio channels."
         }
       ]
     },

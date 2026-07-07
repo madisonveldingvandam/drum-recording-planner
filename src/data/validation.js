@@ -161,45 +161,40 @@ export function validatePlannerState(input) {
   }));
 
   const micSource = Array.isArray(obj.mics) ? obj.mics : def.mics;
-  out.mics = micSource.map((mic, index) =>
-    clampMicToRoom(
-      {
-        id: text(mic.id, `mic-${index + 1}`),
-        standardId: text(mic.standardId, ''),
-        channel: clamp(Math.round(num(mic.channel, index + 1)), 1, 128),
-        name: text(mic.name, `Mic ${index + 1}`),
-        catalogId: text(mic.catalogId, ''),
-        micType: MIC_TYPES.includes(mic.micType) ? mic.micType : 'dynamic',
-        x: num(mic.x, 0),
-        y: num(mic.y, 0),
-        z: num(mic.z, 3),
-        pattern: PATTERNS.includes(mic.pattern) ? mic.pattern : 'cardioid',
-        target: text(mic.target, ''),
-        stand: mic.stand !== false,
-        notes: text(mic.notes, ''),
-      },
-      out.room,
-    ),
-  );
+  out.mics = micSource.map((mic, index) => ({
+    id: text(mic.id, `mic-${index + 1}`),
+    standardId: text(mic.standardId, ''),
+    channel: clamp(Math.round(num(mic.channel, index + 1)), 1, 128),
+    name: text(mic.name, `Mic ${index + 1}`),
+    catalogId: text(mic.catalogId, ''),
+    micType: MIC_TYPES.includes(mic.micType) ? mic.micType : 'dynamic',
+    x: num(mic.x, 0),
+    y: num(mic.y, 0),
+    z: clamp(num(mic.z, 3), 0.1, 200),
+    pattern: PATTERNS.includes(mic.pattern) ? mic.pattern : 'cardioid',
+    target: text(mic.target, ''),
+    stand: mic.stand !== false,
+    notes: text(mic.notes, ''),
+  }));
 
   const goboSource = isLegacyDefaultGoboSet(obj.gobos) ? [] : Array.isArray(obj.gobos) ? obj.gobos : def.gobos;
-  out.gobos = goboSource.map((gobo, index) =>
-    clampGoboToRoom(
-      {
-        id: text(gobo.id, `gobo-${index + 1}`),
-        name: text(gobo.name, `Gobo ${index + 1}`),
-        standardSizeId: text(gobo.standardSizeId, ''),
-        kind: text(gobo.kind, 'panel'),
-        x: num(gobo.x, 0),
-        y: num(gobo.y, 0),
-        rot: num(gobo.rot, 0),
-        w: num(gobo.w, 4),
-        h: num(gobo.h, 6),
-        depth: num(gobo.depth, 0.3),
-      },
-      out.room,
-    ),
-  );
+  out.gobos = goboSource.map((gobo, index) => {
+    const inferredSize = inferGoboStandardSize(gobo);
+    const standardSize = goboStandardSizeById(gobo.standardSizeId) || inferredSize;
+    const kind = GOBO_KINDS.find((item) => item.id === gobo.kind) || GOBO_KINDS[0];
+    return {
+      id: text(gobo.id, `gobo-${index + 1}`),
+      name: text(gobo.name, `Gobo ${index + 1}`),
+      standardSizeId: standardSize?.id || 'custom',
+      kind: kind.id,
+      x: num(gobo.x, 0),
+      y: num(gobo.y, 0),
+      rot: clamp(num(gobo.rot, 0), -180, 180),
+      w: clamp(num(gobo.w, 4), 1, 12),
+      h: clamp(num(gobo.h, 6), 1, 12),
+      depth: clamp(num(gobo.depth, standardSize?.depth || kind.depth || 0.3), 0.02, 2),
+    };
+  });
 
   const inventorySource = obj.studioInventory || {};
   out.studioInventory = {

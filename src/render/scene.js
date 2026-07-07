@@ -326,9 +326,9 @@ export function createPlannerScene({ viewport, tooltip, onMicSelect, onGoboSelec
       ring.rotation.x = Math.PI / 2;
       ring.position.y = 0.02;
       group.add(ring);
-    } else if (mic.pattern === 'supercardioid') {
+    } else if (mic.pattern === 'supercardioid' || mic.pattern === 'hypercardioid') {
       const rearDot = new THREE.Mesh(new THREE.SphereGeometry(0.022, 8, 6), marker);
-      rearDot.position.y = -0.15;
+      rearDot.position.y = mic.pattern === 'hypercardioid' ? -0.17 : -0.15;
       group.add(rearDot);
     }
   }

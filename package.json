@@ -7,6 +7,7 @@
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
     "build:site": "VITE_BASE_PATH=/drum-recording-planner/ vite build --outDir dist-site",
+    "validate:data": "node scripts/validate-data.mjs",
     "build:cargo": "vite build --outDir dist-cargo && node scripts/create-cargo-embed.mjs dist-cargo deploy/cargo-custom-html.html",
     "preview": "vite preview --host 127.0.0.1"
   },

@@ -61,6 +61,7 @@ app.innerHTML = `
       <div class="brand-block">
         <div class="brand">Drum Mic Planner</div>
         <div class="status-line sr-only" id="statusLine" aria-live="polite"></div>
+        <div class="degraded-banner" id="storageWarning" role="status" hidden></div>
       </div>
       <div class="project-bar">
         <label class="field compact-field">
@@ -318,6 +319,8 @@ let referenceConfigs = [];
 let projects = [];
 let autosaveTimer = null;
 let sceneApi = null;
+let storageAvailable = true;
+let sharedImportNotice = false;
 
 const REF_NOTE_START = '[Reference preset context]';
 const REF_NOTE_END = '[/Reference preset context]';
@@ -506,6 +509,31 @@ function setStatus(message) {
   if (node) node.textContent = message;
 }
 
+function markStorageDegraded(message = 'Local storage unavailable. Autosave is off; export JSON to keep this project.') {
+  const firstFailure = storageAvailable;
+  storageAvailable = false;
+  clearTimeout(autosaveTimer);
+  if (state?.options) state.options.autosave = false;
+
+  const node = $('storageWarning');
+  if (node) {
+    node.textContent = message;
+    node.hidden = false;
+  }
+  const autosaveToggle = $('autoSave');
+  if (autosaveToggle) {
+    autosaveToggle.checked = false;
+    autosaveToggle.disabled = true;
+  }
+  setStatus(message);
+  if (firstFailure) toast(message);
+}
+
+function clearShareHash() {
+  if (!location.hash.startsWith('#setup=')) return;
+  history.replaceState(null, document.title, `${location.pathname}${location.search}`);
+}
+
 async function loadJsonFile(path, fallback) {
   if (window.__DRUM_PLANNER_INLINE_DATA__) return fallback;
   try {
@@ -678,7 +706,8 @@ function inferImportedPattern(raw, match) {
   const normalized = normalizeLookup(raw);
   if (/4038|r121|ribbon|m160|figure8|figureeight/.test(normalized)) return 'figure-8';
   if (/omni|635a|measurement/.test(normalized)) return 'omni';
-  if (/supercardioid|hypercardioid/.test(normalized)) return normalized.includes('hyper') ? 'supercardioid' : 'supercardioid';
+  if (/hypercardioid/.test(normalized)) return 'hypercardioid';
+  if (/supercardioid/.test(normalized)) return 'supercardioid';
   return 'cardioid';
 }
 
@@ -772,7 +801,7 @@ function updateState({ autosave = true, refreshForms = false } = {}) {
 }
 
 function scheduleAutosave() {
-  if (!state.options.autosave) return;
+  if (!state.options.autosave || !storageAvailable) return;
   clearTimeout(autosaveTimer);
   autosaveTimer = setTimeout(async () => {
     try {
@@ -781,14 +810,30 @@ function scheduleAutosave() {
       setStatus(`Saved ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`);
     } catch (error) {
       console.error(error);
-      setStatus('Autosave failed');
+      markStorageDegraded('Autosave failed. Local storage is unavailable; export JSON to keep this project.');
     }
   }, 700);
 }
 
 async function refreshProjectList() {
-  projects = await listProjects();
+  if (!storageAvailable) {
+    projects = [];
+    $('projectSelect').innerHTML = option('Local storage unavailable', '');
+    $('projectSelect').disabled = true;
+    return;
+  }
+  try {
+    projects = await listProjects();
+  } catch (error) {
+    console.error(error);
+    projects = [];
+    markStorageDegraded('Project storage unavailable. Autosave is off; export JSON to keep this project.');
+    $('projectSelect').innerHTML = option('Local storage unavailable', '');
+    $('projectSelect').disabled = true;
+    return;
+  }
   const currentId = state.project.id;
+  $('projectSelect').disabled = false;
   $('projectSelect').innerHTML =
     `<option value="">Recent projects</option>` +
     projects
@@ -813,6 +858,7 @@ function renderRoomFields() {
   writeValue('roomH', state.room.height);
   setChecked('measurementRays', state.options.measurementRays);
   setChecked('autoSave', state.options.autosave);
+  $('autoSave').disabled = !storageAvailable;
 }
 
 function renderKitSelectors() {
@@ -1098,7 +1144,8 @@ function updateReferenceConfigDetails() {
     return;
   }
   const candidate = selectedReferenceCandidate(config);
-  const channels = candidate?.channels || [];
+  const sourceGroups = candidate?.channels || [];
+  const layout = candidate ? REFERENCE_PRESET_LAYOUTS[candidate.id] || [] : [];
   const context = referenceConfigContext(config);
   const presetContext = candidate ? REFERENCE_PRESET_CONTEXTS[candidate.id] : null;
   const room = presetContext?.room || null;
@@ -1109,7 +1156,8 @@ function updateReferenceConfigDetails() {
     </div>
     <div class="readout-grid">
       <span>Layout</span><strong>${escapeHtml(referenceLayoutLabel(candidate))}</strong>
-      <span>Channels</span><strong>${escapeHtml(`${channels.length || '—'} · ${compactList(channels, 5)}`)}</strong>
+      <span>Mics</span><strong>${escapeHtml(layout.length ? `${layout.length} rows` : '—')}</strong>
+      <span>Sources</span><strong>${escapeHtml(compactList(sourceGroups, 5))}</strong>
       <span>Room</span><strong>${escapeHtml(referenceRoomText(room))}</strong>
       <span>Basis</span><strong>${escapeHtml(room?.confidence || 'No room context')}</strong>
       <span>Focus</span><strong>${escapeHtml(referenceTone(config))}</strong>
@@ -1222,15 +1270,13 @@ function syncProjectFromFields() {
   updateState({ refreshForms: false });
 }
 
-function syncRoomFromFields() {
+function syncRoomFromFields({ autosave = true, refreshForms = false } = {}) {
   state.room.width = readNumber('roomW', state.room.width);
   state.room.length = readNumber('roomL', state.room.length);
   state.room.height = readNumber('roomH', state.room.height);
   state.options.measurementRays = $('measurementRays').checked;
-  state.options.autosave = $('autoSave').checked;
-  state.mics.forEach((mic) => clampMicToRoom(mic, state.room));
-  state.gobos.forEach((gobo) => clampGoboToRoom(gobo, state.room));
-  updateState({ refreshForms: false });
+  state.options.autosave = storageAvailable && $('autoSave').checked;
+  updateState({ autosave, refreshForms });
 }
 
 function selectedKitIndex() {
@@ -1414,6 +1460,13 @@ function buildReport() {
 function applyTemplate(templateId) {
   const template = templates.find((item) => item.id === templateId);
   if (!template) return;
+  if (
+    !confirmDestructiveApply(`Apply "${template.name}" mic package?`, [
+      `Mics: ${state.mics.length} -> ${template.mics.length}`,
+    ])
+  ) {
+    return;
+  }
   state.mics = template.mics.map((mic, index) => {
     const item = catalogById(mic.catalogId);
     return clampMicToRoom(
@@ -1468,6 +1521,15 @@ function createMicFromStandardPreset(preset) {
 
 function restoreStandardKit(handedness = 'right') {
   const standard = createDefaultState();
+  const title = handedness === 'left' ? 'Restore standard left-handed kit?' : 'Restore standard right-handed kit?';
+  if (
+    !confirmDestructiveApply(title, [
+      `Kit pieces: ${state.kit.length} -> ${standard.kit.length}`,
+      `Mics: ${state.mics.length} -> ${standard.mics.length}`,
+    ])
+  ) {
+    return;
+  }
   state.kit = clone(standard.kit);
   state.mics = clone(standard.mics);
   if (handedness === 'left') {
@@ -1525,6 +1587,14 @@ function referencePresetProjectNote(config, candidate, presetContext) {
   return lines.join('\n');
 }
 
+function replacementRoomText(room) {
+  return `${room.width} ft W x ${room.length} ft L x ${room.height} ft H`;
+}
+
+function confirmDestructiveApply(title, details) {
+  return confirm([title, '', ...details, '', 'This replaces existing project setup data.'].join('\n'));
+}
+
 function replaceReferencePresetProjectNote(notes, nextNote) {
   const source = String(notes || '').trim();
   const start = source.indexOf(REF_NOTE_START);
@@ -1546,7 +1616,6 @@ function applyReferencePresetContext(config, candidate, presetContext) {
       length: presetContext.room.length,
       height: presetContext.room.height,
     };
-    if (presetContext.room.label) state.project.venue = presetContext.room.label;
   }
   if (Array.isArray(presetContext.kit)) state.kit = clone(presetContext.kit);
   if (Array.isArray(presetContext.gobos)) {
@@ -1591,6 +1660,18 @@ function applyReferencePreset(configId, presetId) {
     toast('Preset unavailable');
     return;
   }
+  const nextRoom = presetContext?.room || state.room;
+  const nextKitCount = Array.isArray(presetContext?.kit) ? presetContext.kit.length : state.kit.length;
+  const nextGoboCount = Array.isArray(presetContext?.gobos) ? presetContext.gobos.length : 0;
+  const details = [
+    `Mics: ${state.mics.length} -> ${layout.length}`,
+    `Kit pieces: ${state.kit.length} -> ${nextKitCount}`,
+    `Gobos: ${state.gobos.length} -> ${nextGoboCount}`,
+  ];
+  if (presetContext?.room) {
+    details.push(`Room: ${replacementRoomText(state.room)} -> ${replacementRoomText(nextRoom)}`);
+  }
+  if (!confirmDestructiveApply(`Apply "${referenceConfigLabel(config)}" ${referenceLayoutLabel(candidate)} layout?`, details)) return;
   applyReferencePresetContext(config, candidate, presetContext);
   state.mics = layout.map((mic, index) => createMicFromReferencePreset(config, candidate, mic, index));
   selectedMicIndex = 0;
@@ -1619,8 +1700,11 @@ function bindEvents() {
     $(id).addEventListener('input', syncProjectFromFields);
   });
 
-  ['roomW', 'roomL', 'roomH'].forEach((id) => $(id)?.addEventListener('input', syncRoomFromFields));
-  ['measurementRays', 'autoSave'].forEach((id) => $(id)?.addEventListener('change', syncRoomFromFields));
+  ['roomW', 'roomL', 'roomH'].forEach((id) => {
+    $(id)?.addEventListener('input', () => syncRoomFromFields({ autosave: false }));
+    $(id)?.addEventListener('change', () => syncRoomFromFields({ autosave: true, refreshForms: true }));
+  });
+  ['measurementRays', 'autoSave'].forEach((id) => $(id)?.addEventListener('change', () => syncRoomFromFields()));
 
   $('kitPiece').addEventListener('change', renderKitSelectors);
   $('kitSize').addEventListener('change', () => {
@@ -1705,6 +1789,10 @@ function bindEvents() {
     refreshProjectList();
   });
   $('btnSaveProject').addEventListener('click', async () => {
+    if (!storageAvailable) {
+      toast('Local storage unavailable; export JSON to keep this project');
+      return;
+    }
     try {
       state = await saveProject(state);
       await refreshProjectList();
@@ -1712,14 +1800,24 @@ function bindEvents() {
       setStatus('Saved');
     } catch (error) {
       console.error(error);
-      toast('Save failed');
+      markStorageDegraded('Save failed. Local storage is unavailable; export JSON to keep this project.');
     }
   });
   $('projectSelect').addEventListener('change', async () => {
     const id = $('projectSelect').value;
-    if (!id) return;
-    const loaded = await loadProject(id);
-    if (!loaded) return;
+    if (!id || !storageAvailable) return;
+    let loaded = null;
+    try {
+      loaded = await loadProject(id);
+    } catch (error) {
+      console.error(error);
+      markStorageDegraded('Project load failed. Local storage is unavailable; export JSON to keep current work.');
+      return;
+    }
+    if (!loaded) {
+      toast('Project not found');
+      return;
+    }
     state = loaded;
     selectedMicIndex = 0;
     selectedGoboIndex = 0;
@@ -1729,8 +1827,18 @@ function bindEvents() {
   });
   $('btnDeleteProject').addEventListener('click', async () => {
     if (!state.project.id) return;
+    if (!storageAvailable) {
+      toast('Local storage unavailable; nothing was deleted');
+      return;
+    }
     if (!confirm(`Delete local project "${state.project.name}"?`)) return;
-    await deleteProject(state.project.id);
+    try {
+      await deleteProject(state.project.id);
+    } catch (error) {
+      console.error(error);
+      markStorageDegraded('Delete failed. Local storage is unavailable; export JSON to keep current work.');
+      return;
+    }
     state = validatePlannerState(createDefaultState());
     selectedMicIndex = 0;
     selectedGoboIndex = 0;
@@ -1803,10 +1911,23 @@ function bindEvents() {
 
 async function bootState() {
   const shared = decodeShare(location.hash);
-  if (shared) return shared;
-  const lastId = await getLastProjectId();
-  const loaded = await loadProject(lastId);
-  return loaded || validatePlannerState(createDefaultState());
+  if (shared) {
+    const imported = duplicateAsNewProject(shared, shared.project.name || 'Imported Drum Session');
+    clearShareHash();
+    sharedImportNotice = true;
+    return imported;
+  }
+  try {
+    const lastId = await getLastProjectId();
+    const loaded = await loadProject(lastId);
+    return loaded || validatePlannerState(createDefaultState());
+  } catch (error) {
+    console.error(error);
+    markStorageDegraded('Project storage unavailable. Autosave is off; export JSON to keep this project.');
+    const fallback = validatePlannerState(createDefaultState());
+    fallback.options.autosave = false;
+    return fallback;
+  }
 }
 
 async function init() {
@@ -1833,10 +1954,13 @@ async function init() {
   sceneApi.setState(state);
   await refreshProjectList();
   renderForms();
-  setStatus('Data loaded');
+  if (!storageAvailable) markStorageDegraded();
+  if (sharedImportNotice) toast('Shared setup imported as a new project');
+  if (storageAvailable) setStatus('Data loaded');
 }
 
 init().catch((error) => {
   console.error(error);
   setStatus('App failed to start');
+  toast('App failed to start');
 });

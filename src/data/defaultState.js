@@ -2,7 +2,7 @@ export const APP_SCHEMA_VERSION = 5;
 
 export const SPEED_OF_SOUND_FTPS = 1125;
 
-export const PATTERNS = ['cardioid', 'supercardioid', 'omni', 'figure-8'];
+export const PATTERNS = ['cardioid', 'supercardioid', 'hypercardioid', 'omni', 'figure-8'];
 
 export const MIC_TYPES = ['dynamic', 'pencil', 'ldc', 'kickmic'];
 

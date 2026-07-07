@@ -1,5 +1,6 @@
 import './styles.css';
 import {
+  BookOpen,
   Box,
   Camera,
   ClipboardList,
@@ -100,6 +101,7 @@ app.innerHTML = `
           <button class="tab" type="button" data-tab="mic"><i data-lucide="clipboard-list"></i><span>Mics</span></button>
           <button class="tab" type="button" data-tab="gobos"><i data-lucide="map"></i><span>Gobos</span></button>
           <button class="tab" type="button" data-tab="data"><i data-lucide="file-text"></i><span>Data</span></button>
+          <button class="tab" type="button" data-tab="reference-library"><i data-lucide="book-open"></i><span>Reference Library</span></button>
         </nav>
 
         <div class="tab-panel active" data-panel="project">
@@ -128,6 +130,13 @@ app.innerHTML = `
               <button id="btnApplyReferencePreset" type="button"><i data-lucide="refresh-cw"></i><span>Apply</span></button>
             </div>
             <div id="referenceConfigDetails" class="data-readout reference-readout"></div>
+          </section>
+        </div>
+
+        <div class="tab-panel" data-panel="reference-library">
+          <section id="referenceLibrary" class="reference-library">
+            <p class="sec-title">Reference Library</p>
+            <div id="referenceLibraryList" class="reference-library-list"></div>
           </section>
         </div>
 
@@ -290,6 +299,7 @@ app.innerHTML = `
 
 createIcons({
   icons: {
+    BookOpen,
     Box,
     Camera,
     ClipboardList,
@@ -1169,6 +1179,281 @@ function compactList(values = [], limit = 4) {
   return items.length ? `${items.join(', ')}${extra}` : '—';
 }
 
+const REFERENCE_MIC_COLUMNS = [
+  { label: 'Source', value: (row) => row.source },
+  { label: 'Mic', value: (row) => row.micOptions || row.micModel || row.mic },
+  { label: 'Pattern', value: (row) => row.pattern },
+  { label: 'Placement', value: (row) => row.placement },
+  { label: 'Distance / Angle', value: (row) => row.heightDistanceAngle || row.distanceAngle },
+  { label: 'Phase', value: (row) => row.phaseRelationship || row.phaseNotes },
+  { label: 'Processing', value: (row) => row.processingNotes },
+  { label: 'Confidence', value: (row) => row.confidence },
+  { label: 'Basis', value: (row) => row.evidenceBasis },
+];
+
+function hasReferenceValue(value) {
+  if (Array.isArray(value)) return value.some(hasReferenceValue);
+  if (value && typeof value === 'object') return Object.values(value).some(hasReferenceValue);
+  return value !== null && value !== undefined && String(value).trim() !== '';
+}
+
+function referenceKeyLabel(key) {
+  return String(key)
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replaceAll('_', ' ')
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function renderReferenceValue(value) {
+  if (Array.isArray(value)) {
+    const items = value.filter(hasReferenceValue);
+    if (!items.length) return '';
+    if (items.every((item) => !item || typeof item !== 'object')) {
+      return escapeHtml(items.join(', '));
+    }
+    return `<ul class="reference-list">${items.map((item) => `<li>${renderReferenceValue(item)}</li>`).join('')}</ul>`;
+  }
+  if (value && typeof value === 'object') {
+    return Object.entries(value)
+      .filter(([, entryValue]) => hasReferenceValue(entryValue))
+      .map(
+        ([key, entryValue]) =>
+          `<span class="reference-inline-key">${escapeHtml(referenceKeyLabel(key))}:</span> ${renderReferenceValue(entryValue)}`,
+      )
+      .join('<br>');
+  }
+  return escapeHtml(value);
+}
+
+function renderReferenceField(label, value) {
+  if (!hasReferenceValue(value)) return '';
+  return `<div><dt>${escapeHtml(label)}</dt><dd>${renderReferenceValue(value)}</dd></div>`;
+}
+
+function renderReferenceDefinitionList(rows, className = 'reference-meta') {
+  const content = rows.map(([label, value]) => renderReferenceField(label, value)).filter(Boolean).join('');
+  return content ? `<dl class="${className}">${content}</dl>` : '';
+}
+
+function renderReferenceBlock(title, body) {
+  return body ? `<div class="reference-block"><h3>${escapeHtml(title)}</h3>${body}</div>` : '';
+}
+
+function referenceRecordHeading(config) {
+  const meta = config?.artistAlbumEngineer || {};
+  const record = meta.album || config?.record || config?.name;
+  return [meta.artist, record, meta.year].filter(hasReferenceValue).map((value) => String(value).trim()).join(' - ');
+}
+
+function renderReferenceSessionDetails(config) {
+  const meta = config?.artistAlbumEngineer || {};
+  return renderReferenceDefinitionList([
+    ['Artist', meta.artist],
+    ['Album / record name', meta.album],
+    ['Year', meta.year],
+    ['Recording window', meta.recordingWindow],
+    ['Recorded', meta.recorded],
+    ['Released', meta.released],
+    ['Studio', meta.studio],
+    ['Tracking studio', meta.trackingStudio],
+    ['Known studios', meta.knownStudios],
+    ['Mix studio', meta.mixStudio],
+    ['Drummer', meta.drummer || meta.mainDrummer],
+    ['Additional drummer context', meta.additionalDrummerContext],
+    ['Producer', meta.producer],
+    ['Producers', meta.producers],
+    ['Producer / recording / mixing', meta.producerRecordingMixing],
+    ['Producer credits', meta.producerCredit],
+    ['Engineer', meta.engineer],
+    ['Recording engineer', meta.recordingEngineer],
+    ['Mixing engineer', meta.mixingEngineer],
+    ['Engineers', meta.engineers],
+    ['Assistant engineer', meta.assistantEngineer],
+    ['Second engineers', meta.secondEngineers],
+    ['Additional recording', meta.additionalRecording],
+    ['Mixing', meta.mixing],
+    ['Mastering', meta.mastering || meta.masteringEngineer],
+    ['Confidence', meta.confidence],
+  ]);
+}
+
+function renderReferenceSoundGoal(config) {
+  const goal = config?.soundGoal;
+  if (!goal) return '';
+  return renderReferenceDefinitionList([
+    ['Summary', goal.summary],
+    ['Qualities', goal.qualities],
+    ['Confirmed direction', goal.confirmedDirection],
+    ['Confirmed method', goal.confirmedMethod],
+    ['Practical target', goal.practicalTarget],
+    ['Reference track', goal.referenceTrack],
+    ['Source context', goal.sourceContext],
+    ['Avoid', goal.avoid],
+    ['Confidence', goal.confidence],
+  ]);
+}
+
+function renderReferenceRoomContext(config) {
+  const room = config?.roomContext;
+  if (!room) return '';
+  return renderReferenceDefinitionList([
+    ['Confirmed studio / room context', room.confirmed],
+    ['Studio build context', room.studioBuildContext],
+    ['Practical substitute', room.practicalSubstitute || room.practicalSubstituteFromNotes],
+    ['Planner room approximation', room.plannerRoomApproximation],
+    ['Unknown room details', room.unknown],
+    ['Confidence', room.confidence],
+  ]);
+}
+
+function renderReferenceSignalChain(config) {
+  return config?.signalChain
+    ? renderReferenceDefinitionList(Object.entries(config.signalChain).map(([key, value]) => [referenceKeyLabel(key), value]))
+    : '';
+}
+
+function renderReferenceMicTable(config) {
+  const rows = referenceMicRows(config).filter((row) => row && typeof row === 'object');
+  if (!rows.length) {
+    return '<p class="reference-empty">No structured mic list is present in this reference record.</p>';
+  }
+  const columns = REFERENCE_MIC_COLUMNS.filter((column) => rows.some((row) => hasReferenceValue(column.value(row))));
+  if (!columns.length) return '';
+  return `
+    <div class="table-wrap reference-table-wrap">
+      <table class="reference-table">
+        <thead>
+          <tr>${columns.map((column) => `<th>${escapeHtml(column.label)}</th>`).join('')}</tr>
+        </thead>
+        <tbody>
+          ${rows
+            .map(
+              (row) => `
+                <tr>
+                  ${columns.map((column) => `<td>${renderReferenceValue(column.value(row))}</td>`).join('')}
+                </tr>
+              `,
+            )
+            .join('')}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+function renderReferenceFacts(config) {
+  const groups = [
+    ['Confirmed mic / workflow facts', config.confirmedMicAndWorkflowFacts],
+    ['Evidence table', config.evidenceTable],
+  ]
+    .map(([title, rows]) => {
+      if (!Array.isArray(rows) || !rows.length) return '';
+      const items = rows
+        .filter(hasReferenceValue)
+        .map((row) => {
+          const label = row.detail || row.source || row.song || 'Fact';
+          return `
+            <li>
+              <strong>${escapeHtml(label)}</strong>
+              ${renderReferenceDefinitionList(
+                [
+                  ['Information', row.confirmedInformation || row.information],
+                  ['Inference', row.inference],
+                  ['Source', row.sourceId || row.source],
+                  ['Confidence', row.confidence],
+                  ['Takeaway', row.practicalTakeaway],
+                ],
+                'reference-fact-meta',
+              )}
+            </li>
+          `;
+        })
+        .join('');
+      return items
+        ? `<div class="reference-fact-group"><h4>${escapeHtml(title)}</h4><ul class="reference-facts">${items}</ul></div>`
+        : '';
+    })
+    .join('');
+  return groups;
+}
+
+function renderReferenceSources(sources = []) {
+  if (!Array.isArray(sources) || !sources.length) return '';
+  const items = sources
+    .filter(hasReferenceValue)
+    .map((source) => {
+      const title = source.title || source.id || source.url || 'Source';
+      const link = source.url
+        ? `<a href="${escapeHtml(source.url)}" target="_blank" rel="noreferrer">${escapeHtml(title)}</a>`
+        : `<strong>${escapeHtml(title)}</strong>`;
+      return `
+        <li>
+          ${link}
+          ${renderReferenceDefinitionList(
+            [
+              ['Type', source.sourceType],
+              ['Scope', source.sourceScope],
+              ['Reliability', source.reliability],
+              ['Supports', source.supports],
+            ],
+            'reference-source-meta',
+          )}
+        </li>
+      `;
+    })
+    .join('');
+  return items ? `<ul class="reference-sources">${items}</ul>` : '';
+}
+
+function renderReferenceCaveats(config) {
+  const boundary = config?.accuracyBoundary || {};
+  return renderReferenceDefinitionList([
+    ['Accuracy boundary', boundary.summary],
+    ['Use as', boundary.doUseAs],
+    ['Do not use as', boundary.doNotUseAs],
+    ['Confirmed scope', boundary.confirmedScope],
+    ['Undocumented scope', boundary.undocumentedScope],
+    ['Unknowns', config.unknowns],
+    ['Unresolved unknowns / caveats', config.unresolvedQuestions],
+    ['Studio booking questions', config.studioBookingQuestions],
+    ['Last verified', config.lastVerified],
+  ]);
+}
+
+function renderReferenceLibrary() {
+  const node = $('referenceLibraryList');
+  if (!node) return;
+  if (!referenceConfigs.length) {
+    node.textContent = 'No reference configurations loaded';
+    return;
+  }
+  node.innerHTML = referenceConfigs
+    .map((config) => {
+      const heading = referenceRecordHeading(config) || referenceConfigLabel(config);
+      const sessionDetails = renderReferenceSessionDetails(config);
+      const soundGoal = renderReferenceSoundGoal(config);
+      const roomContext = renderReferenceRoomContext(config);
+      const signalChain = renderReferenceSignalChain(config);
+      const facts = renderReferenceFacts(config);
+      const sources = renderReferenceSources(config.sources);
+      const caveats = renderReferenceCaveats(config);
+      return `
+        <details class="reference-record">
+          <summary>${escapeHtml(heading)}</summary>
+          ${renderReferenceBlock('Session details', sessionDetails)}
+          ${renderReferenceBlock('Sound goal', soundGoal)}
+          ${renderReferenceBlock('Studio / room context', roomContext)}
+          ${renderReferenceBlock('Mic list by source', renderReferenceMicTable(config))}
+          ${renderReferenceBlock('Signal chain / workflow', signalChain)}
+          ${renderReferenceBlock('Documented facts', facts)}
+          ${renderReferenceBlock('Source links / citations', sources)}
+          ${renderReferenceBlock('Unknowns / caveats', caveats)}
+        </details>
+      `;
+    })
+    .join('');
+}
+
 function updateReferenceConfigDetails() {
   const node = $('referenceConfigDetails');
   if (!node) return;
@@ -1220,6 +1505,7 @@ function renderForms() {
   renderStudioInventoryDetails();
   renderTemplates();
   renderReferenceConfigs();
+  renderReferenceLibrary();
   renderAnalysis();
   renderPatchTable();
 }

@@ -807,8 +807,13 @@ tr:last-child td {
 }
 
 @media (max-width: 760px) {
+  :root {
+    --mobile-gutter: 12px;
+  }
+
   body {
     overflow: auto;
+    font-size: 13px;
   }
 
   html,
@@ -820,11 +825,58 @@ tr:last-child td {
 
   .app-shell {
     min-height: 100vh;
+    min-height: 100svh;
   }
 
-  .project-bar,
+  button,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+  }
+
+  button {
+    padding: 9px 10px;
+    font-size: 11px;
+  }
+
+  .topbar {
+    gap: 10px;
+    padding: 10px var(--mobile-gutter) 12px;
+  }
+
+  .brand-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .brand {
+    font-size: 12px;
+  }
+
+  .project-bar {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .project-bar .compact-field {
+    grid-column: 1 / -1;
+  }
+
+  .project-bar button {
+    width: 100%;
+  }
+
+  .field > span,
+  .check {
+    font-size: 11px;
+  }
+
   .row,
   .row.three,
+  .button-row,
   .button-grid {
     grid-template-columns: 1fr;
   }
@@ -838,12 +890,33 @@ tr:last-child td {
   }
 
   #viewport {
-    height: 58vh;
-    min-height: 390px;
+    height: clamp(360px, 55svh, 520px);
+    min-height: 0;
+    border-bottom: 1px solid var(--line);
   }
 
   .inspector {
-    min-height: 520px;
+    min-height: min(560px, 70svh);
+    border-top: 0;
+  }
+
+  .tabs {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    grid-template-columns: repeat(7, minmax(44px, 1fr));
+    background: var(--panel);
+    box-shadow: 0 1px 0 var(--line);
+  }
+
+  .tab {
+    min-height: 48px;
+    padding: 8px 4px;
+  }
+
+  .tab svg {
+    width: 18px;
+    height: 18px;
   }
 
   .tab span,
@@ -851,8 +924,48 @@ tr:last-child td {
     display: none;
   }
 
-  .tabs {
-    grid-template-columns: repeat(7, 1fr);
+  .viewer-toolbar {
+    top: 10px;
+    left: 10px;
+    gap: 6px;
+  }
+
+  .viewer-toolbar button {
+    width: 44px;
+    min-height: 44px;
+    padding: 0;
+  }
+
+  #toast {
+    bottom: 12px;
+    width: calc(100% - 24px);
+    text-align: center;
+    white-space: normal;
+  }
+
+  section {
+    padding: 16px var(--mobile-gutter);
+  }
+
+  .small-field {
+    max-width: none;
+  }
+
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .risk-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .risk-row em {
+    grid-column: 1 / -1;
+  }
+
+  .table-wrap,
+  .reference-table-wrap {
+    max-width: calc(100vw - (var(--mobile-gutter) * 2));
   }
 
   .reference-meta > div,
@@ -864,6 +977,27 @@ tr:last-child td {
 
   .reference-table {
     min-width: 760px;
+  }
+}
+
+@media (max-width: 390px) {
+  .project-bar {
+    gap: 6px;
+  }
+
+  .project-bar button span {
+    font-size: 10px;
+    letter-spacing: 0.02em;
+  }
+
+  .tabs {
+    grid-template-columns: repeat(7, minmax(40px, 1fr));
+  }
+}
+
+@media (max-width: 760px) and (orientation: landscape) {
+  #viewport {
+    height: max(300px, 72svh);
   }
 }
 

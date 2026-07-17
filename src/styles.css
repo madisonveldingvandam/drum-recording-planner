@@ -811,16 +811,25 @@ tr:last-child td {
     --mobile-gutter: 12px;
   }
 
-  body {
-    overflow: auto;
-    font-size: 13px;
-  }
-
   html,
   body,
   #app {
     height: auto;
     min-height: 100%;
+  }
+
+  html {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  body,
+  #app {
+    overflow: visible;
+  }
+
+  body {
+    font-size: 13px;
   }
 
   .app-shell {
@@ -890,14 +899,23 @@ tr:last-child td {
   }
 
   #viewport {
-    height: clamp(360px, 55svh, 520px);
+    height: clamp(280px, 40svh, 420px);
     min-height: 0;
     border-bottom: 1px solid var(--line);
   }
 
+  #viewport canvas {
+    touch-action: pan-y !important;
+  }
+
   .inspector {
-    min-height: min(560px, 70svh);
+    display: block;
+    min-height: 0;
     border-top: 0;
+  }
+
+  .tab-panel {
+    overflow-y: visible;
   }
 
   .tabs {
@@ -997,7 +1015,7 @@ tr:last-child td {
 
 @media (max-width: 760px) and (orientation: landscape) {
   #viewport {
-    height: max(300px, 72svh);
+    height: max(260px, 56svh);
   }
 }
 
